@@ -462,6 +462,25 @@ a.close-chat {
 
 /* Feedback section Css */
 
+/* default chat text */
+
+.center-container {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column; /* Align items vertically */
+    align-items: center; /* Center items horizontally */
+    text-align: center; /* Center text */
+  }
+  
+  .center-image {
+    max-width: 100%; /* Adjust as necessary */
+    height: auto; /* Maintain aspect ratio */
+  }
+  
+  .center-text {
+    margin-top: 10px; /* Space between image and text */
+  }
+
 /* Loader */
 
 .loader {

@@ -45,12 +45,15 @@ function Chatbot() {
 
     const [isOpen, setIsOpen] = useState(false);
     const handleClose = () => setIsOpen(false);
+    const [isVisible, setIsVisible] = useState(true);      // State to control visibility for default chat image and text
+    const [responseReceived, setResponseReceived] = useState(false);
+
     //messages
     const [chatMessage, setChatMessage] = useState([
-        {
-            position: "left_buble",
-            message: "Hello there, I am your assistant. How can I help you today? ",
-        },
+        // {
+        //     position: "left_buble",
+        //     message: "Hello there, I am your assistant. How can I help you today? ",
+        // },
     ]);
 
     const [inputValue, setInputValue] = useState("");
@@ -59,12 +62,29 @@ function Chatbot() {
     //reset
     const resetChat = () => {
         setChatMessage([
-            {
-                position: "left_buble",
-                message: "Hello there, I am your assistant. How can I help you today? ",
-            },
+            // {
+            //     position: "left_buble",
+            //     message: "Hello there, I am your assistant. How can I help you today? ",
+            // },
         ]);
     };
+
+    // Handle key press
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            setIsVisible(false); // Hide image and text on Enter
+            simulateChatbotResponse(); // Simulate receiving a response from the chatbot
+        }
+    };
+
+
+  // Simulate receiving a response from the chatbot
+  const simulateChatbotResponse = () => {
+    // Simulate a delay for receiving response
+    setTimeout(() => {
+      setResponseReceived(true); // Set the state to indicate response received
+    }, 1000); // Simulated delay (1 second)
+  };
 
     //feedback
     const [isLiked, setIsLiked] = useState(false);
@@ -272,6 +292,12 @@ function Chatbot() {
                         </div>
                     </div>
                     <div className="start-chatbot">
+                        {isVisible && (
+                            <div className="center-container">
+                                <img src="/src/assets/chatbot.png" alt="description" className="center-image" />
+                                <p className="center-text">Hello there, I am your assistant. How can I help you today? </p>
+                            </div>
+                        )}
                         {/* chat messages section */}
                         {chatMessage.map((chatMessage, key) => (
                             <Message
@@ -289,6 +315,7 @@ function Chatbot() {
                         </div>}
                         {/* Loader section */}
                         {/* Feedback section */}
+                        {responseReceived && (
                         <div className="feedback-container">
                             <p className="feedback-text">Was this response helpful?</p>
                             <button onClick={handleThumbsUp} className="text-gray-500 hover:text-gray-800 ml-2">
@@ -317,6 +344,7 @@ function Chatbot() {
                                 </div>
                             )}
                         </div>
+                        )}
                     </div>
                     {/* input && reset section  */}
                     <div className="blanter-msg">
@@ -357,6 +385,7 @@ function Chatbot() {
                                     placeholder="What can I help you with..."
                                     maxLength="400"
                                     value={inputValue}
+                                    onKeyPress={handleKeyPress} // Listen for Enter key press
                                     onChange={(e) => setInputValue(e.target.value)}
                                     disabled={isLoading}
                                 />
