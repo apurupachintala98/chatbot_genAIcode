@@ -1,9 +1,10 @@
 import logo from './logo.svg';
 import './App.css';
+import Chatbot from './pages/Chatbot';
 
 function App() {
   return (
-   <h1>Test</h1>
+   <Chatbot />
   );
 }
 

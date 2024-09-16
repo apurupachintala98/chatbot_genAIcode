@@ -1,0 +1,495 @@
+
+/* chat css */
+:root {
+    font-family: 'Open Sans', sans-serif !important;
+    font-style: light;
+    font-size: 12px !important;
+    --chat-primary-bg: #00bbba;
+    --chat-primary-color: #fff;
+    --chat-bubble-bg: #fff;
+    --chat-bubble-color: rgba(0, 0, 0, .8);
+    --chat-scroll-track-color: #f1f1f1;
+    --chat-scroll-color: #7a7676;
+}
+
+
+.bubble-container {
+    width: 100%;
+    position: static;
+    margin: 20px auto;
+    clear: both;
+}
+
+.chat-bubble {
+    position: relative;
+    width: 600px;
+    max-width: 80%;
+    border-radius: 10px;
+    background-color: var(--chat-bubble-bg);
+    color: #080707;
+    padding: 15px;
+    line-height: 2;
+    font-weight: 600;
+
+}
+
+.text_message {
+    white-space: pre-wrap;
+}
+
+
+.bubble-container .left_buble {
+    float: left;
+    margin-left: 3px;
+    box-shadow: 5px 3px 10px lightblue;
+}
+
+.bubble-container .right_buble {
+    float: right;
+    margin-right: 3px !important;
+    background-image: -webkit-linear-gradient(left, #00bbba, #44b8f3);
+    box-shadow: -3px 3px 10px #c0bdbd;
+}
+
+.reset-chat-button {
+    border-radius: 50px;
+    align-items: center;
+    background-image: -webkit-linear-gradient(left, #00bbba, #44b8f3 37.5%);
+    margin-right: 0.5rem;
+}
+
+.reset-chat-button svg {
+    width: 2.2rem;
+    height: 2.2rem;
+    color: white;
+}
+
+span.flex.items-stretch.transition-all.duration-200.rounded-md.text-sm {
+    padding: .5rem !important;
+}
+
+.clear {
+    clear: both;
+}
+
+.bub_title {
+    font-weight: bold;
+}
+
+.start-chatbot {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.start-chatbot::-webkit-scrollbar {
+    width: 5px;
+}
+
+.start-chatbot::-webkit-scrollbar-thumb {
+    background-color: var(--chat-scroll-color);
+    border-radius: 5px;
+}
+
+.start-chatbot::-webkit-scrollbar-track {
+    background-color: var(--chat-scroll-track-color);
+}
+
+.assistantName {
+    font-size: 13.5px;
+    font-weight: 600;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    line-height: 0.5;
+    vertical-align: bottom;
+    color: #fff;
+}
+
+#assistant-chat {
+    box-sizing: border-box !important;
+    outline: none !important;
+    position: fixed;
+    width: 50%;
+    max-width: 100% !important;
+    border-radius: 10px;
+    box-shadow: 0 1px 15px var(--chat-primary-bg);
+    bottom: 90px;
+    right: 30px;
+    overflow: hidden;
+    z-index: 10000000 !important;
+    animation-name: showchat;
+    animation-duration: 1s;
+    transform: scale(1);
+    background-color: #fff;
+}
+
+a.blantershow-chats {
+    background: #fff;
+    color: #404040;
+    position: fixed;
+    display: flex;
+    font-weight: 400;
+    justify-content: space-between;
+    bottom: 125px;
+    right: 30px;
+    font-size: 15px;
+    padding: 15px 15px;
+    border-radius: 30px;
+    box-shadow: 0 1px 15px rgba(32, 33, 36, 0.28);
+    text-decoration: none;
+}
+
+a.blantershow-chats svg {
+    width: 30px;
+    height: 30px;
+    transform: scale(1.2);
+    object-fit: contain;
+}
+
+.header-chats {
+    background-image: -webkit-linear-gradient(left, #00bbba, #44b8f3 37.5%);
+    color: #fff;
+    padding: 45px 12px 10px;
+    margin-top: -56px;
+}
+
+.header-chats p {
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0;
+    height: 50px;
+}
+
+.info-avatar {
+    position: relative;
+}
+
+.info-avatar svg {
+    border-radius: 100%;
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    float: left;
+    margin: 0 10px 0 0;
+    background-color: #fff;
+
+}
+
+input#chat-input {
+    border: 1px solid #d5d0d0;
+    border-radius: 19px;
+    font-family: 'Open Sans', sans-serif !important;
+    font-size: 10.5px;
+    /* width: 100%; */
+    height: 20px;
+    outline: none;
+    resize: none;
+    padding: 20px;
+    box-shadow: 1.7px 1.4px 5.4px hsl(0deg 0% 0% / 0.2);
+
+}
+
+input#chat-input:focus {
+
+    border-color: #0eb9f2;
+}
+
+.input-group-addon {
+    border: 1px solid #d5d0d0;
+}
+
+.blanter-msg {
+    display: inline;
+    position: sticky;
+    left: 0;
+    bottom: 0;
+    border-top: solid 1px var(--primary-bg);
+}
+
+.blanter-msg form {
+    padding: 1rem;
+}
+
+a.close-chat {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    color: var(--chat-primary-color);
+    font-size: 30px;
+    text-decoration: none;
+}
+
+@keyframes ZpjSY {
+    0% {
+        background-color: rgb(182, 181, 186);
+    }
+
+    15% {
+        background-color: rgb(17, 17, 17);
+    }
+
+    25% {
+        background-color: rgb(182, 181, 186);
+    }
+}
+
+@keyframes hPhMsj {
+    15% {
+        background-color: rgb(182, 181, 186);
+    }
+
+    25% {
+        background-color: rgb(17, 17, 17);
+    }
+
+    35% {
+        background-color: rgb(182, 181, 186);
+    }
+}
+
+@keyframes showhide {
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+}
+
+@keyframes showchat {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+
+@media screen and (max-width: 480px) {
+    #assistant-chat {
+        width: auto;
+        left: 5%;
+        right: 5%;
+        font-size: 80%;
+    }
+}
+
+.hide {
+    display: none;
+    animation-name: showhide;
+    animation-duration: 0.5s;
+    transform: scale(1);
+    opacity: 1;
+}
+
+.show {
+    display: block;
+    animation-name: showhide;
+    animation-duration: 0.5s;
+    transform: scale(1);
+    opacity: 1;
+}
+
+
+.hFENyl {
+    position: relative;
+    display: flex;
+}
+
+.ixsrax {
+    height: 5px;
+    width: 5px;
+    margin: 0px 2px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    animation-duration: 1.2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    top: 0px;
+    background-color: rgb(158, 157, 162);
+    animation-name: ZpjSY;
+}
+
+.dRvxoz {
+    height: 5px;
+    width: 5px;
+    margin: 0px 2px;
+    background-color: rgb(182, 181, 186);
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    animation-duration: 1.2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    top: 0px;
+    animation-name: hPhMsj;
+}
+
+.start-chatbot {
+    /* background-color: rgba(155, 155, 155, .5); */
+    width: 100%;
+    overflow-x: hidden;
+    height: 100vh;
+    padding: 1rem;
+}
+
+.assistant-chat-body {
+    padding: 20px;
+}
+
+.eJJEeC {
+    min-height: 40px;
+    text-align: center;
+    margin: 10px auto;
+}
+
+.flowbite-drawer-items {
+    height: 100%;
+}
+
+
+/* OnlineStatus css */
+
+.online-status {
+    display: table-cell;
+    align-items: center;
+    margin-top: 11px;
+    /* animation: slideIn 0.5s ease-in-out;  */
+    /* Animation for the whole component */
+}
+
+.online-icon {
+    color: #b2ff58;
+    width: 10px;
+    font-size: 10px;
+    /* Adjust size as needed */
+    margin-right: 5px;
+    /* Space between icon and text */
+    position: relative;
+    /* Position relative to the parent container */
+
+}
+
+.svg-inline--fa {
+    height: 7px;
+}
+
+/* Text that slides from right to left */
+.sliding-text {
+    font-size: 11px;
+    /* Adjust text size */
+    color: #fff;
+    /* Text color */
+    margin-top: 5px;
+    display: inline-block;
+    /* Ensure the text is treated as a block element for positioning */
+    position: absolute;
+    /* Position absolutely within the container */
+    white-space: nowrap;
+    /* Prevent text from wrapping */
+    animation: slideLeft 7s ease-out forwards;
+    /* Apply animation */
+}
+
+/* Keyframes for sliding effect */
+@keyframes slideLeft {
+    from {
+        transform: translateX(100%);
+        /* Start off-screen to the right */
+        opacity: 0;
+        /* Start invisible */
+    }
+
+    to {
+        transform: translateX(0);
+        /* Move to original position */
+        opacity: 1;
+        /* Fade in */
+    }
+}
+
+/* Feedback section Css */
+
+.feedback-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .feedback-text {
+    margin-bottom: 0;
+  }
+  
+  .feedback-button {
+    margin-left: 5px;
+   border: none;
+   cursor: pointer;
+  }
+  
+  .feedback-button.active {
+    color: #0070f3; /* Active color */
+  }
+  
+  .comment-box {
+    display: block;
+    margin-top: 10px;
+  }
+  
+  .comment-textarea {
+    width: 100%;
+    margin-top: 10px;
+  }
+  
+  .submit-comment-button {
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 5px;
+    cursor: pointer;
+  }
+
+/* Feedback section Css */
+
+/* Loader */
+
+.loader {
+    display: flex;
+    height: 100vh; /* Full screen height */
+  }
+  
+  .dot {
+    width: 5px;
+    height: 5px;
+    margin: 0 5px;
+    background-color: #5009b5; /* Customize color as needed */
+    border-radius: 50%;
+    animation: loading 0.8s infinite alternate;
+  }
+  
+  .dot:nth-child(2) {
+    animation-delay: 0.2s;
+    background-color: #794cff; /* Stagger the animation delay */
+  }
+  
+  .dot:nth-child(3) {
+    animation-delay: 0.4s;
+    background-color: #00bbba; /* Stagger the animation delay */
+  }
+
+  .dot:nth-child(4) {
+    animation-delay: 0.6s; 
+    background-color: #44b8f3;/* Stagger the animation delay */
+  }
+
+  @keyframes loading {
+    0% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    100% {
+      transform: scale(1.5);
+      opacity: 1;
+    }
+  }
+
+/* Loader */
+
+  
