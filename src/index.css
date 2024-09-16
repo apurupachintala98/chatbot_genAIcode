@@ -23,7 +23,7 @@ code {
   padding: 0 !important;
 }
 
-#root > div > div > div.fixed.z-40.overflow-y-auto.bg-white.p-4.transition-transform.dark\:bg-gray-800.right-0.top-0.h-screen.w-80.transform-none > div:nth-child(1) > button > svg{
+#root > div.fixed.z-40.overflow-y-auto.bg-white.p-4.transition-transform.dark\:bg-gray-800.right-0.top-0.h-screen.w-80.transform-none > div:nth-child(1) > button > svg{
   width: 15px;
   height: 15px;
   color: #fff;

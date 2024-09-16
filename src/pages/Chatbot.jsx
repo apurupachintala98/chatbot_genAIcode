@@ -77,21 +77,21 @@ function Chatbot() {
         if (isDisliked) setIsDisliked(false);
 
         //Send the new state to the backend
-        try {
-            const response = await fetch('http://localhost:5000/api/like', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ liked: !isLiked, disliked: false }),
-            });
+        // try {
+        //     const response = await fetch('http://localhost:5000/api/like', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify({ liked: !isLiked, disliked: false }),
+        //     });
 
-            if (!response.ok) {
-                throw new Error('Failed to update like status');
-            }
-        } catch (error) {
-            console.error('Error updating like status:', error);
-        }
+        //     if (!response.ok) {
+        //         throw new Error('Failed to update like status');
+        //     }
+        // } catch (error) {
+        //     console.error('Error updating like status:', error);
+        // }
     };
 
     const handleThumbsDown = async () => {
@@ -100,21 +100,21 @@ function Chatbot() {
         if (isLiked) setIsLiked(false);
 
         // Send the new state to the backend
-        try {
-            const response = await fetch('http://localhost:5000/api/like', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ liked: false, disliked: !isDisliked }),
-            });
+        // try {
+        //     const response = await fetch('http://localhost:5000/api/like', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify({ liked: false, disliked: !isDisliked }),
+        //     });
 
-            if (!response.ok) {
-                throw new Error('Failed to update dislike status');
-            }
-        } catch (error) {
-            console.error('Error updating dislike status:', error);
-        }
+        //     if (!response.ok) {
+        //         throw new Error('Failed to update dislike status');
+        //     }
+        // } catch (error) {
+        //     console.error('Error updating dislike status:', error);
+        // }
     };
 
     const handleButtonClick = () => {
@@ -138,7 +138,6 @@ function Chatbot() {
         if (prompt === "") {
             return;
         }
-
         const newMessages = [
             ...chatMessage,
             {
@@ -221,47 +220,47 @@ function Chatbot() {
                     </svg>
                 </a>
             </div>
-            <Drawer open={isOpen} onClose={handleClose} position="right">
+            <Drawer open={isOpen} onClose={handleClose} position="right" className="curved-borderforchat">
                 <DrawerHeader titleIcon={() => <></>} />
                 <Drawer.Items>
                     <div className="header-chats">
                         <div className="head-home">
                             <div className="info-avatar">
-                            <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 -30 128 180"
-                        x="0px"
-                        y="0px"
-                    >
-                        <g>
-                            <g data-name="Glyph">
-                                <path
-                                    fill="#09c"
-                                    d="M9.847,70.468A45.764,45.764,0,0,0,55.527,116s6.427-.033,7.544-.1a1.51,1.51,0,0,0,1.221-2.217,26.586,26.586,0,0,1-3.042-9.131,1.5,1.5,0,0,0-1.552-1.292c-.629.028-1.261.044-1.9.044-10.64,0-19.971-3.862-26.275-10.875C25.573,85.806,22.865,76.833,23.9,67.16A14.622,14.622,0,0,1,38.4,53.985,16.016,16.016,0,0,1,47.383,56.5,18.654,18.654,0,0,0,57.8,59.385,18.654,18.654,0,0,0,68.211,56.5a16.014,16.014,0,0,1,8.981-2.516,14.62,14.62,0,0,1,14.5,13.175c.078.73.133,1.5.172,2.412a1.492,1.492,0,0,0,1.592,1.515,39.834,39.834,0,0,1,10.561.718,1.509,1.509,0,0,0,1.8-1.466l.032-9.825a52.884,52.884,0,0,0-15.416-37.38c-9-9.084-20.577-14.086-32.6-14.086s-23.6,5-32.6,14.086A52.882,52.882,0,0,0,9.814,60.505ZM57.815,23.5a5.5,5.5,0,1,1-5.5,5.5A5.5,5.5,0,0,1,57.815,23.5ZM27.44,25.17A67.511,67.511,0,0,0,37.88,39.19,9.378,9.378,0,0,0,44.55,42H71.04a9.361,9.361,0,0,0,6.67-2.81A67.9,67.9,0,0,0,88.18,25.13s1.5,1.55,2.15,2.29A70.775,70.775,0,0,1,79.86,41.29,12.4,12.4,0,0,1,71.04,45H44.55a12.382,12.382,0,0,1-8.81-3.71A69.6,69.6,0,0,1,25.3,27.46C25.96,26.71,27.44,25.17,27.44,25.17Z"
-                                />
-                                <path
-                                    fill="#09c"
-                                    d="M7.2,17.091v22.46a13.145,13.145,0,0,0-1.85,1.54c-4.2,4.18-4.38,9.48-4.62,16.83-.25,7.39-.43,12.73,3.45,16.96.15.16.31.31.47.46a1.5,1.5,0,0,0,2.55-1.18c-.1-1.33-.15-2.42-.15-3.45l-.04-9.97a53.787,53.787,0,0,1,3.025-18.154,2.915,2.915,0,0,0,.165-.961V17.091A8.5,8.5,0,0,0,8.491.233,8.592,8.592,0,0,0,.223,8.094,8.513,8.513,0,0,0,7.2,17.091Z"
-                                />
-                                <path
-                                    fill="#09c"
-                                    d="M67.814,67.03v5.857a5.5,5.5,0,0,0,4.487,5.4,1.5,1.5,0,0,0,1.155-.259,35.133,35.133,0,0,1,4.321-2.672,1.5,1.5,0,0,0,.731-.86,5.706,5.706,0,0,0,.306-1.8V67.227c.063-2.941-2.525-5.815-5.5-5.7A5.515,5.515,0,0,0,67.814,67.03Z"
-                                />
-                                <path
-                                    fill="#09c"
-                                    d="M114.977,8.084A8.59,8.59,0,0,0,106.709.223,8.5,8.5,0,0,0,105,17.08V38.785a3.006,3.006,0,0,0,.176,1.02c.357.988.74,1.971,1.054,2.965a53.9,53.9,0,0,1,2.62,17l-.04,11.49A1.545,1.545,0,0,0,110,72.74l.87.33a1.511,1.511,0,0,0,1.8-.53c2.79-4.02,2.63-8.89,2.4-15.64-.25-7.34-.42-12.64-4.62-16.82A14.188,14.188,0,0,0,108,38.13V17.08A8.512,8.512,0,0,0,114.977,8.084Z"
-                                />
-                                <path
-                                    fill="#09c"
-                                    d="M96,74c-10.986,0-20.977,4.609-26.9,12.368-1.662-.109-2.878-.792-4.848-2.206a4.39,4.39,0,0,0-5.408.127A4.5,4.5,0,0,0,57.491,89.6a24.939,24.939,0,0,0,6.6,9.338C64.031,99.628,64,100.318,64,101c0,14.888,14.355,27,32,27s32-12.112,32-27S113.645,74,96,74ZM78.5,105a4,4,0,1,1,4-4A4,4,0,0,1,78.5,105Zm18,0a4,4,0,1,1,4-4A4,4,0,0,1,96.5,105Zm17,0a4,4,0,1,1,4-4A4,4,0,0,1,113.5,105Z"
-                                />
-                                <path
-                                    fill="#09c"
-                                    d="M42.32,61.53a5.713,5.713,0,0,0-5.51,5.7c.02,1.36,0,4.1,0,5.46a5.686,5.686,0,0,0,5.26,5.69,5.574,5.574,0,0,0,5.74-5.49c-.01-1.47,0-4.4,0-5.86A5.521,5.521,0,0,0,42.32,61.53Z"
-                                />
-                            </g>
-                        </g>
-                    </svg>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 -30 128 180"
+                                    x="0px"
+                                    y="0px"
+                                >
+                                    <g>
+                                        <g data-name="Glyph">
+                                            <path
+                                                fill="#09c"
+                                                d="M9.847,70.468A45.764,45.764,0,0,0,55.527,116s6.427-.033,7.544-.1a1.51,1.51,0,0,0,1.221-2.217,26.586,26.586,0,0,1-3.042-9.131,1.5,1.5,0,0,0-1.552-1.292c-.629.028-1.261.044-1.9.044-10.64,0-19.971-3.862-26.275-10.875C25.573,85.806,22.865,76.833,23.9,67.16A14.622,14.622,0,0,1,38.4,53.985,16.016,16.016,0,0,1,47.383,56.5,18.654,18.654,0,0,0,57.8,59.385,18.654,18.654,0,0,0,68.211,56.5a16.014,16.014,0,0,1,8.981-2.516,14.62,14.62,0,0,1,14.5,13.175c.078.73.133,1.5.172,2.412a1.492,1.492,0,0,0,1.592,1.515,39.834,39.834,0,0,1,10.561.718,1.509,1.509,0,0,0,1.8-1.466l.032-9.825a52.884,52.884,0,0,0-15.416-37.38c-9-9.084-20.577-14.086-32.6-14.086s-23.6,5-32.6,14.086A52.882,52.882,0,0,0,9.814,60.505ZM57.815,23.5a5.5,5.5,0,1,1-5.5,5.5A5.5,5.5,0,0,1,57.815,23.5ZM27.44,25.17A67.511,67.511,0,0,0,37.88,39.19,9.378,9.378,0,0,0,44.55,42H71.04a9.361,9.361,0,0,0,6.67-2.81A67.9,67.9,0,0,0,88.18,25.13s1.5,1.55,2.15,2.29A70.775,70.775,0,0,1,79.86,41.29,12.4,12.4,0,0,1,71.04,45H44.55a12.382,12.382,0,0,1-8.81-3.71A69.6,69.6,0,0,1,25.3,27.46C25.96,26.71,27.44,25.17,27.44,25.17Z"
+                                            />
+                                            <path
+                                                fill="#09c"
+                                                d="M7.2,17.091v22.46a13.145,13.145,0,0,0-1.85,1.54c-4.2,4.18-4.38,9.48-4.62,16.83-.25,7.39-.43,12.73,3.45,16.96.15.16.31.31.47.46a1.5,1.5,0,0,0,2.55-1.18c-.1-1.33-.15-2.42-.15-3.45l-.04-9.97a53.787,53.787,0,0,1,3.025-18.154,2.915,2.915,0,0,0,.165-.961V17.091A8.5,8.5,0,0,0,8.491.233,8.592,8.592,0,0,0,.223,8.094,8.513,8.513,0,0,0,7.2,17.091Z"
+                                            />
+                                            <path
+                                                fill="#09c"
+                                                d="M67.814,67.03v5.857a5.5,5.5,0,0,0,4.487,5.4,1.5,1.5,0,0,0,1.155-.259,35.133,35.133,0,0,1,4.321-2.672,1.5,1.5,0,0,0,.731-.86,5.706,5.706,0,0,0,.306-1.8V67.227c.063-2.941-2.525-5.815-5.5-5.7A5.515,5.515,0,0,0,67.814,67.03Z"
+                                            />
+                                            <path
+                                                fill="#09c"
+                                                d="M114.977,8.084A8.59,8.59,0,0,0,106.709.223,8.5,8.5,0,0,0,105,17.08V38.785a3.006,3.006,0,0,0,.176,1.02c.357.988.74,1.971,1.054,2.965a53.9,53.9,0,0,1,2.62,17l-.04,11.49A1.545,1.545,0,0,0,110,72.74l.87.33a1.511,1.511,0,0,0,1.8-.53c2.79-4.02,2.63-8.89,2.4-15.64-.25-7.34-.42-12.64-4.62-16.82A14.188,14.188,0,0,0,108,38.13V17.08A8.512,8.512,0,0,0,114.977,8.084Z"
+                                            />
+                                            <path
+                                                fill="#09c"
+                                                d="M96,74c-10.986,0-20.977,4.609-26.9,12.368-1.662-.109-2.878-.792-4.848-2.206a4.39,4.39,0,0,0-5.408.127A4.5,4.5,0,0,0,57.491,89.6a24.939,24.939,0,0,0,6.6,9.338C64.031,99.628,64,100.318,64,101c0,14.888,14.355,27,32,27s32-12.112,32-27S113.645,74,96,74ZM78.5,105a4,4,0,1,1,4-4A4,4,0,0,1,78.5,105Zm18,0a4,4,0,1,1,4-4A4,4,0,0,1,96.5,105Zm17,0a4,4,0,1,1,4-4A4,4,0,0,1,113.5,105Z"
+                                            />
+                                            <path
+                                                fill="#09c"
+                                                d="M42.32,61.53a5.713,5.713,0,0,0-5.51,5.7c.02,1.36,0,4.1,0,5.46a5.686,5.686,0,0,0,5.26,5.69,5.574,5.574,0,0,0,5.74-5.49c-.01-1.47,0-4.4,0-5.86A5.521,5.521,0,0,0,42.32,61.53Z"
+                                            />
+                                        </g>
+                                    </g>
+                                </svg>
                             </div>
                             <p>
                                 <span className="assistantName"> Chat With HEDIS Bot</span>
@@ -273,24 +272,24 @@ function Chatbot() {
                         </div>
                     </div>
                     <div className="start-chatbot">
-                         {/* chat messages section */}
-            {chatMessage.map((chatMessage, key) => (
-              <Message
-                key={key}
-                position={chatMessage.position}
-                message={chatMessage.message}
-              />
-            ))}
-           {/* Loader section */}
-           {isLoading && <div className="loader">
+                        {/* chat messages section */}
+                        {chatMessage.map((chatMessage, key) => (
+                            <Message
+                                key={key}
+                                position={chatMessage.position}
+                                message={chatMessage.message}
+                            />
+                        ))}
+                        {/* Loader section */}
+                        {isLoading && <div className="loader">
                             <div className="dot"></div>
                             <div className="dot"></div>
                             <div className="dot"></div>
                             <div className="dot"></div>
                         </div>}
                         {/* Loader section */}
-            {/* Feedback section */}
-            <div className="feedback-container">
+                        {/* Feedback section */}
+                        <div className="feedback-container">
                             <p className="feedback-text">Was this response helpful?</p>
                             <button onClick={handleThumbsUp} className="text-gray-500 hover:text-gray-800 ml-2">
                                 {isLiked ? <ThumbsUpIconDark /> : <ThumbsUpIcon />}
@@ -303,65 +302,68 @@ function Chatbot() {
                             </button>
                             {isCommentBoxVisible && (
                                 <div className="comment-box">
-                                    <textarea
-                                        placeholder="Write your comment here..."
-                                        rows="4"
-                                        className="comment-textarea"
-                                    />
-                                    <button className="submit-comment-button">
-                                        Submit
-                                    </button>
+                                    <form className="comment-submit">
+                                        <label for="chat" class="sr-only">Your Comment</label>
+                                        <div class="flex items-center p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
+                                            <textarea id="chat" rows="3" class="block p-2 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message..."></textarea>
+                                            <button type="submit" class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
+                                                <svg class="w-5 h-5" aria-hidden="true" fill="#44b8f3" viewBox="0 0 448 448">
+                                                    <path d="M.213 32L0 181.333 320 224 0 266.667.213 416 448 224z" />
+                                                </svg>
+                                                <span class="sr-only">Send message</span>
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
                             )}
                         </div>
-          </div>
+                    </div>
                     {/* input && reset section  */}
                     <div className="blanter-msg">
-            <form onSubmit={handleSubmit}>
-              <div class="input-group">
-                <div>
+                        <form onSubmit={handleSubmit}>
+                            <div class="input-group">
+                                <div>
 
-                  <Button
-                    onClick={resetChat}
-                    disabled={isLoading}
-                    type="button"
-                    className="reset-chat-button"
-                    data-toggle="tooltip" data-placement="top" title="Reset Chat"
-                  >
-                    <svg
-                      className="w-6 h-6 text-gray-800 dark:text-white"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4"
-                      />
-                    </svg>
-                  </Button>
-                </div>
-                <input
-                  type="text"
-                  id="chat-input"
-                  class="form-control"
-                  placeholder="What can I help you with..."
-                  maxLength="400"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  disabled={isLoading}
-                />
-              </div>
-            </form>
-          </div>
+                                    <Button
+                                        onClick={resetChat}
+                                        disabled={isLoading}
+                                        type="button"
+                                        className="reset-chat-button"
+                                        data-toggle="tooltip" data-placement="top" title="Reset Chat"
+                                    >
+                                        <svg
+                                            className="w-6 h-6 text-gray-800 dark:text-white"
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                stroke="currentColor"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4"
+                                            />
+                                        </svg>
+                                    </Button>
+                                </div>
+                                <input
+                                    type="text"
+                                    id="chat-input"
+                                    class="form-control"
+                                    placeholder="What can I help you with..."
+                                    maxLength="400"
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value)}
+                                    disabled={isLoading}
+                                />
+                            </div>
+                        </form>
+                    </div>
                     {/* input && reset section  */}
-
                 </Drawer.Items>
             </Drawer>
         </>
