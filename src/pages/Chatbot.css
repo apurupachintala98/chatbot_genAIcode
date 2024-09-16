@@ -472,13 +472,11 @@ a.close-chat {
     text-align: center; /* Center text */
   }
   
-  .center-image {
-    max-width: 100%; /* Adjust as necessary */
-    height: auto; /* Maintain aspect ratio */
-  }
-  
   .center-text {
-    margin-top: 10px; /* Space between image and text */
+    margin-top: 10px;
+    font-size: 12.5px;
+    font-weight: 600;
+     /* Space between image and text */
   }
 
 /* Loader */
