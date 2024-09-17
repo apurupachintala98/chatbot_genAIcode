@@ -28,3 +28,8 @@ code {
   height: 15px;
   color: #fff;
 }
+
+#root > div.fixed.z-40.overflow-y-auto.bg-white.p-4.transition-transform.dark\:bg-gray-800.right-0.top-0.h-screen.w-80.transform-none.curved-borderforchat > div:nth-child(2) > div.blanter-msg > form > div > button{
+  border-top-left-radius: none !important; 
+  border-bottom-left-radius: none !important;
+}

@@ -523,4 +523,15 @@ a.close-chat {
 
 /* Loader */
 
-  
+/* Button on top of the Input */
+.sendBtn {
+    background: #03A9F4;
+    border-radius: 50px;
+    aspect-ratio: 1;
+    height: 80%;
+    position: absolute;
+    top: 10%;
+    right: 3px;
+    border-top-left-radius: none !important; 
+     border-bottom-left-radius: none !important;
+} 
