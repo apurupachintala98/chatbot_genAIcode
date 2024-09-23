@@ -82,3 +82,8 @@ input#chat-input:focus {
 .header-searchbar {
   flex-basis: 300px;
 }
+
+.newChat-btn {
+  position: absolute;
+  bottom: 30px;
+}

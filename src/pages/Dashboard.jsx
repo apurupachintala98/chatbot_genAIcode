@@ -81,7 +81,7 @@ function Dashboard() {
       <Sidebar className="fixed min-w-fit top-0 left-0 z-20 flex flex-col flex-shrink-0 w-64 h-full pt-4 font-normal sidebar">
         <Sidebar.Items>
           <Sidebar.ItemGroup>
-            <Button gradientDuoTone="greenToBlue" size="xl">
+            <Button gradientDuoTone="greenToBlue" size="xl" className='newChat-btn'>
               New Chat
               <HiOutlinePencilAlt className="ml-2 h-5 w-5" />
             </Button>
