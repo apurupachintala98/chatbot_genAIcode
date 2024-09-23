@@ -91,12 +91,12 @@ function Dashboard() {
       </Sidebar>
       {/* Navbar */}
       <Navbar fluid={true} rounded={true} className="fixed z-30 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 navbarfixed">
-        <Navbar.Toggle className="d-flex" />
-        <a href="/" class="p-2">
+        <Navbar.Toggle />
+        <a href="/" class="p-2 logo">
           <img src="/logo.png" alt="Elevance Health Logo" />
         </a>
-        <p className="d-flex p-2 ml-3 mb-0 flex-fill align-items-center">ARB Chat Assistant</p>
-        <div className="p-2 mr-2">
+        <p className="d-flex p-2 ml-3 mb-0 flex-fill align-items-center chat-assist">ARB Chat Assistant</p>
+        <div className="p-2 mr-2 header-searchbar">
           <TextInput type="search" placeholder="Search" icon={HiSearch} className="hidden md:block" />
         </div>
         <Dropdown
