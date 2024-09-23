@@ -90,7 +90,7 @@ function Dashboard() {
         </Sidebar.Items>
       </Sidebar>
       {/* Navbar */}
-      <Navbar fluid={true} rounded={true} className="fixed z-30 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 navbarfixed">
+      <Navbar fluid={true} rounded={true} className="fixed z-30 w-full dark:border-gray-700 navbarfixed">
         <Navbar.Toggle />
         <a href="/" class="p-2 logo">
           <img src="/logo.png" alt="Elevance Health Logo" />

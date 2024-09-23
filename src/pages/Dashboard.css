@@ -48,6 +48,8 @@ input#chat-input:focus {
 
 .navbarfixed {
     box-shadow: -1px -4px 14px #000;
+    background-image: -webkit-linear-gradient(left, #00bbba, #44b8f3 37.5%);
+
 }
 
 .sidebar {
@@ -71,8 +73,9 @@ input#chat-input:focus {
 }
 
 .chat-assist {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bolder;
+  color: #fff;
 }
 
 .logo {
