@@ -110,7 +110,7 @@ input#chat-input:focus {
 .chat_message {
   /* position: relative;
     width: 600px; */
-  /* max-width: 80%; */
+  max-width: 80%;
   border-radius: 10px;
   background-color: var(--chat-bubble-bg);
   color: #fff;
