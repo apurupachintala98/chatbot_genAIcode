@@ -1,75 +1,93 @@
-   .sendBtn {
-    background: #03A9F4;
-    border-radius: 50px;
-    aspect-ratio: 1;
-    height: 56%;
-    position: absolute;
-    top: 22%;
-    right: 14px;
-    border-top-left-radius: none !important; 
-     border-bottom-left-radius: none !important;
-} 
+.sendBtn {
+  background: #03A9F4;
+  border-radius: 50px;
+  aspect-ratio: 1;
+  height: 56%;
+  position: absolute;
+  top: 22%;
+  right: 14px;
+  border-top-left-radius: none !important;
+  border-bottom-left-radius: none !important;
+}
 
 input#chat-input {
-    border: 1px solid #d5d0d0;
-    border-radius: 19px;
-    font-family: 'Open Sans', sans-serif !important;
-    font-size: 10.5px;
-    width: 100%;
-    height: 20px;
-    outline: none;
-    resize: none;
-    padding: 20px;
-    box-shadow: 1.7px 1.4px 5.4px hsl(0deg 0% 0% / 0.2);
+  border: 1px solid #d5d0d0;
+  border-radius: 19px;
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 10.5px;
+  width: 100%;
+  height: 20px;
+  outline: none;
+  resize: none;
+  padding: 20px;
+  box-shadow: 1.7px 1.4px 5.4px hsl(0deg 0% 0% / 0.2);
 
 }
 
 input#chat-input:focus {
 
-    border-color: #0eb9f2;
+  border-color: #0eb9f2;
 }
 
 .input-group-addon {
-    border: 1px solid #d5d0d0;
+  border: 1px solid #d5d0d0;
 }
 
 .blanter-msg {
-    display: inline;
-    position: absolute;
-    left: 13%;
-    width: 74%;
-    bottom: 40px;
-    border-top: solid 1px var(--primary-bg);
+  display: inline;
+  position: absolute;
+  left: 18%;
+  width: 74%;
+  bottom: 80px;
+  border-top: solid 1px var(--primary-bg);
 }
 
+
 .blanter-msg form {
-    padding: 1rem;
+  padding: 1rem;
 }
 
 .navbarfixed {
-    box-shadow: -1px -4px 14px #000;
-    background-image: -webkit-linear-gradient(left, #00bbba, #44b8f3 37.5%);
+  box-shadow: -1px -4px 14px #000;
+  background-image: -webkit-linear-gradient(left, #00bbba, #44b8f3 37.5%);
 
 }
 
 .sidebar {
-    box-shadow: -1px -3px 10px grey;
+  box-shadow: -1px -3px 10px grey;
 }
 
 .main-content {
-    background: #ece9e9;
+  background: #ece9e9;
 }
 
 .start-chatbot-fullscreen {
-    bottom: 40px;
-    display: inline;
-    position: absolute;
-    left: 14.4%;
-    width: 83%;
-    height: 84vh;
-    border-radius: 0.75rem;
-    background: #fff;
-    box-shadow: 1px 2px 10px #bebbbb;
+  bottom: 40px;
+  display: inline;
+  position: absolute;
+  left: 14.4%;
+  top: 90px;
+  width: 80%;
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 1px 2px 10px #bebbbb;
+  overflow-x: hidden;
+  height: 100vh;
+  padding: 1rem;
+  max-height: 85vh;
+  overflow-y: auto;
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  /* Enables vertical scrolling */
+  display: flex;
+  flex-direction: column;
+  /* Stacks messages vertically */
+}
+
+.newChat-btn {
+  position: absolute;
+  bottom: 30px;
 }
 
 .chat-assist {
@@ -86,7 +104,72 @@ input#chat-input:focus {
   flex-basis: 300px;
 }
 
-.newChat-btn {
-  position: absolute;
-  bottom: 30px;
+/* Dashboard.css */
+
+/* Basic styling for the chat log */
+.chat_message {
+  /* position: relative;
+    width: 600px; */
+  /* max-width: 80%; */
+  border-radius: 10px;
+  background-color: var(--chat-bubble-bg);
+  color: #fff;
+  padding: 15px;
+  line-height: 2;
+  font-weight: 600;
+  /* width: 100%; */
+  position: static;
+  margin: 20px auto;
+  clear: both;
+}
+
+/* Styling for assistant messages */
+.chat_message.ai {
+  background-color: #f0f4f8;
+  color: #333;
+  float: left;
+  margin-left: 25px;
+}
+
+/* Styling for user messages */
+.chat_message:not(.ai) {
+  background-color: #e0f7fa;
+  color: #00796b;
+  float: right;
+  margin-right: 25px;
+}
+
+
+
+
+/* Avatar styling */
+.avatar {
+  margin-right: 10px;
+}
+
+/* Message text styling */
+.message {
+  font-size: 16px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* Error message styling */
+.error-message {
+  color: #ff4c4c;
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.center-text {
+  margin-top: 10px;
+  font-size: 16.5px;
+  font-weight: 600;
+  /* Space between image and text */
+}
+
+#root>div.flex.h-screen.main-content>div.start-chatbot-fullscreen>div.center-container>div>div>img {
+  width: 50px !important;
+  height: 50px !important;
 }
