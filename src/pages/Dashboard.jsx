@@ -1,12 +1,80 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import { Sidebar, Navbar, TextInput, Avatar, Dropdown, Button } from 'flowbite-react';
 import {
   HiSearch, HiOutlinePencilAlt
 } from "react-icons/hi";
 import "./Dashboard.css";
 
+//chat message section
+const Message = (props) => {
+  let dataRoll = props.position === "left_buble" ? "ASSISTANT" : "USER";
+  let thisClass = `chat-bubble ${props.position}`;
+  return (
+    <div data-role={dataRoll} className="bubble-container">
+      <div className={thisClass}>
+        <div className="text_message">
+          {props.message.replace(/<\/?[^>]+(>|$)/g, "")}
+        </div>
+      </div>
+      <div className="clear"></div>
+    </div>
+  );
+}
+
 function Dashboard() {
+
+  //messages
+  const [chatMessage, setChatMessage] = useState([
+    // {
+    //     position: "left_buble",
+    //     message: "Hello there, I am your assistant. How can I help you today? ",
+    // },
+  ]);
+  const [inputValue, setInputValue] = useState("");
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    const prompt = inputValue.trim();
+    if (prompt === "") {
+      return;
+    }
+    const newMessages = [
+      ...chatMessage,
+      {
+        position: "right_buble",
+        message: prompt,
+      },
+    ];
+    setChatMessage(newMessages);
+    setInputValue("");
+
+    // const data = {
+    //     input: prompt,
+    // };
+
+    try {
+      // const res = await axios.post('http://localhost:5000/get_response', data);
+      // const updatedMessages = [
+      //     ...newMessages,
+      //     {
+      //         position: "left_buble",
+      //         message: res.data.response,
+      //     },
+      // ];
+      // setChatMessage(updatedMessages);
+    } catch (error) {
+      // console.error("Error fetching response:", error);
+      // const errorMessage = {
+      //     position: "left_buble",
+      //     message: "Error",
+      // };
+      // setChatMessage([...newMessages, errorMessage]);
+    } finally {
+    }
+  }
+
   return (
     <div className="flex h-screen main-content">
       {/* Sidebar */}
@@ -50,13 +118,13 @@ function Dashboard() {
       {/* Content Area */}
       <div className="start-chatbot-fullscreen">
         {/* chat messages section */}
-        {/* {chatMessage.map((chatMessage, key) => (
-//                             <Message
-//                                 key={key}
-//                                 position={chatMessage.position}
-//                                 message={chatMessage.message}
-//                             />
-                         ))} */}
+        {chatMessage.map((chatMessage, key) => (
+          <Message
+            key={key}
+            position={chatMessage.position}
+            message={chatMessage.message}
+          />
+        ))}
         {/* Loader section */}
         {/* {isLoading && <div className="loader">
 //                             <div className="dot"></div>
@@ -66,16 +134,19 @@ function Dashboard() {
                         </div>} */}
         {/* Loader section */}
         <div className="blanter-msg">
-          <input
-            type="text"
-            id="chat-input"
-            class="form-control"
-            placeholder="What can I help you with..."
-            maxLength="400"
-          />
-          <button class="sendBtn"> <svg class="w-8 h-6 ml-2" aria-hidden="true" fill="#ffffff" viewBox="0 0 448 448">
-            <path d="M.213 32L0 181.333 320 224 0 266.667.213 416 448 224z" />
-          </svg></button>
+          <form onSubmit={handleSubmit}>
+
+            <input
+              type="text"
+              id="chat-input"
+              class="form-control"
+              placeholder="What can I help you with..."
+              maxLength="400"
+            />
+            <button class="sendBtn"> <svg class="w-8 h-6 ml-2" aria-hidden="true" fill="#ffffff" viewBox="0 0 448 448">
+              <path d="M.213 32L0 181.333 320 224 0 266.667.213 416 448 224z" />
+            </svg></button>
+          </form>
         </div>
 
       </div>

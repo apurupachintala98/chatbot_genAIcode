@@ -2,10 +2,10 @@
     background: #03A9F4;
     border-radius: 50px;
     aspect-ratio: 1;
-    height: 80%;
+    height: 56%;
     position: absolute;
-    top: 10%;
-    right: 3px;
+    top: 22%;
+    right: 14px;
     border-top-left-radius: none !important; 
      border-bottom-left-radius: none !important;
 } 
