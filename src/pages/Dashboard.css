@@ -38,7 +38,7 @@ input#chat-input:focus {
   position: absolute;
   left: 18%;
   width: 74%;
-  bottom: 80px;
+  bottom: 55px;
   border-top: solid 1px var(--primary-bg);
 }
 
@@ -65,9 +65,9 @@ input#chat-input:focus {
   bottom: 40px;
   display: inline;
   position: absolute;
-  left: 14.4%;
+  left: 12.4%;
   top: 90px;
-  width: 80%;
+  width: 85%;
   border-radius: 0.75rem;
   background: #fff;
   box-shadow: 1px 2px 10px #bebbbb;
@@ -94,6 +94,7 @@ input#chat-input:focus {
   font-size: 20px;
   font-weight: bolder;
   color: #fff;
+  text-shadow: 1px 1px 1px #000;
 }
 
 .logo {
@@ -121,6 +122,7 @@ input#chat-input:focus {
   position: static;
   margin: 20px auto;
   clear: both;
+  box-shadow: 0px 0px 7px #898080;
 }
 
 /* Styling for assistant messages */
@@ -143,7 +145,7 @@ input#chat-input:focus {
 .chat-container {
   width: 100%;
     overflow-x: hidden;
-    height: 68vh;
+    height: 77vh;
     padding: 1rem;
     overflow-y: auto;
 }

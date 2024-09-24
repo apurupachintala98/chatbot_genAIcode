@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useLayoutEffect, useRef } from 'react';
 import { Sidebar, Navbar, TextInput, Avatar, Dropdown, Button } from 'flowbite-react';
 import { HiSearch, HiOutlinePencilAlt } from "react-icons/hi";
 import "./Dashboard.css";
@@ -12,7 +12,7 @@ function Dashboard() {
   const [input, setInput] = useState(''); // User input
   const [chatLog, setChatLog] = useState([
   ]);
-  const chatEndRef = useRef(null);
+  const endOfMessagesRef = useRef(null);
   const [isVisible, setIsVisible] = useState(true); // State to control visibility for default chat image and text
   const [responseReceived, setResponseReceived] = useState(false); // feedback response icons
   const [error, setError] = useState('');
@@ -85,6 +85,7 @@ function Dashboard() {
     setResponseReceived(false); // Hide the helpfulness prompt
     setError(''); // Clear any existing error message
     setRouteCd('None'); // Reset route_cd to None
+    setIsLoading(false);
   };
 
   // Handle key press event for disappearing the default chat bot message on user click
@@ -105,9 +106,12 @@ function Dashboard() {
   };
 
   // chat Scroll to the bottom when a new message is added
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  useLayoutEffect(() => {
+    if (endOfMessagesRef.current) {
+      endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [chatLog]);
+
 
   const getWidth = (length) => {
     const baseWidth = 10; // Minimum width
@@ -135,7 +139,7 @@ function Dashboard() {
         <a href="/" class="p-2 logo">
           <img src={elevance} alt="Elevance Health Logo" width={100} height={60} />
         </a>
-        <p className="d-flex p-2 ml-3 mb-0 flex-fill align-items-center chat-assist">ARB Chat Assistant</p>
+        <p className="d-flex p-2 ml-3 mb-0 flex-fill align-items-center chat-assist">EDA ARB Scheduler</p>
         <div className="p-2 mr-2 header-searchbar">
           <TextInput type="search" placeholder="Search" icon={HiSearch} className="hidden md:block" />
         </div>
@@ -157,19 +161,20 @@ function Dashboard() {
 
       {/* Content Area */}
       <div className="start-chatbot-fullscreen">
-        {isVisible && (
-          <div className="center-container">
-            <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
-            <p className="center-text">Hello there, I am your assistant. How can I help you today? </p>
-          </div>
-        )}
         <div className='chat-container'>
+          {isVisible && (
+            <div className="center-container">
+              <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
+              <p className="center-text">Hello there, I am your assistant. How can I help you today? </p>
+            </div>
+          )}
           {chatLog.map((chat, index) => (
             <div key={index} style={{
               backgroundColor: 'lightblue',
               width: `${getWidth(chat.length)}%`,
               padding: '10px',
               transition: 'width 0.3s ease',
+              overflowY: 'auto'
             }} className={`chat_message ${chat.role === 'assistant' ? 'ai' : ''}`}>
               <div className='chat_message_center'>
                 <div className='avatar'>
@@ -214,10 +219,11 @@ function Dashboard() {
           {responseReceived && (
             <Feedback />
           )}
-          {error && <p className="error-message">{error}</p>}
           {/* This empty div is to ensure scrolling to the last message */}
-          <div ref={chatEndRef} />
+          <div ref={endOfMessagesRef} />
         </div>
+        {/* {error && <p className="error-message">{error}</p>} */}
+
       </div>
 
       {/* Input section */}
@@ -239,10 +245,7 @@ function Dashboard() {
           </svg></button>
         </form>
       </div>
-
     </div>
-
-
   );
 }
 
