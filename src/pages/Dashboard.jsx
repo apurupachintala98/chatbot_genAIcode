@@ -7,8 +7,8 @@ import chatbot from '../assets/images/chatbot.jpg';
 import user from '../assets/images/user.png';
 import Feedback from "../components/Feedback";
 import SuggestedPrompts from '../components/SuggestedPrompts';
-
-
+ 
+ 
 function Dashboard() {
   const [input, setInput] = useState(''); // User input
   const [chatLog, setChatLog] = useState([
@@ -20,18 +20,19 @@ function Dashboard() {
   const [isLoading, setIsLoading] = useState(false); // Loading indicator
   const [routeCd, setRouteCd] = useState('None'); // Route code for API
   const [showPrompts, setShowPrompts] = useState(true);
-
+  const [routeCdUpdated, setRouteCdUpdated] = useState(false);
+ 
   const suggestedPrompts = [
     "I want to schedule a ARB meeting",
     "What is the status of my ARB review?",
     "Guide me on the TGOV process?",
     "Guide me on snowflake Onboarding process"
 ];
-
+ 
   // New states for user-provided app_cd and request_id
   const [appCd, setAppCd] = useState('user'); // User input for app_cd
   const [requestId, setRequestId] = useState('8000'); // User input for request_id
-
+ 
   async function handleSubmit(e) {
     e.preventDefault();
     if (!input.trim()) return; // Prevent empty messages
@@ -50,9 +51,9 @@ function Dashboard() {
     setError(''); // Clear any previous error
     setShowPrompts(false);
     setIsVisible(false); // Hide image and text on Enter
-
-
-
+ 
+ 
+ 
     try {
       // Dynamic API URL based on user inputs
       const response = await fetch(
@@ -65,22 +66,24 @@ function Dashboard() {
           body: JSON.stringify(newChatLog)
         }
       );
-
+ 
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
+ 
       const data = await response.json();
       const botMessage = {
         role: 'assistant',
         content: data.modelreply,
       };
-
+ 
       // Update route_cd if provided in the response
-      if (data.route_cd) {
+      if (data.route_cd && data.route_cd !== routeCd) {
         setRouteCd(data.route_cd);
+        setRouteCdUpdated(true); // Indicate that route_cd has been updated
+        botMessage.content = "Hello! we forwaded your request to ARB scheduler .Type anything to start your schedule ?";
       }
-
+ 
       // Add bot's response to chat log
       setChatLog([...newChatLog, botMessage]);
     } catch (err) {
@@ -91,14 +94,14 @@ function Dashboard() {
       setShowPrompts(false);
     }
   }
-
+ 
 //   const handlePromptClick = (prompt) => {
 //     setInput(prompt);
 //     setChatLog(prompt);
 //     setShowPrompts(false); // Hide prompts when a prompt is clicked
 // };
-
-
+ 
+ 
   const handleNewChat = () => {
     setChatLog([
     ]); // Reset chat log with default message
@@ -108,8 +111,9 @@ function Dashboard() {
     setRouteCd('None'); // Reset route_cd to None
     setIsLoading(false);
     setShowPrompts(true);
+    setRouteCdUpdated(false);
   };
-
+ 
   // Handle key press event for disappearing the default chat bot message on user click
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
@@ -118,7 +122,7 @@ function Dashboard() {
       setShowPrompts(false);
     }
   };
-
+ 
   // Simulate receiving a response from the chatbot
   const simulateChatbotResponse = () => {
     // Simulate a delay for receiving response
@@ -126,15 +130,15 @@ function Dashboard() {
       setResponseReceived(true); // Set the state to indicate response received
     }, 1000); // Simulated delay (1 second)
   };
-
+ 
   // chat Scroll to the bottom when a new message is added
   useLayoutEffect(() => {
     if (endOfMessagesRef.current) {
       endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [chatLog]);
-
-
+ 
+ 
   const getWidth = (length) => {
     const baseWidth = 10; // Minimum width
     const scaleFactor = 5; // Each character adds to the width
@@ -152,7 +156,7 @@ function Dashboard() {
               <HiOutlinePencilAlt className="ml-2 h-5 w-5" />
             </Button>
           </Sidebar.ItemGroup>
-
+ 
         </Sidebar.Items>
       </Sidebar>
       {/* Navbar */}
@@ -180,7 +184,7 @@ function Dashboard() {
           <Dropdown.Item>Sign out</Dropdown.Item>
         </Dropdown>
       </Navbar>
-
+ 
       {/* Content Area */}
       <div className="start-chatbot-fullscreen">
         <div className='chat-container'>
@@ -245,15 +249,15 @@ function Dashboard() {
           <div ref={endOfMessagesRef} />
         </div>
         {/* {error && <p className="error-message">{error}</p>} */}
-
+  {/* <SuggestedPrompts prompts={suggestedPrompts} onPromptClick={handlePromptClick} /> */}
+  {showPrompts && (
+                <SuggestedPrompts prompts={suggestedPrompts} />
+            )}
+ 
       </div>
       {/* Input section */}
       <div className="blanter-msg">
-      {/* <SuggestedPrompts prompts={suggestedPrompts} onPromptClick={handlePromptClick} /> */}
-      {showPrompts && (
-                <SuggestedPrompts prompts={suggestedPrompts} />
-            )}
-
+     
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -265,7 +269,7 @@ function Dashboard() {
             onKeyPress={handleKeyPress} // Listen for Enter key press
             maxLength="400"
           />
-
+ 
           <button class="sendBtn" > <svg class="w-8 h-6 ml-2" aria-hidden="true" fill="#ffffff" viewBox="0 0 448 448">
             <path d="M.213 32L0 181.333 320 224 0 266.667.213 416 448 224z" onClick={handleSubmit} />
           </svg></button>
@@ -274,5 +278,7 @@ function Dashboard() {
     </div>
   );
 }
-
+ 
 export default Dashboard;
+ 
+ 

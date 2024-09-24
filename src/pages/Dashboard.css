@@ -4,15 +4,18 @@
   aspect-ratio: 1;
   /*height: 56%; */
   position: absolute;
-  height: 12.2%;
+  /* height: 12.2%;
   top: 82.8%;
-  right: 15px;
+  right: 15px; */
+  height: 58.2%;
+    top: 20.8%;
+    right: 15px;
   /* top: 22%;
   right: 14px; */
   border-top-left-radius: none !important;
   border-bottom-left-radius: none !important;
 }
-
+ 
 input#chat-input {
   border: 1px solid #d5d0d0;
   border-radius: 19px;
@@ -24,18 +27,18 @@ input#chat-input {
   resize: none;
   padding: 20px;
   box-shadow: 1.7px 1.4px 5.4px hsl(0deg 0% 0% / 0.2);
-
+ 
 }
-
+ 
 input#chat-input:focus {
-
+ 
   border-color: #0eb9f2;
 }
-
+ 
 .input-group-addon {
   border: 1px solid #d5d0d0;
 }
-
+ 
 .blanter-msg {
   display: inline;
   position: absolute;
@@ -44,27 +47,27 @@ input#chat-input:focus {
   bottom: 55px;
   border-top: solid 1px var(--primary-bg);
 }
-
-
+ 
+ 
 .blanter-msg form {
   padding: 1rem;
 }
-
+ 
 .navbarfixed {
   box-shadow: -1px -4px 14px #000;
   background-color: #1a3673 !important;
   /* background-image: -webkit-linear-gradient(left, #00bbba, #44b8f3 37.5%); */
-
+ 
 }
-
+ 
 .sidebar {
   box-shadow: -1px -3px 10px grey;
 }
-
+ 
 .main-content {
   background: #ece9e9;
 }
-
+ 
 .start-chatbot-fullscreen {
   bottom: 40px;
   display: inline;
@@ -90,30 +93,30 @@ input#chat-input:focus {
   flex-direction: column;
   /* Stacks messages vertically */
 }
-
+ 
 .newChat-btn {
   position: absolute;
   bottom: 30px;
   background-color: #1a3673;
 }
-
+ 
 .chat-assist {
   font-size: 20px;
   font-weight: bolder;
   color: #fff;
   text-shadow: 1px 1px 1px #000;
 }
-
+ 
 /* .logo {
   flex-basis: 200px;
 } */
-
+ 
 .header-searchbar {
   flex-basis: 300px;
 }
-
+ 
 /* Dashboard.css */
-
+ 
 /* Basic styling for the chat log */
 .chat_message {
   /* position: relative;
@@ -131,24 +134,24 @@ input#chat-input:focus {
   clear: both;
   box-shadow: 0px 0px 7px #898080;
 }
-
+ 
 /* Styling for assistant messages */
 .chat_message.ai {
-   background-color: #fff; 
+   background-color: #fff !important;
   color: #1a3673;
   float: left;
   margin-left: 25px;
 }
-
+ 
 /* Styling for user messages */
 .chat_message:not(.ai) {
-  background-color: #e0f7fa;
+  background-color: #e0f7fa !important;
   color: #1a3673;
   float: right;
   margin-right: 25px;
 }
-
-
+ 
+ 
 .chat-container {
   width: 100%;
     overflow-x: hidden;
@@ -156,19 +159,19 @@ input#chat-input:focus {
     padding: 1rem;
     overflow-y: auto;
 }
-
+ 
 /* Avatar styling */
 .avatar {
   margin-right: 10px;
 }
-
+ 
 /* Message text styling */
 .message {
   font-size: 16px;
   line-height: 1.5;
   word-break: break-word;
 }
-
+ 
 /* Error message styling */
 .error-message {
   color: #ff4c4c;
@@ -176,7 +179,7 @@ input#chat-input:focus {
   font-size: 14px;
   text-align: center;
 }
-
+ 
 .center-text {
   margin-top: 10px;
   font-size: 16.5px;
@@ -184,16 +187,16 @@ input#chat-input:focus {
   color: #1a3673;
   /* Space between image and text */
 }
-
+ 
 #root>div.flex.h-screen.main-content>div.start-chatbot-fullscreen>div.center-container>div>div>img {
   width: 50px !important;
   height: 50px !important;
 }
-
+ 
 .container {
   display: flex;
-} 
-
+}
+ 
 .container img {
   width: 100%;
 }
@@ -201,27 +204,31 @@ input#chat-input:focus {
 .container .image {
     flex-shrink: 0;
 }
-
+ 
 .chat_message:not(.ai) .container .info {
   margin-right: 20px;
 }
-
+ 
 .chat_message.ai .container .info {
   margin-left: 20px;
 }
-
+ 
 .feedback-container {
   width: 100%;
   margin-left: 25px;
 }
-
+ 
 .loader {
   width: 100%;
   margin-left: 25px;
 }
-
+ 
 .suggested-prompts-container {
   margin-top: 20px;
+    width: 75%;
+    position: absolute;
+    left: 12%;
+    bottom: 81px;
 }
 
 .suggested-prompts {
@@ -231,7 +238,7 @@ input#chat-input:focus {
     width: 97%;
     margin-left: 13px;
 }
-
+ 
 .prompt {
   padding: 10px;
     background-color: #f8f9fa;
@@ -243,20 +250,22 @@ input#chat-input:focus {
     resize: none;
     color: #1a3673;
     box-shadow: 1.7px 1.4px 5.4px hsl(0deg 0% 0% / 0.2);
-
+ 
 }
-
+ 
 .prompt-header {
   font-size: 14.5px;
     font-weight: bold;
     color: #1a3673;
     margin-left: 20px;
 }
-
+ 
 .prompt:hover {
   background-color: #e2e6ea;
 }
-
+ 
 .prompt:active {
   background-color: #dae0e5;
 }
+ 
+ 
