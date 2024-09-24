@@ -48,6 +48,8 @@ function Dashboard() {
     setInput(''); // Clear the input field
     setIsLoading(true); // Set loading state to true
     setError(''); // Clear any previous error
+    setShowPrompts(false);
+
 
     try {
       // Dynamic API URL based on user inputs
@@ -84,6 +86,7 @@ function Dashboard() {
       console.error(err);
     } finally {
       setIsLoading(false); // Set loading state to false
+      setShowPrompts(false);
     }
   }
 
