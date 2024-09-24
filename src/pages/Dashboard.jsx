@@ -6,6 +6,7 @@ import elevance from '../assets/images/logo.png';
 import chatbot from '../assets/images/chatbot.jpg';
 import user from '../assets/images/user.png';
 import Feedback from "../components/Feedback";
+import SuggestedPrompts from '../components/SuggestedPrompts';
 
 
 function Dashboard() {
@@ -18,6 +19,13 @@ function Dashboard() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false); // Loading indicator
   const [routeCd, setRouteCd] = useState('None'); // Route code for API
+
+  const suggestedPrompts = [
+    "I want to schedule a ARB meeting",
+    "What is the status of my ARB review?",
+    "Guide me on the TGOV process?",
+    "Guide me on snowflake Onboarding process"
+];
 
   // New states for user-provided app_cd and request_id
   const [appCd, setAppCd] = useState('user'); // User input for app_cd
@@ -78,6 +86,12 @@ function Dashboard() {
     }
   }
 
+  const handlePromptClick = (prompt) => {
+    setInput(prompt);
+    setChatLog(prompt);
+  };
+  
+
   const handleNewChat = () => {
     setChatLog([
     ]); // Reset chat log with default message
@@ -125,7 +139,7 @@ function Dashboard() {
       <Sidebar className="fixed min-w-fit top-0 left-0 z-20 flex flex-col flex-shrink-0 w-64 h-full pt-4 font-normal sidebar">
         <Sidebar.Items>
           <Sidebar.ItemGroup>
-            <Button gradientDuoTone="greenToBlue" size="xl" onClick={handleNewChat} className="newChat-btn fw-bold">
+            <Button size="xl" onClick={handleNewChat} className="newChat-btn fw-bold">
               New Chat
               <HiOutlinePencilAlt className="ml-2 h-5 w-5" />
             </Button>
@@ -139,10 +153,10 @@ function Dashboard() {
         <a href="/" class="p-2 logo">
           <img src={elevance} alt="Elevance Health Logo" width={100} height={60} />
         </a>
-        <p className="d-flex p-2 ml-3 mb-0 flex-fill align-items-center chat-assist">EDA ARB Scheduler</p>
-        <div className="p-2 mr-2 header-searchbar">
+        <p className="d-flex p-2 ml-3 mb-0 align-items-center justify-content-center chat-assist">EDA ARB Scheduler Assistant</p>
+        {/* <div className="p-2 mr-2 header-searchbar">
           <TextInput type="search" placeholder="Search" icon={HiSearch} className="hidden md:block" />
-        </div>
+        </div> */}
         <Dropdown
           label={<Avatar placeholderInitials="AC" rounded />}
           arrowIcon={false}
@@ -165,7 +179,7 @@ function Dashboard() {
           {isVisible && (
             <div className="center-container">
               <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
-              <p className="center-text">Hello there, I am your assistant. How can I help you today? </p>
+              <p className="center-text">Hello there, I am your ARB Scheduler Assistant. How can I help you today? </p>
             </div>
           )}
           {chatLog.map((chat, index) => (
@@ -225,9 +239,12 @@ function Dashboard() {
         {/* {error && <p className="error-message">{error}</p>} */}
 
       </div>
-
       {/* Input section */}
       <div className="blanter-msg">
+      {/* <SuggestedPrompts prompts={suggestedPrompts} onPromptClick={handlePromptClick} /> */}
+      <SuggestedPrompts prompts={suggestedPrompts} />
+
+
         <form onSubmit={handleSubmit}>
           <input
             type="text"
