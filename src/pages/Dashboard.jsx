@@ -5,7 +5,6 @@ import "./Dashboard.css";
 import elevance from '../assets/images/logo.png';
 import chatbot from '../assets/images/chatbot.jpg';
 import user from '../assets/images/user.png';
-import ChatAvatar from "../components/ChatAvatar";
 import Feedback from "../components/Feedback";
 
 
@@ -31,9 +30,9 @@ function Dashboard() {
       setError('Please provide valid app_cd and request_id.');
       return;
     }
-    const newMessage = { 
-      role: 'user', 
-      content: input ,
+    const newMessage = {
+      role: 'user',
+      content: input,
     };
     const newChatLog = [...chatLog, newMessage]; // Add user's message to chat log
     setChatLog(newChatLog);
@@ -59,8 +58,8 @@ function Dashboard() {
       }
 
       const data = await response.json();
-      const botMessage = { 
-        role: 'assistant', 
+      const botMessage = {
+        role: 'assistant',
         content: data.modelreply,
       };
 
@@ -93,7 +92,7 @@ function Dashboard() {
     if (event.key === 'Enter') {
       setIsVisible(false); // Hide image and text on Enter
       simulateChatbotResponse(); // Simulate receiving a response from the chatbot
-      
+
     }
   };
 
@@ -160,63 +159,65 @@ function Dashboard() {
       <div className="start-chatbot-fullscreen">
         {isVisible && (
           <div className="center-container">
-            <ChatAvatar
-              imgSrc={chatbot} // Replace with the chatbot's avatar
-              altText="Chatbot" />
+            <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
             <p className="center-text">Hello there, I am your assistant. How can I help you today? </p>
           </div>
         )}
-        {chatLog.map((chat, index) => (
-          <div key={index}  style={{
-            backgroundColor: 'lightblue',
-            width: `${getWidth(chat.length)}%`,
-            padding: '10px',
-            borderRadius: '4px',
-            transition: 'width 0.3s ease',
-          }} className={`chat_message ${chat.role === 'assistant' ? 'ai' : ''}`}>
-            <div className='chat_message_center'>
-              <div className='avatar'>
-                <div className={`flex ${chat.role === 'assistant' ? 'justify-start' : 'justify-end'} mb-4`}>
-                  {chat.role !== 'assistant' && (
-                    <><div className="space-y-1 font-medium dark:text-white mr-3">
-                      <div className='message'>
-                        {chat.content}
-                      </div>
-                    </div><ChatAvatar
-                        imgSrc={user} // Replace with the user's avatar
-                        altText="User" /></>
-                  )}
-                  {chat.role === 'assistant' && (
-                    <>
-                      <ChatAvatar
-                        imgSrc={chatbot} // Replace with the chatbot's avatar
-                        altText="Chatbot" /><div className="space-y-1 font-medium dark:text-white ml-3">
-                        <div className='message'>
-                          {chat.content}
+        <div className='chat-container'>
+          {chatLog.map((chat, index) => (
+            <div key={index} style={{
+              backgroundColor: 'lightblue',
+              width: `${getWidth(chat.length)}%`,
+              padding: '10px',
+              transition: 'width 0.3s ease',
+            }} className={`chat_message ${chat.role === 'assistant' ? 'ai' : ''}`}>
+              <div className='chat_message_center'>
+                <div className='avatar'>
+                  <div className={`flex ${chat.role === 'assistant' ? 'justify-start' : 'justify-end'} mb-4`}>
+                    {chat.role !== 'assistant' && (
+                      <div class="container">
+                        <div class="info">
+                          <div className='message'>
+                            {chat.content}
+                          </div>
                         </div>
-                      </div></>
-                  )}
+                        <div class="image">
+                          <Avatar img={user} altText="User" className='mb-0' rounded></Avatar>
+                        </div>
+                      </div>
+                    )}
+                    {chat.role === 'assistant' && (
+                      <div class="container">
+                        <div class="image">
+                          <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
+                        </div>
+                        <div class="info">
+                          <div className='message'>
+                            {chat.content}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+          {/* Loader section */}
+          {isLoading && <div className="loader">
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+            <div className="dot"></div>
+          </div>}
           {/* Feedback icons */}
           {responseReceived && (
-                   <Feedback />       
-                        )}
-        {/* Loader section */}
-        {isLoading && <div className="loader">
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-        </div>}
-       
-        {error && <p className="error-message">{error}</p>}
-        {/* This empty div is to ensure scrolling to the last message */}
-        <div ref={chatEndRef} />
-
+            <Feedback />
+          )}
+          {error && <p className="error-message">{error}</p>}
+          {/* This empty div is to ensure scrolling to the last message */}
+          <div ref={chatEndRef} />
+        </div>
       </div>
 
       {/* Input section */}
@@ -231,8 +232,8 @@ function Dashboard() {
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress} // Listen for Enter key press
             maxLength="400"
-        />
-        
+          />
+
           <button class="sendBtn" > <svg class="w-8 h-6 ml-2" aria-hidden="true" fill="#ffffff" viewBox="0 0 448 448">
             <path d="M.213 32L0 181.333 320 224 0 266.667.213 416 448 224z" onClick={handleSubmit} />
           </svg></button>
