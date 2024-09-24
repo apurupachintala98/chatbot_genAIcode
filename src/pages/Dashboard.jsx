@@ -49,6 +49,8 @@ function Dashboard() {
     setIsLoading(true); // Set loading state to true
     setError(''); // Clear any previous error
     setShowPrompts(false);
+    setIsVisible(false); // Hide image and text on Enter
+
 
 
     try {
