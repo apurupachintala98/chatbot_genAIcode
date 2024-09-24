@@ -19,6 +19,7 @@ function Dashboard() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false); // Loading indicator
   const [routeCd, setRouteCd] = useState('None'); // Route code for API
+  const [showPrompts, setShowPrompts] = useState(true);
 
   const suggestedPrompts = [
     "I want to schedule a ARB meeting",
@@ -86,11 +87,12 @@ function Dashboard() {
     }
   }
 
-  const handlePromptClick = (prompt) => {
-    setInput(prompt);
-    setChatLog(prompt);
-  };
-  
+//   const handlePromptClick = (prompt) => {
+//     setInput(prompt);
+//     setChatLog(prompt);
+//     setShowPrompts(false); // Hide prompts when a prompt is clicked
+// };
+
 
   const handleNewChat = () => {
     setChatLog([
@@ -100,6 +102,7 @@ function Dashboard() {
     setError(''); // Clear any existing error message
     setRouteCd('None'); // Reset route_cd to None
     setIsLoading(false);
+    setShowPrompts(true);
   };
 
   // Handle key press event for disappearing the default chat bot message on user click
@@ -107,7 +110,7 @@ function Dashboard() {
     if (event.key === 'Enter') {
       setIsVisible(false); // Hide image and text on Enter
       simulateChatbotResponse(); // Simulate receiving a response from the chatbot
-
+      setShowPrompts(false);
     }
   };
 
@@ -242,8 +245,9 @@ function Dashboard() {
       {/* Input section */}
       <div className="blanter-msg">
       {/* <SuggestedPrompts prompts={suggestedPrompts} onPromptClick={handlePromptClick} /> */}
-      <SuggestedPrompts prompts={suggestedPrompts} />
-
+      {showPrompts && (
+                <SuggestedPrompts prompts={suggestedPrompts} />
+            )}
 
         <form onSubmit={handleSubmit}>
           <input
