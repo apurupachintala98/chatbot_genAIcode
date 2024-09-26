@@ -1,5 +1,5 @@
 .sendBtn {
-  background: #1a3673;
+  /* background: #1a3673; */
    border-radius: 50px;
   aspect-ratio: 1;
   /*height: 56%; */
@@ -18,7 +18,7 @@
  
 input#chat-input {
   border: 1px solid #d5d0d0;
-  border-radius: 19px;
+  border-radius: 7px;
   font-family: 'Open Sans', sans-serif !important;
   font-size: 10.5px;
   width: 100%;
@@ -42,8 +42,8 @@ input#chat-input:focus {
 .blanter-msg {
   display: inline;
   position: absolute;
-  left: 26%;
-  width: 60%;
+  left: 32%;
+  width: 45%;
   bottom: 55px;
   border-top: solid 1px var(--primary-bg);
 }
@@ -225,9 +225,9 @@ input#chat-input:focus {
  
 .suggested-prompts-container {
   margin-top: 20px;
-    width: 75%;
+    width: 56%;
     position: absolute;
-    left: 12%;
+    left: 19.2%;
     bottom: 81px;
 }
 
@@ -243,7 +243,7 @@ input#chat-input:focus {
   padding: 10px;
     background-color: #f8f9fa;
     border: 1px solid #ddd;
-    border-radius: 50px;
+    border-radius: 7px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     outline: none;

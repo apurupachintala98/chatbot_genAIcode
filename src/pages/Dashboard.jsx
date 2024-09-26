@@ -270,7 +270,7 @@ function Dashboard() {
             maxLength="400"
           />
  
-          <button class="sendBtn" > <svg class="w-8 h-6 ml-2" aria-hidden="true" fill="#ffffff" viewBox="0 0 448 448">
+          <button class="sendBtn" > <svg class="w-8 h-6 ml-2" aria-hidden="true" fill="#1a3673" viewBox="0 0 448 448">
             <path d="M.213 32L0 181.333 320 224 0 266.667.213 416 448 224z" onClick={handleSubmit} />
           </svg></button>
         </form>
