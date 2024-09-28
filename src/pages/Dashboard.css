@@ -70,28 +70,15 @@ input#chat-input:focus {
  
 .start-chatbot-fullscreen {
   bottom: 40px;
-  display: inline;
-  position: absolute;
-  /* left: 12.4%; */
-  left: 16.4%;
-  top: 90px;
-  /* width: 85%; */
-  width: 80%;
-  border-radius: 0.75rem;
-  background: #fff;
-  box-shadow: 1px 2px 10px #bebbbb;
-  overflow-x: hidden;
-  /* height: 100vh; */
-  padding: 1rem;
-  /* max-height: 85vh; */
-  overflow-y: auto;
-  flex: 1;
-  padding: 10px;
-  /* overflow-y: auto; */
-  /* Enables vertical scrolling */
-  display: flex;
-  flex-direction: column;
-  /* Stacks messages vertically */
+    position: absolute;
+    top: 106px;
+    width: 100%;
+    border-radius: 0.75rem;
+    background: #fff;
+    box-shadow: 1px 2px 10px #bebbbb;
+    overflow-x: hidden;
+    overflow-y: auto;
+    flex: 1 1;
 }
  
 .newChat-btn {
@@ -267,5 +254,55 @@ input#chat-input:focus {
 .prompt:active {
   background-color: #dae0e5;
 }
- 
- 
+
+.center-container {
+  margin: 10px 0 30px;
+  display: flex;
+  flex-direction: column; /* Align items vertically */
+  align-items: center; /* Center items horizontally */
+  text-align: center; /* Center text */
+}
+
+.choose-option {
+  width: 287px;
+  height: 290px;
+  position: relative;
+  box-shadow: 2px 18px 70px 0px #9D9D9D;
+  overflow: hidden;
+  border-radius: inherit;
+  padding: 0 !important;
+}
+
+.card-heading {
+  top: 239px !important;
+  left: 10% !important;
+  position: absolute !important;
+  color: #fff;
+}
+/* 
+
+.category-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #696a86;
+  border: 2px solid #fff;
+  position: absolute;
+  bottom: -30px;
+  left: 268px;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+  z-index: 11;
+} */
+
+.lg-text {
+  width: 800px;
+    height: 290px;
+    background: #1a3673;
+    position: absolute;
+    left: -3%;
+    top: -202px;
+    box-sizing: border-box;
+    transition: all 0.5s ease-in-out;
+}
