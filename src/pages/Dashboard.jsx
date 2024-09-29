@@ -15,12 +15,6 @@ function Dashboard() {
     setIsNewUser(false); // Reset new user flag
   };
 
-  const getWidth = (length) => {
-    const baseWidth = 10; // Minimum width
-    const scaleFactor = 5; // Each character adds to the width
-    const calculatedWidth = baseWidth + length * scaleFactor;
-    return calculatedWidth > 100 ? 100 : calculatedWidth;
-  };
   return (
     <div className="flex flex-col md:flex-row h-screen main-content">
       {/* Sidebar */}
@@ -63,9 +57,6 @@ function Dashboard() {
 
       {/* Content Area */}
       <div className="flex-grow start-chatbot-fullscreen p-4 md:p-6 d-flex justify-content-between">
-      {isNewUser ? (
-          <UserChat />
-        ) : (
         <div className='chat-container'>
           {/* {isVisible && ( */}
             <div className="center-container">
@@ -73,6 +64,10 @@ function Dashboard() {
               <p className="center-text">Hello there, I am your ARB Scheduler Assistant. How can I help you today? </p>
             </div>
           {/* )} */}
+
+          {isNewUser ? (
+          <UserChat />
+        ) : (
           <Card className="max-w-sm mx-auto md:max-w-md choose-option" >
             <div className='lg-text p-0'>
               <h5 className="text-2xl text-center font-bold tracking-tight text-gray-900 dark:text-white card-heading">
@@ -104,7 +99,7 @@ function Dashboard() {
               </button>
             </div>
           </Card>
-        
+        )}
           <Modal show={openModal} size="2xl" onClose={() => setOpenModal(false)} popup>
             <Modal.Header />
             <Modal.Body>
@@ -128,7 +123,7 @@ function Dashboard() {
           {/* //userchat */}
        
         </div>
-        )}
+        
       </div>
     </div>
   );

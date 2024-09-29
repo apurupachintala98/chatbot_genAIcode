@@ -40,13 +40,6 @@ function UserChat() {
       setError('Please provide valid app_cd and request_id.');
       return;
     }
-
-     // Ensure chat starts only if "ARB New User" is clicked
-  if (!isNewUser) {
-    setError('Please click the ARB New User button to start the chat.');
-    return;
-  }
-
     const newMessage = {
       role: 'user',
       content: input,
@@ -56,9 +49,7 @@ function UserChat() {
     setInput(''); // Clear the input field
     setIsLoading(true); // Set loading state to true
     setError(''); // Clear any previous error
-    setShowPrompts(false);
-    setIsVisible(false); // Hide image and text on Enter
-
+ 
     try {
       // Dynamic API URL based on user inputs
       const response = await fetch(
@@ -71,65 +62,33 @@ function UserChat() {
           body: JSON.stringify(newChatLog)
         }
       );
-
+ 
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
+ 
       const data = await response.json();
-
-      // If route_cd is updated, send a "hey" message to the API but don't display it
+      const botMessage = {
+        role: 'assistant',
+        content: data.modelreply,
+      };
+ 
+      // Check if the route_cd has been updated
       if (data.route_cd && data.route_cd !== routeCd) {
         setRouteCd(data.route_cd);
-        setRouteCdUpdated(true);
-
-        // Send "Hey" message to the API but don't display it
-        const silentMessage = {
-          role: 'user',
-          content: 'Hey',
-        };
-
-        const silentResponse = await fetch(
-          `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify([...newChatLog, silentMessage])
-          }
-        );
-
-        if (!silentResponse.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        const silentData = await silentResponse.json();
-        const finalBotMessage = {
-          role: 'assistant',
-          content: silentData.modelreply,
-        };
-
-        // Only add the final response to the chat log
-        setChatLog([...newChatLog, finalBotMessage]);
-      } else {
-        // Normal flow: Add bot's response to chat log
-        const botMessage = {
-          role: 'assistant',
-          content: data.modelreply,
-        };
-        setChatLog([...newChatLog, botMessage]);
+        setRouteCdUpdated(true); // Indicate that route_cd has been updated
+        botMessage.content = "You are now ready. Say hi to start.";
       }
-   
+ 
+      // Add bot's response to chat log
+      setChatLog([...newChatLog, botMessage]);
     } catch (err) {
       setError('Error communicating with backend');
       console.error(err);
     } finally {
       setIsLoading(false); // Set loading state to false
-      setShowPrompts(false);
     }
   }
-
 
   // Handle key press event for disappearing the default chat bot message on user click
   const handleKeyPress = (event) => {
@@ -155,94 +114,70 @@ function UserChat() {
     }
   }, [chatLog]);
 
-  const getWidth = (length) => {
-    const baseWidth = 10; // Minimum width
-    const scaleFactor = 5; // Each character adds to the width
-    const calculatedWidth = baseWidth + length * scaleFactor;
-    return calculatedWidth > 100 ? 100 : calculatedWidth;
-  };
-
   //   const handlePromptClick = (prompt) => {
   //     setInput(prompt);
   //     setChatLog(prompt);
   //     setShowPrompts(false); // Hide prompts when a prompt is clicked
   // };
 
-
-
   return (
-    <div className="flex flex-col md:flex-row h-screen main-content">
-      {/* Content Area */}
-      <div className="flex-grow start-chatbot-fullscreen p-4 md:p-6 d-flex justify-content-between">
-        <div className='chat-container'>
-          {isVisible && (
-            <div className="center-container">
-              <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
-              <p className="center-text">Hello there, I am your ARB Scheduler Assistant. How can I help you today? </p>
-            </div>
-          )}
-          
-          {chatLog.map((chat, index) => (
-            <div key={index} style={{
-              backgroundColor: 'lightblue',
-              width: `${getWidth(chat.length)}%`,
-              padding: '10px',
-              transition: 'width 0.3s ease',
-              overflowY: 'auto'
-            }} className={`chat_message ${chat.role === 'assistant' ? 'ai' : ''}`}>
-              <div className='chat_message_center'>
-                <div className='avatar'>
-                  <div className={`flex ${chat.role === 'assistant' ? 'justify-start' : 'justify-end'} mb-4`}>
-                    {chat.role !== 'assistant' && (
-                      <div class="container">
-                        <div class="info">
-                          <div className='message'>
-                            {chat.content}
-                          </div>
-                        </div>
-                        <div class="image">
-                          <Avatar img={user} altText="User" className='mb-0' rounded></Avatar>
-                        </div>
+    <div>
+      {chatLog.map((chat, index) => (
+        <div key={index} style={{
+          backgroundColor: 'lightblue',
+          padding: '10px',
+          transition: 'width 0.3s ease',
+          overflowY: 'auto'
+        }} className={`chat_message ${chat.role === 'assistant' ? 'ai' : ''}`}>
+          <div className='chat_message_center'>
+            <div className='avatar'>
+              <div className={`flex ${chat.role === 'assistant' ? 'justify-start' : 'justify-end'} mb-4`}>
+                {chat.role !== 'assistant' && (
+                  <div class="container">
+                    <div class="info">
+                      <div className='message'>
+                        {chat.content}
                       </div>
-                    )}
-                    {chat.role === 'assistant' && (
-                      <div class="container">
-                        <div class="image">
-                          <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
-                        </div>
-                        <div class="info">
-                          <div className='message'>
-                            {chat.content}
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                    </div>
+                    <div class="image">
+                      <Avatar img={user} altText="User" className='mb-0' rounded></Avatar>
+                    </div>
                   </div>
-                </div>
+                )}
+                {chat.role === 'assistant' && (
+                  <div class="container">
+                    <div class="image">
+                      <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
+                    </div>
+                    <div class="info">
+                      <div className='message'>
+                        {chat.content}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-          ))}
-          {/* Loader section */}
-          {isLoading && <div className="loader">
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
-          </div>}
-          {/* Feedback icons */}
-          {responseReceived && (
-            <Feedback />
-          )}
-          {/* This empty div is to ensure scrolling to the last message */}
-          <div ref={endOfMessagesRef} />
+          </div>
         </div>
-        {/* {error && <p className="error-message">{error}</p>} */}
-        {/* <SuggestedPrompts prompts={suggestedPrompts} onPromptClick={handlePromptClick} /> */}
-        {showPrompts && (
-          <SuggestedPrompts prompts={suggestedPrompts} />
-        )}
+      ))}
+      {/* Loader section */}
+      {isLoading && <div className="loader">
+        <div className="dot"></div>
+        <div className="dot"></div>
+        <div className="dot"></div>
+        <div className="dot"></div>
+      </div>}
+      {/* Feedback icons */}
+      {responseReceived && (
+        <Feedback />
+      )}
+      {/* This empty div is to ensure scrolling to the last message */}
+      <div ref={endOfMessagesRef} />
+      {showPrompts && (
+        <SuggestedPrompts prompts={suggestedPrompts} />
+      )}
 
-      </div>
       {/* Input section */}
       <div className="blanter-msg p-4 md:p-6">
 
@@ -254,7 +189,7 @@ function UserChat() {
             placeholder="What can I help you with..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={handleKeyPress} 
+            onKeyPress={handleKeyPress}
             maxLength="400"
           />
 
