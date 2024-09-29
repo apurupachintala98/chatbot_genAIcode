@@ -20,6 +20,8 @@ function Dashboard() {
   const [showPrompts, setShowPrompts] = useState(true);
   const [routeCdUpdated, setRouteCdUpdated] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(false); // Track if ARB New User button is clicked
+
 
   const suggestedPrompts = [
     "I want to schedule a ARB meeting",
@@ -39,6 +41,13 @@ function Dashboard() {
       setError('Please provide valid app_cd and request_id.');
       return;
     }
+
+     // Ensure chat starts only if "ARB New User" is clicked
+  if (!isNewUser) {
+    setError('Please click the ARB New User button to start the chat.');
+    return;
+  }
+
     const newMessage = {
       role: 'user',
       content: input,
@@ -112,6 +121,17 @@ function Dashboard() {
         };
         setChatLog([...newChatLog, botMessage]);
       }
+    //    if (isNewUser) {
+    //     setChatLog([...chatLog, finalBotMessage]);
+    //   }
+    // } else {
+    //   const botMessage = { role: 'assistant', content: data.modelreply };
+
+    //   // Update chat log only if isNewUser is true
+    //   if (isNewUser) {
+    //     setChatLog([...chatLog, botMessage]);
+    //   }
+    // }
     } catch (err) {
       setError('Error communicating with backend');
       console.error(err);
@@ -130,6 +150,7 @@ function Dashboard() {
     setIsLoading(false);
     setShowPrompts(true);
     setRouteCdUpdated(false);
+    setIsNewUser(false); // Reset new user flag
   };
 
   // Handle key press event for disappearing the default chat bot message on user click
@@ -243,7 +264,10 @@ function Dashboard() {
               <button
                 type="button"
                 className="inline-flex w-full justify-center rounded-lg bg-cyan-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-200 dark:focus:ring-cyan-900"
-              >
+                onClick={() => {
+                  setIsNewUser(true);  // Set to true when clicked
+                  setShowPrompts(false); // Optionally hide prompts
+                }}>
                 ARB New User
               </button>
             </div>
@@ -258,9 +282,7 @@ function Dashboard() {
                 <div className="flex justify-center gap-4">
                   <div className="flex flex-col gap-3">
                     <div className="flex flex-wrap gap-6">
-                      <Avatar img="/images/people/profile-picture-5.jpg" rounded bordered color="gray" size="lg">
-                      ARB Scheduler
-                      </Avatar>
+                      <Avatar img="/images/people/profile-picture-5.jpg" rounded bordered color="gray" size="lg" />
                       <Avatar img="/images/people/profile-picture-5.jpg" rounded bordered color="light" size="lg" />
                       <Avatar img="/images/people/profile-picture-5.jpg" rounded bordered color="purple" size="lg" />
                     </div>
@@ -270,7 +292,8 @@ function Dashboard() {
             </Modal.Body>
           </Modal>
           
-          {/* {chatLog.map((chat, index) => (
+          
+          {chatLog.map((chat, index) => (
             <div key={index} style={{
               backgroundColor: 'lightblue',
               width: `${getWidth(chat.length)}%`,
@@ -309,18 +332,18 @@ function Dashboard() {
                 </div>
               </div>
             </div>
-          ))} */}
+          ))}
           {/* Loader section */}
-          {/* {isLoading && <div className="loader">
+          {isLoading && <div className="loader">
             <div className="dot"></div>
             <div className="dot"></div>
             <div className="dot"></div>
             <div className="dot"></div>
-          </div>} */}
+          </div>}
           {/* Feedback icons */}
-          {/* {responseReceived && (
+          {responseReceived && (
             <Feedback />
-          )} */}
+          )}
           {/* This empty div is to ensure scrolling to the last message */}
           <div ref={endOfMessagesRef} />
         </div>
