@@ -49,6 +49,8 @@ function UserChat() {
     setInput(''); // Clear the input field
     setIsLoading(true); // Set loading state to true
     setError(''); // Clear any previous error
+    setShowPrompts(false);
+    setIsVisible(false); // Hide image and text on Enter
  
     try {
       // Dynamic API URL based on user inputs
@@ -68,27 +70,58 @@ function UserChat() {
       }
  
       const data = await response.json();
-      const botMessage = {
-        role: 'assistant',
-        content: data.modelreply,
-      };
  
-      // Check if the route_cd has been updated
+      // If route_cd is updated, send a "hey" message to the API but don't display it
       if (data.route_cd && data.route_cd !== routeCd) {
         setRouteCd(data.route_cd);
-        setRouteCdUpdated(true); // Indicate that route_cd has been updated
-        botMessage.content = "You are now ready. Say hi to start.";
-      }
+        setRouteCdUpdated(true);
  
-      // Add bot's response to chat log
-      setChatLog([...newChatLog, botMessage]);
+        // Send "Hey" message to the API but don't display it
+        const silentMessage = {
+          role: 'user',
+          content: 'Hey',
+        };
+ 
+        const silentResponse = await fetch(
+          `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify([...newChatLog, silentMessage])
+          }
+        );
+ 
+        if (!silentResponse.ok) {
+          throw new Error('Network response was not ok');
+        }
+ 
+        const silentData = await silentResponse.json();
+        const finalBotMessage = {
+          role: 'assistant',
+          content: silentData.modelreply,
+        };
+ 
+        // Only add the final response to the chat log
+        setChatLog([...newChatLog, finalBotMessage]);
+      } else {
+        // Normal flow: Add bot's response to chat log
+        const botMessage = {
+          role: 'assistant',
+          content: data.modelreply,
+        };
+        setChatLog([...newChatLog, botMessage]);
+      }
     } catch (err) {
       setError('Error communicating with backend');
       console.error(err);
     } finally {
       setIsLoading(false); // Set loading state to false
+      setShowPrompts(false);
     }
   }
+ 
 
   // Handle key press event for disappearing the default chat bot message on user click
   const handleKeyPress = (event) => {
