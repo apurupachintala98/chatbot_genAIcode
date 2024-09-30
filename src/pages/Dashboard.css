@@ -44,7 +44,7 @@ input#chat-input:focus {
   position: absolute;
   left: 32%;
   width: 45%;
-  bottom: 55px;
+  /* bottom: 55px; */
   border-top: solid 1px var(--primary-bg);
 }
  
@@ -138,7 +138,7 @@ input#chat-input:focus {
 .chat-container {
   width: 100%;
     overflow-x: hidden;
-    height: 73vh;
+    height: 70vh;
     padding: 1rem;
     overflow-y: auto;
 }

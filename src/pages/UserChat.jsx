@@ -8,7 +8,7 @@ import chatbot from '../assets/images/chatbot.jpg';
 import user from '../assets/images/user.png';
 import Feedback from "../components/Feedback";
 import SuggestedPrompts from '../components/SuggestedPrompts';
-
+ 
 function UserChat() {
   const [input, setInput] = useState(''); // User input
   const [chatLog, setChatLog] = useState([]);
@@ -21,12 +21,11 @@ function UserChat() {
   const [showPrompts, setShowPrompts] = useState(true);
   const [routeCdUpdated, setRouteCdUpdated] = useState(false);
   const [isNewUser, setIsNewUser] = useState(false); // Track if ARB New User button is clicked
-
+ 
   // New states for file upload functionality
   const [fileUploadCondition, setFileUploadCondition] = useState(false); // Toggle for file upload option
   const [selectedFile, setSelectedFile] = useState(null); // Store selected file
   const [uploadStatus, setUploadStatus] = useState(''); // Track file upload status
-
 
 
   const suggestedPrompts = [
@@ -35,73 +34,95 @@ function UserChat() {
     "Guide me on the TGOV process?",
     "Guide me on snowflake Onboarding process"
   ];
-
+ 
   // New states for user-provided app_cd and request_id
   const [appCd, setAppCd] = useState('user'); // User input for app_cd
   const [requestId, setRequestId] = useState('8000'); // User input for request_id
-
+ 
    // Handle file selection
    const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
   };
-
+ 
   // // Handle file upload
   // const handleFileUpload = async (e) => {
   //   e.preventDefault();
-
+ 
   //   if (!selectedFile) {
   //     setError('Please select a file to upload.');
   //     return;
   //   }
-
+ 
   //   const formData = new FormData();
   //   formData.append('file', selectedFile);
-
+ 
   //   try {
   //     const response = await fetch('your-api-url-to-upload-file', {
   //       method: 'POST',
   //       body: formData,
   //     });
-
+ 
   //     if (!response.ok) {
   //       throw new Error('File upload failed');
   //     }
-
+ 
   //     const fileData = await response.json();
-
+ 
   //     // Add file as a message in the chat log
   //     const newMessage = {
   //       role: 'user',
   //       content: `File uploaded: ${fileData.fileName}`, // You can adjust how to display the file
   //       fileUrl: fileData.fileUrl, // Use the file URL for showing file
   //     };
-
+ 
   //     setChatLog([...chatLog, newMessage]);
   //     setSelectedFile(null); // Clear the selected file
   //   } catch (err) {
   //     setError('Error uploading file');
   //   }
   // };
-
-
+ 
   // Handle file upload
   const handleFileUpload = async (e) => {
     e.preventDefault();
-
+ 
     if (!selectedFile) {
       setUploadStatus('Please select a file to upload.');
       return;
     }
-
+ 
+    const json_result_model_response = { "SVRO_APPROVED_YN": "Yes", "SVRO_PROGRAM_NO": "SVR21431", "BUSINESS_FUNDED": "No", "FUNDING_COST_CENTER_NO": "", "TGOV_REQUEST_ID": "TGov2342", "PROJECT_NAME": "Digital", "PROJECT_CODE": "DDS", "APM_NO": "APM1231321", "IT_OWNER_NAME": "Pavan", "ARCHITECT_LEAD_NAME": "Pavan", "BUSINES_OWNER_NAME": "Pavan", "PHI/PII": "No", "Architecture Deck": "Yes", "REVIEW_DATE": "10-03-2024", "Receiver_Email": "Gentela.VNSaiPavan@carelon.com" }
+  //   const app_info= {
+  //     "json_result_model_response": json_result_model_response,
+  //     "final_response_flag": true
+  // }
+    //const formData = new FormData();
+    // const payload = {
+    //   app_cd: "user",
+    //   request_id: "8000",
+    //   route_cd: "arb_scheduler",
+    //   app_info: app_info,
+    //   file:"dummy"
+    //    // Send the app_info from the response
+    // };
     const formData = new FormData();
-    formData.append('file', selectedFile);
-
+        formData.append('app_cd', "user");
+        formData.append('request_id', "8000");
+        formData.append('route_cd', "arb_scheduler");
+        formData.append('app_info', JSON.stringify({
+          "json_result_model_response": json_result_model_response,
+          "final_response_flag": "True"
+      }));
+        formData.append('file', selectedFile); // Add the selected file
+ 
+    //payload.append('file', selectedFile);
+ 
     try {
-      const response = await fetch('http://your-backend-url/upload', {
+      const response = await fetch('http://10.126.192.122:8000/upload_file/?app_cd=user&request_id=8000&route_cd=arb_scheduler', {
         method: 'POST',
         body: formData, // FormData object
       });
-
+ 
       if (response.ok) {
         setUploadStatus('File uploaded successfully!');
       } else {
@@ -112,8 +133,7 @@ function UserChat() {
       setUploadStatus('An error occurred while uploading the file.');
     }
   };
-
-
+ 
   async function handleSubmit(e) {
     e.preventDefault();
     if (!input.trim()) return; // Prevent empty messages
@@ -203,7 +223,7 @@ function UserChat() {
     }
   }
  
-
+ 
   // Handle key press event for disappearing the default chat bot message on user click
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
@@ -212,7 +232,7 @@ function UserChat() {
       setShowPrompts(false);
     }
   };
-
+ 
   // Simulate receiving a response from the chatbot
   const simulateChatbotResponse = () => {
     // Simulate a delay for receiving response
@@ -220,20 +240,20 @@ function UserChat() {
       setResponseReceived(true); // Set the state to indicate response received
     }, 1000); // Simulated delay (1 second)
   };
-
+ 
   // chat Scroll to the bottom when a new message is added
   useLayoutEffect(() => {
     if (endOfMessagesRef.current) {
       endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [chatLog]);
-
+ 
   //   const handlePromptClick = (prompt) => {
   //     setInput(prompt);
   //     setChatLog(prompt);
   //     setShowPrompts(false); // Hide prompts when a prompt is clicked
   // };
-
+ 
   return (
     <div className='user-chat-container'>
       {chatLog.map((chat, index) => (
@@ -257,9 +277,9 @@ function UserChat() {
                           </div>
                         )}
                       </div>
-            
+           
                     </div>
-    
+   
                     <div class="image">
                       <Avatar img={user} altText="User" className='mb-0' rounded></Avatar>
                     </div>
@@ -281,8 +301,8 @@ function UserChat() {
             </div>
           </div>
         </div>
-      ))} 
-
+      ))}
+ 
       {/* Loader section */}
       {isLoading && <div className="loader">
         <div className="dot"></div>
@@ -290,7 +310,7 @@ function UserChat() {
         <div className="dot"></div>
         <div className="dot"></div>
       </div>}
-
+ 
       {/* Feedback icons */}
       {responseReceived && (
         <Feedback />
@@ -313,7 +333,7 @@ function UserChat() {
         </form>
       {/* Input section */}
       <div className="blanter-msg p-4 md:p-6">
-
+ 
         <form onSubmit={handleSubmit} className="flex">
           <input
             type="text"
@@ -325,16 +345,16 @@ function UserChat() {
             onKeyPress={handleKeyPress}
             maxLength="400"
           />
-
+ 
           {/* <button class="sendBtn" type="submit"> <svg class="w-8 h-6 ml-2" aria-hidden="true" fill="#1a3673" viewBox="0 0 448 448">
             <path d="M.213 32L0 181.333 320 224 0 266.667.213 416 448 224z" onClick={handleSubmit} />
           </svg></button> */}
-           <button class="sendBtn" type="submit" onClick={handleSubmit}> <FaTelegramPlane className="h-7 w-7 text-cyan-600 dark:text-cyan-500" color="#1a3673"/> 
+           <button class="sendBtn" type="submit" onClick={handleSubmit}> <FaTelegramPlane className="h-7 w-7 text-cyan-600 dark:text-cyan-500" color="#1a3673"/>
            </button>
         </form>
       </div>
     </div>
   );
 }
-
+ 
 export default UserChat;
