@@ -308,7 +308,7 @@ function UserChat() {
       {/* Input section */}
       <div className="blanter-msg p-4 md:p-6">
           {/* Display Suggested Prompts */}
-          {showPrompts && filteredPrompts.length > 0 && (
+          {/* {showPrompts && filteredPrompts.length > 0 && (
           <ul className="suggested-prompts-list">
             {filteredPrompts.map((prompt, index) => (
               <li key={index} onClick={() => handlePromptClick(prompt)} className="suggested-prompt-item">
@@ -316,7 +316,7 @@ function UserChat() {
               </li>
             ))}
           </ul>
-        )}
+        )} */}
         <form onSubmit={handleSubmit} className="flex">
           <input
             type="text"
