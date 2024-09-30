@@ -1,6 +1,7 @@
 import React, { useState, useLayoutEffect, useRef } from 'react';
 import { Sidebar, Navbar, TextInput, Avatar, Dropdown, Button, Card, Modal } from 'flowbite-react';
 import { HiSearch, HiOutlinePencilAlt } from "react-icons/hi";
+import { FaTelegramPlane } from 'react-icons/fa';
 import "./Dashboard.css";
 import elevance from '../assets/images/logo.png';
 import chatbot from '../assets/images/chatbot.jpg';
@@ -21,6 +22,12 @@ function UserChat() {
   const [routeCdUpdated, setRouteCdUpdated] = useState(false);
   const [isNewUser, setIsNewUser] = useState(false); // Track if ARB New User button is clicked
 
+  // New states for file upload functionality
+  const [fileUploadCondition, setFileUploadCondition] = useState(false); // Toggle for file upload option
+  const [selectedFile, setSelectedFile] = useState(null); // Store selected file
+  const [uploadStatus, setUploadStatus] = useState(''); // Track file upload status
+
+
 
   const suggestedPrompts = [
     "I want to schedule a ARB meeting",
@@ -32,6 +39,80 @@ function UserChat() {
   // New states for user-provided app_cd and request_id
   const [appCd, setAppCd] = useState('user'); // User input for app_cd
   const [requestId, setRequestId] = useState('8000'); // User input for request_id
+
+   // Handle file selection
+   const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  // // Handle file upload
+  // const handleFileUpload = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!selectedFile) {
+  //     setError('Please select a file to upload.');
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   formData.append('file', selectedFile);
+
+  //   try {
+  //     const response = await fetch('your-api-url-to-upload-file', {
+  //       method: 'POST',
+  //       body: formData,
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('File upload failed');
+  //     }
+
+  //     const fileData = await response.json();
+
+  //     // Add file as a message in the chat log
+  //     const newMessage = {
+  //       role: 'user',
+  //       content: `File uploaded: ${fileData.fileName}`, // You can adjust how to display the file
+  //       fileUrl: fileData.fileUrl, // Use the file URL for showing file
+  //     };
+
+  //     setChatLog([...chatLog, newMessage]);
+  //     setSelectedFile(null); // Clear the selected file
+  //   } catch (err) {
+  //     setError('Error uploading file');
+  //   }
+  // };
+
+
+  // Handle file upload
+  const handleFileUpload = async (e) => {
+    e.preventDefault();
+
+    if (!selectedFile) {
+      setUploadStatus('Please select a file to upload.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+      const response = await fetch('http://your-backend-url/upload', {
+        method: 'POST',
+        body: formData, // FormData object
+      });
+
+      if (response.ok) {
+        setUploadStatus('File uploaded successfully!');
+      } else {
+        setUploadStatus('File upload failed.');
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      setUploadStatus('An error occurred while uploading the file.');
+    }
+  };
+
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -154,7 +235,7 @@ function UserChat() {
   // };
 
   return (
-    <div>
+    <div className='user-chat-container'>
       {chatLog.map((chat, index) => (
         <div key={index} style={{
           backgroundColor: 'lightblue',
@@ -170,8 +251,15 @@ function UserChat() {
                     <div class="info">
                       <div className='message'>
                         {chat.content}
+                        {chat.fileUrl && (
+                          <div>
+                            <a href={chat.fileUrl} target="_blank" rel="noopener noreferrer">View File</a>
+                          </div>
+                        )}
                       </div>
+            
                     </div>
+    
                     <div class="image">
                       <Avatar img={user} altText="User" className='mb-0' rounded></Avatar>
                     </div>
@@ -193,7 +281,8 @@ function UserChat() {
             </div>
           </div>
         </div>
-      ))}
+      ))} 
+
       {/* Loader section */}
       {isLoading && <div className="loader">
         <div className="dot"></div>
@@ -201,16 +290,27 @@ function UserChat() {
         <div className="dot"></div>
         <div className="dot"></div>
       </div>}
+
       {/* Feedback icons */}
       {responseReceived && (
         <Feedback />
       )}
       {/* This empty div is to ensure scrolling to the last message */}
       <div ref={endOfMessagesRef} />
-      {showPrompts && (
+      {/* {showPrompts && (
         <SuggestedPrompts prompts={suggestedPrompts} />
-      )}
-
+      )} */}
+                                                                       {/* File Upload Section */}
+       {/* {fileUploadCondition && (
+        <form onSubmit={handleFileUpload} className="file-upload-form">
+          <input type="file" onChange={handleFileChange} />
+          <button type="submit" className="upload-button">Upload</button>
+        </form>
+      )} */}
+       <form onSubmit={handleFileUpload} className="file-upload-form">
+          <input type="file" onChange={handleFileChange} />
+          <button type="submit" className="upload-button">Upload</button>
+        </form>
       {/* Input section */}
       <div className="blanter-msg p-4 md:p-6">
 
@@ -226,10 +326,11 @@ function UserChat() {
             maxLength="400"
           />
 
-          <button class="sendBtn" type="submit"> <svg class="w-8 h-6 ml-2" aria-hidden="true" fill="#ffffff" viewBox="0 0 448 448">
+          {/* <button class="sendBtn" type="submit"> <svg class="w-8 h-6 ml-2" aria-hidden="true" fill="#1a3673" viewBox="0 0 448 448">
             <path d="M.213 32L0 181.333 320 224 0 266.667.213 416 448 224z" onClick={handleSubmit} />
-          </svg></button>
-          {/* <FaTelegramPlane className="h-5 w-5 text-cyan-600 dark:text-cyan-500" /> */}
+          </svg></button> */}
+           <button class="sendBtn" type="submit" onClick={handleSubmit}> <FaTelegramPlane className="h-7 w-7 text-cyan-600 dark:text-cyan-500" color="#1a3673"/> 
+           </button>
         </form>
       </div>
     </div>

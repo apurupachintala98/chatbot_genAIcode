@@ -9,7 +9,7 @@
   right: 15px; */
   height: 58.2%;
     top: 20.8%;
-    right: 15px;
+    right: 7px;
   /* top: 22%;
   right: 14px; */
   border-top-left-radius: none !important;
@@ -106,16 +106,12 @@ input#chat-input:focus {
  
 /* Basic styling for the chat log */
 .chat_message {
-  /* position: relative;
-    width: 600px; */
   max-width: 80%;
   border-radius: 15px;
-  /* background-color: var(--chat-bubble-bg); */
   color: #1a3673;
   padding: 15px;
   line-height: 2;
   font-weight: 600;
-  /* width: 100%; */
   position: static;
   margin: 20px auto;
   clear: both;
@@ -123,7 +119,7 @@ input#chat-input:focus {
 }
  
 /* Styling for assistant messages */
-.chat_message.ai {
+ .chat_message.ai {
    background-color: #fff !important;
   color: #1a3673;
   float: left;
@@ -131,12 +127,12 @@ input#chat-input:focus {
 }
  
 /* Styling for user messages */
-.chat_message:not(.ai) {
+ .chat_message:not(.ai) {
   background-color: #e0f7fa !important;
   color: #1a3673;
   float: right;
   margin-right: 25px;
-}
+} 
  
  
 .chat-container {
@@ -157,6 +153,7 @@ input#chat-input:focus {
   font-size: 16px;
   line-height: 1.5;
   word-break: break-word;
+  margin: 0 10px;
 }
  
 /* Error message styling */
@@ -172,7 +169,6 @@ input#chat-input:focus {
   font-size: 16.5px;
   font-weight: 600;
   color: #1a3673;
-  /* Space between image and text */
 }
  
 #root>div.flex.h-screen.main-content>div.start-chatbot-fullscreen>div.center-container>div>div>img {
@@ -305,4 +301,17 @@ input#chat-input:focus {
     top: -202px;
     box-sizing: border-box;
     transition: all 0.5s ease-in-out;
+}
+
+.user-chat-container {
+  width: 80%;
+    margin-left: 16%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.file-upload-form {
+  display: flex;
+  justify-content: center;
 }
