@@ -44,7 +44,7 @@ input#chat-input:focus {
   position: absolute;
   left: 32%;
   width: 45%;
-  /* bottom: 55px; */
+  bottom: 0;
   border-top: solid 1px var(--primary-bg);
 }
  
