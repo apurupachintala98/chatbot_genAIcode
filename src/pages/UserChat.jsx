@@ -1,6 +1,6 @@
 import React, { useState, useLayoutEffect, useRef } from 'react';
 import { Sidebar, Navbar, TextInput, Avatar, Dropdown, Button, Card, Modal } from 'flowbite-react';
-import { HiSearch, HiOutlinePencilAlt } from "react-icons/hi";
+import { HiSearch, HiOutlinePencilAlt, HiUpload } from "react-icons/hi";
 import { FaTelegramPlane } from 'react-icons/fa';
 import "./Dashboard.css";
 import elevance from '../assets/images/logo.png';
@@ -18,9 +18,7 @@ function UserChat() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false); // Loading indicator
   const [routeCd, setRouteCd] = useState('None'); // Route code for API
-  const [showPrompts, setShowPrompts] = useState(true);
   const [routeCdUpdated, setRouteCdUpdated] = useState(false);
-  const [isNewUser, setIsNewUser] = useState(false); // Track if ARB New User button is clicked
 
   // New states for file upload functionality
   const [fileUploadCondition, setFileUploadCondition] = useState(false); // Toggle for file upload option
@@ -28,16 +26,41 @@ function UserChat() {
   const [uploadStatus, setUploadStatus] = useState(''); // Track file upload status
 
 
-  const suggestedPrompts = [
-    "I want to schedule a ARB meeting",
+  const [suggestedPrompts, setSuggestedPrompts] = useState([
+    "I want to schedule an ARB meeting",
     "What is the status of my ARB review?",
     "Guide me on the TGOV process?",
-    "Guide me on snowflake Onboarding process"
-  ];
+    "Guide me on Snowflake Onboarding process",
+  ]);
+  const [filteredPrompts, setFilteredPrompts] = useState([]); // Filtered prompts
+  const [showPrompts, setShowPrompts] = useState(false); // To toggle the suggestion display
 
   // New states for user-provided app_cd and request_id
   const [appCd, setAppCd] = useState('user'); // User input for app_cd
   const [requestId, setRequestId] = useState('8000'); // User input for request_id
+
+  const handleInputChange = (e) => {
+    const userInput = e.target.value;
+    setInput(userInput);
+    
+    // Filter prompts based on user input
+    if (userInput) {
+      const filtered = suggestedPrompts.filter(prompt =>
+        prompt.toLowerCase().includes(userInput.toLowerCase())
+      );
+      setFilteredPrompts(filtered);
+      setShowPrompts(true); // Show suggestions when input is typed
+    } else {
+      setFilteredPrompts([]);
+      setShowPrompts(false); // Hide suggestions when input is cleared
+    }
+  };
+
+  // Handle clicking on a suggested prompt
+  const handlePromptClick = (prompt) => {
+    setInput(prompt); // Autofill the input field with the clicked suggestion
+    setShowPrompts(false); // Hide the suggestions list after a selection
+  };
 
   // Handle file selection
   const handleFileChange = (e) => {
@@ -177,7 +200,6 @@ function UserChat() {
     }
   }
 
-
   // Handle key press event for disappearing the default chat bot message on user click
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
@@ -201,12 +223,6 @@ function UserChat() {
       endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [chatLog]);
-
-  //   const handlePromptClick = (prompt) => {
-  //     setInput(prompt);
-  //     setChatLog(prompt);
-  //     setShowPrompts(false); // Hide prompts when a prompt is clicked
-  // };
 
   return (
     <div className='user-chat-container'>
@@ -282,12 +298,25 @@ function UserChat() {
           onChange={handleFileChange}
           accept=".pdf,.pptx"  // Allow only PDF and PPTX files
         />
-        <button type="submit" className="upload-button">Upload</button>
+        {/* <button type="submit" className="upload-button">Upload</button> */}
+        <button type="submit" className="upload-button">
+    <HiUpload className="inline-block mr-2" /> {/* Upload Icon */}
+    Upload
+  </button>
       </form>
-      {uploadStatus && <div className="upload-status">{uploadStatus}</div>}
+      {uploadStatus && <div className="upload-status d-flex justify-content-center mt-3">{uploadStatus}</div>}
       {/* Input section */}
       <div className="blanter-msg p-4 md:p-6">
-
+          {/* Display Suggested Prompts */}
+          {showPrompts && filteredPrompts.length > 0 && (
+          <ul className="suggested-prompts-list">
+            {filteredPrompts.map((prompt, index) => (
+              <li key={index} onClick={() => handlePromptClick(prompt)} className="suggested-prompt-item">
+                {prompt}
+              </li>
+            ))}
+          </ul>
+        )}
         <form onSubmit={handleSubmit} className="flex">
           <input
             type="text"
@@ -295,7 +324,8 @@ function UserChat() {
             class="form-control"
             placeholder="What can I help you with..."
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            // onChange={(e) => setInput(e.target.value)}
+            onChange={handleInputChange}
             onKeyPress={handleKeyPress}
             maxLength="400"
           />
@@ -306,6 +336,7 @@ function UserChat() {
           <button class="sendBtn" type="submit" onClick={handleSubmit}> <FaTelegramPlane className="h-7 w-7 text-cyan-600 dark:text-cyan-500" color="#1a3673" />
           </button>
         </form>
+       
       </div>
     </div>
   );
