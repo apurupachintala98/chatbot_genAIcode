@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect, useRef } from 'react';
 import { Sidebar, Navbar, TextInput, Avatar, Dropdown, Button, Card, Modal } from 'flowbite-react';
 import { HiSearch, HiOutlinePencilAlt } from "react-icons/hi";
 import { FaTelegramPlane } from 'react-icons/fa';
-import "./Dashboard.css";
+import "./Dashboard.css"; 
 import elevance from '../assets/images/logo.png';
 import chatbot from '../assets/images/chatbot.jpg';
 import user from '../assets/images/user.png';

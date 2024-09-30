@@ -145,8 +145,8 @@ input#chat-input:focus {
  
 /* Avatar styling */
 .avatar {
-  margin-right: 10px;
-}
+  margin-right: 11px;
+} 
  
 /* Message text styling */
 .message {

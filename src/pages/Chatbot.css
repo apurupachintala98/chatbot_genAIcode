@@ -206,7 +206,7 @@ input#chat-input:focus {
     display: inline;
     position: sticky;
     left: 0;
-    bottom: 0;
+    /* bottom: 0; */
     border-top: solid 1px var(--primary-bg);
 }
 
