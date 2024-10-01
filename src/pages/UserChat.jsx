@@ -144,14 +144,15 @@ function UserChat({
       const data = await response.json();
       setApiResponse(data); // Store the PUT API response in the state
       console.log("API Response:", data);  // Debug the API response
-
+      const modelReply = data.modelReply;
+      if (modelReply.includes(' "Architecture Deck": "Yes"')) {
+        setFileUploadCondition(true); // Show file upload option if user replies with "yes"
+      }
       // If route_cd is updated, send a "hey" message to the API but don't display it
       if (data.route_cd && data.route_cd !== routeCd) {
         setRouteCd(data.route_cd);
         setRouteCdUpdated(true);
-        if (data.modelReply.includes(' "Architecture Deck": "Yes"')) {
-          setFileUploadCondition(true); // Show file upload option if user replies with "yes"
-        }
+      
 
         // Send "Hey" message to the API but don't display it
         const silentMessage = {
