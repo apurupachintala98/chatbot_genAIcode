@@ -15,7 +15,6 @@ function Dashboard() {
  const [error, setError] = useState(''); // Error message state
  const [showPrompts, setShowPrompts] = useState(true); // Show/hide suggested prompts
  const [routeCdUpdated, setRouteCdUpdated] = useState(false); // Track route update
- const [inputValue, setInputValue] = useState('');
 
  const handleNewChat = () => {
    setChatLog([]); // Reset chat log with default message
@@ -82,8 +81,6 @@ function Dashboard() {
           setShowPrompts={setShowPrompts}
           routeCdUpdated={routeCdUpdated}
           setRouteCdUpdated={setRouteCdUpdated}
-          setInputValue={setInputValue}
-          inputValue={inputValue}
         />
       </div>
     </div>

@@ -19,7 +19,6 @@ function UserChat({
   responseReceived, setResponseReceived,
   error, setError,
   routeCdUpdated, setRouteCdUpdated,
-  inputValue, setInputValue
 }) {
 
   const [input, setInput] = useState(''); // User input
@@ -47,7 +46,6 @@ function UserChat({
 
   // Modify handlePromptClick to pass the prompt directly to handleSubmit
   const handlePromptClick = (prompt) => {
-    handleSubmit({ preventDefault: () => {} }, prompt);  // Send prompt to handleSubmit
  };
 
   // Handle file selection
@@ -117,7 +115,6 @@ function UserChat({
     const newChatLog = [...chatLog, newMessage]; // Add user's message to chat log
     setChatLog(newChatLog);
     setInput(''); // Clear the input field
-    setInputValue('');
     setIsLoading(true); // Set loading state to true
     setError(''); // Clear any previous error
     setShowPrompts(false);
@@ -346,8 +343,8 @@ function UserChat({
               id="chat-input"
               class="form-control"
               placeholder="What can I help you with..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
               maxLength="400"
             />
