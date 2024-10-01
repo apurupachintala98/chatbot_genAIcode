@@ -24,6 +24,8 @@ function UserChat() {
   const [fileUploadCondition, setFileUploadCondition] = useState(false); // Toggle for file upload option
   const [selectedFile, setSelectedFile] = useState(null); // Store selected file
   const [uploadStatus, setUploadStatus] = useState(''); // Track file upload status
+  const [apiResponse, setApiResponse] = useState(null); // New state for storing API response
+
 
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
@@ -83,13 +85,13 @@ function UserChat() {
       return;
     }
 
-    const json_result_model_response = { "SVRO_APPROVED_YN": "Yes", "SVRO_PROGRAM_NO": "SVR21431", "BUSINESS_FUNDED": "No", "FUNDING_COST_CENTER_NO": "", "TGOV_REQUEST_ID": "TGov2342", "PROJECT_NAME": "Digital", "PROJECT_CODE": "DDS", "APM_NO": "APM1231321", "IT_OWNER_NAME": "Pavan", "ARCHITECT_LEAD_NAME": "Pavan", "BUSINES_OWNER_NAME": "Pavan", "PHI/PII": "No", "Architecture Deck": "Yes", "REVIEW_DATE": "10-03-2024", "Receiver_Email": "Gentela.VNSaiPavan@carelon.com" }
+    // const json_result_model_response = { "SVRO_APPROVED_YN": "Yes", "SVRO_PROGRAM_NO": "SVR21431", "BUSINESS_FUNDED": "No", "FUNDING_COST_CENTER_NO": "", "TGOV_REQUEST_ID": "TGov2342", "PROJECT_NAME": "Digital", "PROJECT_CODE": "DDS", "APM_NO": "APM1231321", "IT_OWNER_NAME": "Pavan", "ARCHITECT_LEAD_NAME": "Pavan", "BUSINES_OWNER_NAME": "Pavan", "PHI/PII": "No", "Architecture Deck": "Yes", "REVIEW_DATE": "10-03-2024", "Receiver_Email": "Gentela.VNSaiPavan@carelon.com" }
     const formData = new FormData();
     formData.append('app_cd', "user");
     formData.append('request_id', "8000");
     formData.append('route_cd', "arb_scheduler");
     formData.append('app_info', JSON.stringify({
-      "json_result_model_response": json_result_model_response,
+      "json_result_model_response": apiResponse, //Use the stored response
       "final_response_flag": "True"
     }));
     formData.append('file', selectedFile); // Add the selected file
@@ -148,6 +150,7 @@ function UserChat() {
       }
 
       const data = await response.json();
+      setApiResponse(data); // Store the PUT API response in the state
 
       // If route_cd is updated, send a "hey" message to the API but don't display it
       if (data.route_cd && data.route_cd !== routeCd) {
