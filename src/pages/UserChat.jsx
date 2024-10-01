@@ -89,7 +89,7 @@ function UserChat() {
     formData.append('app_cd', appCd);
     formData.append('request_id', requestId);
     formData.append('route_cd', routeCd);
-    formData.append('app_info', apiResponse.app_info);
+    formData.append('app_info', JSON.stringify(apiResponse.app_info));
     formData.append('file', selectedFile); // Add the selected file
 
     try {
