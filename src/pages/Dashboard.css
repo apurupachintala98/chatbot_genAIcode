@@ -208,10 +208,16 @@ input#chat-input:focus {
  
 .suggested-prompts-container {
   margin-top: 20px;
-    width: 56%;
-    position: absolute;
-    left: 19.2%;
-    bottom: 81px;
+  width: 42%;
+  position: absolute;
+  left: 33.2%;
+  bottom: 81px;
+}
+
+.suggested-prompts-container h3 {
+  font-size: 14px;
+  margin-left: 16px;
+
 }
 
 .suggested-prompts {
@@ -334,25 +340,3 @@ input#chat-input:focus {
   color: red;
 }
 
-.suggested-prompts-list {
-  background-color: white;
-  border: 1px solid #ccc;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  width: 100%;
-  max-height: 150px;
-  overflow-y: auto;
-  z-index: 1;
-}
-
-.suggested-prompt-item {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #ccc;
-}
-
-.suggested-prompt-item:hover {
-  background-color: #f0f0f0;
-}

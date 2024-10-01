@@ -14,11 +14,12 @@ import query from '../assets/images/Query.png';
 import scheduler from '../assets/images/scheduler.jpg';
 
 function UserChat({
-  chatLog, setChatLog, 
-  isVisible, setIsVisible, 
-  responseReceived, setResponseReceived, 
-  error, setError, 
-  routeCdUpdated, setRouteCdUpdated 
+  chatLog, setChatLog,
+  isVisible, setIsVisible,
+  responseReceived, setResponseReceived,
+  error, setError,
+  routeCdUpdated, setRouteCdUpdated,
+  inputValue, setInputValue
 }) {
 
   const [input, setInput] = useState(''); // User input
@@ -31,7 +32,7 @@ function UserChat({
   const [uploadStatus, setUploadStatus] = useState(''); // Track file upload status
   const [apiResponse, setApiResponse] = useState(null); // New state for storing API response
   const [filteredPrompts, setFilteredPrompts] = useState([]); // Filtered prompts
-  const [showPrompts, setShowPrompts] = useState(false); // To toggle the suggestion display
+  const [showPrompts, setShowPrompts] = useState(true); // To toggle the suggestion display
   // New states for user-provided app_cd and request_id
   const [appCd, setAppCd] = useState('user'); // User input for app_cd
   const [requestId, setRequestId] = useState('8000'); // User input for request_id
@@ -44,11 +45,12 @@ function UserChat({
     "Guide me on Snowflake Onboarding process",
   ]);
 
-  // Handle clicking on a suggested prompt
-  const handlePromptClick = (prompt) => {
-    setInput(prompt); // Autofill the input field with the clicked suggestion
-    setShowPrompts(false); // Hide the suggestions list after a selection
-  };
+ // Modify handlePromptClick to pass the prompt directly to handleSubmit
+ const handlePromptClick = (prompt) => {
+  // Pass the clicked prompt directly to handleSubmit
+  handleSubmit({ preventDefault: () => {} }, prompt); // Pass prompt as second argument
+};
+
 
   // Handle file selection
   const handleFileChange = (e) => {
@@ -62,11 +64,11 @@ function UserChat({
     }
   };
 
-    // Handle clicking on a category icon and updating routeCd
-    const handleCategoryClick = (categoryRouteCd) => {
-      setRouteCd(categoryRouteCd); // Update the route_cd based on the clicked category
-      setIsVisible(false); // Hide the welcome message and categories after clicking
-    };
+  // Handle clicking on a category icon and updating routeCd
+  const handleCategoryClick = (categoryRouteCd) => {
+    setRouteCd(categoryRouteCd); // Update the route_cd based on the clicked category
+    setIsVisible(false); // Hide the welcome message and categories after clicking
+  };
 
   // Handle file upload
   const handleFileUpload = async (e) => {
@@ -101,20 +103,22 @@ function UserChat({
     }
   };
 
-  async function handleSubmit(e) {
+   // Updated handleSubmit to handle both user input and prompts
+   async function handleSubmit(e, message = inputValue) {
     e.preventDefault();
-    if (!input.trim()) return; // Prevent empty messages
+    if (!message.trim()) return; // Prevent empty messages
     if (!appCd.trim() || !requestId.trim()) {
       setError('Please provide valid app_cd and request_id.');
       return;
     }
     const newMessage = {
       role: 'user',
-      content: input,
+      content: message,
     };
     const newChatLog = [...chatLog, newMessage]; // Add user's message to chat log
     setChatLog(newChatLog);
     setInput(''); // Clear the input field
+    setInputValue('');
     setIsLoading(true); // Set loading state to true
     setError(''); // Clear any previous error
     setShowPrompts(false);
@@ -144,6 +148,9 @@ function UserChat({
       if (data.route_cd && data.route_cd !== routeCd) {
         setRouteCd(data.route_cd);
         setRouteCdUpdated(true);
+        if (data.modelReply.includes(' "Architecture Deck": "Yes"')) {
+          setFileUploadCondition(true); // Show file upload option if user replies with "yes"
+        }
 
         // Send "Hey" message to the API but don't display it
         const silentMessage = {
@@ -192,6 +199,7 @@ function UserChat({
   }
 
   // Handle key press event for disappearing the default chat bot message on user click
+  
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       setIsVisible(false); // Hide image and text on Enter
@@ -219,7 +227,7 @@ function UserChat({
 
     <div className='chat-container'>
       {isVisible && (
-      <><div className="center-container">
+        <><div className="center-container">
           <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
           <p className="center-text">Hello there, I am your ARB Scheduler Assistant. How can I help you today? </p>
         </div><div className="text-center space-y-6">
@@ -229,8 +237,8 @@ function UserChat({
             <div className="flex justify-center gap-4">
               <div className="flex flex-col gap-3">
                 <div className="flex flex-wrap gap-6">
-                   {/* ARB Scheduler Category */}
-                   <div className="flex flex-col items-center" onClick={() => handleCategoryClick('arb_scheduler')}>
+                  {/* ARB Scheduler Category */}
+                  <div className="flex flex-col items-center" onClick={() => handleCategoryClick('arb_scheduler')}>
                     <Avatar img={scheduler} rounded bordered color="gray" size="lg" />
                     <p className="mt-2 text-center text-gray-700 dark:text-gray-300">ARB Scheduler</p>
                   </div>
@@ -249,8 +257,8 @@ function UserChat({
                 </div>
               </div>
             </div>
-          </div></> 
-     )}
+          </div></>
+      )}
       <div className='user-chat-container'>
         {chatLog.map((chat, index) => (
           <div key={index} style={{
@@ -309,32 +317,24 @@ function UserChat({
         )}
         {/* This empty div is to ensure scrolling to the last message */}
         <div ref={endOfMessagesRef} />
-        {/* {showPrompts && (
-        <SuggestedPrompts prompts={suggestedPrompts} />
-      )} */}
-       {/* Display Suggested Prompts */}
-       {showPrompts && (
-          <ul className="suggested-prompts-list">
-            {filteredPrompts.map((prompt, index) => (
-              <li key={index} onClick={() => handlePromptClick(prompt)} className="suggested-prompt-item">
-                {prompt}
-              </li>
-            ))}
-          </ul>
+
+        {/* Display Suggested Prompts */}
+        {showPrompts && (
+          <SuggestedPrompts prompts={suggestedPrompts} onPromptClick={handlePromptClick} />
         )}
         {/* File Upload Section */}
-        <form onSubmit={handleFileUpload} className="file-upload-form">
-          <input
-            type="file"
-            onChange={handleFileChange}
-            accept=".pdf,.pptx"  // Allow only PDF and PPTX files
-          />
-          {/* <button type="submit" className="upload-button">Upload</button> */}
-          <button type="submit" className="upload-button">
-            <HiUpload className="inline-block mr-2" /> {/* Upload Icon */}
-            Upload
-          </button>
-        </form>
+        {fileUploadCondition && (
+          <form onSubmit={handleFileUpload} className="file-upload-form">
+            <input
+              type="file"
+              onChange={handleFileChange}
+              accept=".pdf,.pptx"  // Allow only PDF and PPTX files
+            />
+            <button type="submit" className="upload-button">
+              <HiUpload className="inline-block mr-2" /> {/* Upload Icon */}
+              Upload
+            </button>
+          </form>)}
         {uploadStatus && <div className="upload-status d-flex justify-content-center mt-3">{uploadStatus}</div>}
         {/* Input section */}
         <div className="blanter-msg p-4 md:p-6">
@@ -344,9 +344,8 @@ function UserChat({
               id="chat-input"
               class="form-control"
               placeholder="What can I help you with..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              // onChange={handleInputChange}
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               maxLength="400"
             />
