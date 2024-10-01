@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useRef , useEffect} from 'react';
+import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { Sidebar, Navbar, TextInput, Avatar, Dropdown, Button, Card, Modal } from 'flowbite-react';
 import { HiSearch, HiOutlinePencilAlt, HiUpload } from "react-icons/hi";
 import { FaTelegramPlane } from 'react-icons/fa';
@@ -9,6 +9,9 @@ import user from '../assets/images/user.png';
 import Feedback from "../components/Feedback";
 import SuggestedPrompts from '../components/SuggestedPrompts';
 import parseMessageContent from '../components/parseMessageContent';
+import faq from '../assets/images/FAQ.jpg';
+import query from '../assets/images/Query.png';
+import scheduler from '../assets/images/scheduler.jpg';
 
 function UserChat() {
   const [input, setInput] = useState(''); // User input
@@ -45,7 +48,7 @@ function UserChat() {
   const handleInputChange = (e) => {
     const userInput = e.target.value;
     setInput(userInput);
-    
+
     // Filter prompts based on user input
     if (userInput) {
       const filtered = suggestedPrompts.filter(prompt =>
@@ -90,9 +93,6 @@ function UserChat() {
     formData.append('app_cd', appCd);
     formData.append('request_id', requestId);
     formData.append('route_cd', routeCd);
-    // formData.append('app_info', JSON.stringify(
-    //   apiResponse.app_info
-    // ));
     formData.append('app_info', JSON.stringify(apiResponse.app_info));
     formData.append('file', selectedFile); // Add the selected file
 
@@ -228,89 +228,119 @@ function UserChat() {
   }, [chatLog]);
 
   return (
-    <div className='user-chat-container'>
-      {chatLog.map((chat, index) => (
-        <div key={index} style={{
-          backgroundColor: 'lightblue',
-          padding: '10px',
-          transition: 'width 0.3s ease',
-          overflowY: 'auto'
-        }} className={`chat_message ${chat.role === 'assistant' ? 'ai' : ''}`}>
-          <div className='chat_message_center'>
-            <div className='avatar'>
-              <div className={`flex ${chat.role === 'assistant' ? 'justify-start' : 'justify-end'} mb-4`}>
-                {chat.role !== 'assistant' && (
-                  <div class="container">
-                    <div class="info">
-                      <div className='message'>
-                        {chat.content}
+
+    <div className='chat-container'>
+      {isVisible && (
+      <><div className="center-container">
+          <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
+          <p className="center-text">Hello there, I am your ARB Scheduler Assistant. How can I help you today? </p>
+        </div><div className="text-center space-y-6">
+            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Choose a ARB Category
+            </h3>
+            <div className="flex justify-center gap-4">
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-wrap gap-6">
+                  <div className="flex flex-col items-center">
+                    <Avatar img={scheduler} rounded bordered color="gray" size="lg" />
+                    <p className="mt-2 text-center text-gray-700 dark:text-gray-300">ARB Scheduler</p>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <Avatar img={faq} rounded bordered color="light" size="lg" />
+                    <p className="mt-2 text-center text-gray-700 dark:text-gray-300">ARB FAQ</p>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <Avatar img={query} rounded bordered color="purple" size="lg" />
+                    <p className="mt-2 text-center text-gray-700 dark:text-gray-300">ARB Query</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div></> 
+     )}
+      <div className='user-chat-container'>
+        {chatLog.map((chat, index) => (
+          <div key={index} style={{
+            backgroundColor: 'lightblue',
+            padding: '10px',
+            transition: 'width 0.3s ease',
+            overflowY: 'auto'
+          }} className={`chat_message ${chat.role === 'assistant' ? 'ai' : ''}`}>
+            <div className='chat_message_center'>
+              <div className='avatar'>
+                <div className={`flex ${chat.role === 'assistant' ? 'justify-start' : 'justify-end'} mb-4`}>
+                  {chat.role !== 'assistant' && (
+                    <div class="container">
+                      <div class="info">
+                        <div className='message'>
+                          {chat.content}
+                        </div>
+
                       </div>
 
-                    </div>
-
-                    <div class="image">
-                      <Avatar img={user} altText="User" className='mb-0' rounded></Avatar>
-                    </div>
-                  </div>
-                )}
-                {chat.role === 'assistant' && (
-                  <div class="container">
-                    <div class="image">
-                      <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
-                    </div>
-                    <div class="info">
-                      <div className='message'>
-                        {/* Parse and render the assistant's message */}
-                      {parseMessageContent(chat.content)}
+                      <div class="image">
+                        <Avatar img={user} altText="User" className='mb-0' rounded></Avatar>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                  {chat.role === 'assistant' && (
+                    <div class="container">
+                      <div class="image">
+                        <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
+                      </div>
+                      <div class="info">
+                        <div className='message'>
+                          {/* Parse and render the assistant's message */}
+                          {parseMessageContent(chat.content)}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
 
-      {/* Loader section */}
-      {isLoading && <div className="loader">
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-        <div className="dot"></div>
-      </div>}
+        {/* Loader section */}
+        {isLoading && <div className="loader">
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+          <div className="dot"></div>
+        </div>}
 
-      {/* Feedback icons */}
-      {responseReceived && (
-        <Feedback />
-      )}
-      {/* This empty div is to ensure scrolling to the last message */}
-      <div ref={endOfMessagesRef} />
-      {/* {showPrompts && (
+        {/* Feedback icons */}
+        {responseReceived && (
+          <Feedback />
+        )}
+        {/* This empty div is to ensure scrolling to the last message */}
+        <div ref={endOfMessagesRef} />
+        {/* {showPrompts && (
         <SuggestedPrompts prompts={suggestedPrompts} />
       )} */}
-      {/* File Upload Section */}
-      {/* {fileUploadCondition && (
+        {/* File Upload Section */}
+        {/* {fileUploadCondition && (
         <form onSubmit={handleFileUpload} className="file-upload-form">
           <input type="file" onChange={handleFileChange} />
           <button type="submit" className="upload-button">Upload</button>
         </form>
       )} */}
-      <form onSubmit={handleFileUpload} className="file-upload-form">
-        <input
-          type="file"
-          onChange={handleFileChange}
-          accept=".pdf,.pptx"  // Allow only PDF and PPTX files
-        />
-        {/* <button type="submit" className="upload-button">Upload</button> */}
-        <button type="submit" className="upload-button">
-    <HiUpload className="inline-block mr-2" /> {/* Upload Icon */}
-    Upload
-  </button>
-      </form>
-      {uploadStatus && <div className="upload-status d-flex justify-content-center mt-3">{uploadStatus}</div>}
-      {/* Input section */}
-      <div className="blanter-msg p-4 md:p-6">
+        <form onSubmit={handleFileUpload} className="file-upload-form">
+          <input
+            type="file"
+            onChange={handleFileChange}
+            accept=".pdf,.pptx"  // Allow only PDF and PPTX files
+          />
+          {/* <button type="submit" className="upload-button">Upload</button> */}
+          <button type="submit" className="upload-button">
+            <HiUpload className="inline-block mr-2" /> {/* Upload Icon */}
+            Upload
+          </button>
+        </form>
+        {uploadStatus && <div className="upload-status d-flex justify-content-center mt-3">{uploadStatus}</div>}
+        {/* Input section */}
+        <div className="blanter-msg p-4 md:p-6">
           {/* Display Suggested Prompts */}
           {/* {showPrompts && filteredPrompts.length > 0 && (
           <ul className="suggested-prompts-list">
@@ -321,28 +351,30 @@ function UserChat() {
             ))}
           </ul>
         )} */}
-        <form onSubmit={handleSubmit} className="flex">
-          <input
-            type="text"
-            id="chat-input"
-            class="form-control"
-            placeholder="What can I help you with..."
-            value={input}
-            // onChange={(e) => setInput(e.target.value)}
-            onChange={handleInputChange}
-            onKeyPress={handleKeyPress}
-            maxLength="400"
-          />
+          <form onSubmit={handleSubmit} className="flex">
+            <input
+              type="text"
+              id="chat-input"
+              class="form-control"
+              placeholder="What can I help you with..."
+              value={input}
+              // onChange={(e) => setInput(e.target.value)}
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              maxLength="400"
+            />
 
-          {/* <button class="sendBtn" type="submit"> <svg class="w-8 h-6 ml-2" aria-hidden="true" fill="#1a3673" viewBox="0 0 448 448">
+            {/* <button class="sendBtn" type="submit"> <svg class="w-8 h-6 ml-2" aria-hidden="true" fill="#1a3673" viewBox="0 0 448 448">
             <path d="M.213 32L0 181.333 320 224 0 266.667.213 416 448 224z" onClick={handleSubmit} />
           </svg></button> */}
-          <button class="sendBtn" type="submit" onClick={handleSubmit}> <FaTelegramPlane className="h-7 w-7 text-cyan-600 dark:text-cyan-500" color="#1a3673" />
-          </button>
-        </form>
-       
+            <button class="sendBtn" type="submit" onClick={handleSubmit}> <FaTelegramPlane className="h-7 w-7 text-cyan-600 dark:text-cyan-500" color="#1a3673" />
+            </button>
+          </form>
+
+        </div>
       </div>
     </div>
+
   );
 }
 

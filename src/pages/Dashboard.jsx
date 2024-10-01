@@ -1,21 +1,14 @@
-import React, { useState, useLayoutEffect, useRef } from 'react';
-import { Sidebar, Navbar, TextInput, Avatar, Dropdown, Button, Card, Modal } from 'flowbite-react';
+import React from 'react';
+import { Sidebar, Navbar, Avatar, Dropdown, Button } from 'flowbite-react';
 import { HiSearch, HiOutlinePencilAlt } from "react-icons/hi";
 import "./Dashboard.css";
 import elevance from '../assets/images/logo.png';
-import chatbot from '../assets/images/chatbot.jpg';
-import user from '../assets/images/user.png';
 import UserChat from './UserChat';
-import faq from '../assets/images/FAQ.jpg';
-import query from '../assets/images/Query.png';
-import scheduler from '../assets/images/scheduler.jpg';
+
 
 function Dashboard() {
-  const [openModal, setOpenModal] = useState(false);
-  const [isNewUser, setIsNewUser] = useState(false); // Track if ARB New User button is clicked
 
   const handleNewChat = () => {
-    setIsNewUser(false); // Reset new user flag
   };
 
   return (
@@ -60,82 +53,7 @@ function Dashboard() {
 
       {/* Content Area */}
       <div className="flex-grow start-chatbot-fullscreen p-4 md:p-6 d-flex justify-content-between">
-        <div className='chat-container'>
-          {/* {isVisible && ( */}
-          <div className="center-container">
-            <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
-            <p className="center-text">Hello there, I am your ARB Scheduler Assistant. How can I help you today? </p>
-          </div>
-          {/* )} */}
-
-          {isNewUser ? (
-            <UserChat />
-          ) : (
-            <Card className="max-w-sm mx-auto md:max-w-md choose-option" >
-              <div className='lg-text p-0'>
-                <h5 className="text-2xl text-center font-bold tracking-tight text-gray-900 dark:text-white card-heading">
-                  Select a Category
-                </h5>
-                {/* <button class="category-icon">
-            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
-</svg>
-            </button>
-            */}
-              </div>
-              <div className='category-btn mt-5'>
-                <button
-                  type="button"
-                  className="inline-flex w-full justify-center rounded-lg bg-cyan-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-200 dark:focus:ring-cyan-900 mb-3" onClick={() => setOpenModal(true)}
-                >
-                  ARB Existing User
-                </button>
-
-                <button
-                  type="button"
-                  className="inline-flex w-full justify-center rounded-lg bg-cyan-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-200 dark:focus:ring-cyan-900"
-                  onClick={() => {
-                    setIsNewUser(true);  // Set to true when clicked
-                    // setShowPrompts(false); // Optionally hide prompts
-                  }}>
-                  ARB New User
-                </button>
-              </div>
-            </Card>
-          )}
-          <Modal show={openModal} size="2xl" onClose={() => setOpenModal(false)} popup>
-            <Modal.Header />
-            <Modal.Body>
-              <div className="text-center space-y-6">
-                <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                  Choose a ARB Category
-                </h3>
-                <div className="flex justify-center gap-4">
-                  <div className="flex flex-col gap-3">
-                    <div className="flex flex-wrap gap-6">
-                      <div className="flex flex-col items-center">
-                        <Avatar img={scheduler} rounded bordered color="gray" size="lg" />
-                        <p className="mt-2 text-center text-gray-700 dark:text-gray-300">ARB Scheduler</p>
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <Avatar img={faq} rounded bordered color="light" size="lg" />
-                        <p className="mt-2 text-center text-gray-700 dark:text-gray-300">ARB FAQ</p>
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <Avatar img={query} rounded bordered color="purple" size="lg" />
-                        <p className="mt-2 text-center text-gray-700 dark:text-gray-300">ARB Query</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Modal.Body>
-          </Modal>
-
-          {/* //userchat */}
-
-        </div>
-
+      <UserChat />
       </div>
     </div>
   );
