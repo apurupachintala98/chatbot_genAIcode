@@ -181,16 +181,14 @@ function UserChat({
         };
 
         // Only add the final response to the chat log
-        // setChatLog([...newChatLog, finalBotMessage]);
-        setChatLog((prevChatLog) => [...prevChatLog, finalBotMessage]);  // Update chat log with final response
+        setChatLog([...newChatLog, finalBotMessage]);
       } else {
         // Normal flow: Add bot's response to chat log
         const botMessage = {
           role: 'assistant',
           content: data.modelreply,
         };
-        // setChatLog([...newChatLog, botMessage]);
-        setChatLog((prevChatLog) => [...prevChatLog, botMessage]);
+        setChatLog([...newChatLog, botMessage]);
       }
     } catch (err) {
       setError('Error communicating with backend');
