@@ -44,24 +44,6 @@ function UserChat({
     "Guide me on Snowflake Onboarding process",
   ]);
 
-
-  const handleInputChange = (e) => {
-    const userInput = e.target.value;
-    setInput(userInput);
-
-    // Filter prompts based on user input
-    if (userInput) {
-      const filtered = suggestedPrompts.filter(prompt =>
-        prompt.toLowerCase().includes(userInput.toLowerCase())
-      );
-      setFilteredPrompts(filtered);
-      setShowPrompts(true); // Show suggestions when input is typed
-    } else {
-      setFilteredPrompts([]);
-      setShowPrompts(false); // Hide suggestions when input is cleared
-    }
-  };
-
   // Handle clicking on a suggested prompt
   const handlePromptClick = (prompt) => {
     setInput(prompt); // Autofill the input field with the clicked suggestion
@@ -330,6 +312,16 @@ function UserChat({
         {/* {showPrompts && (
         <SuggestedPrompts prompts={suggestedPrompts} />
       )} */}
+       {/* Display Suggested Prompts */}
+       {showPrompts && (
+          <ul className="suggested-prompts-list">
+            {filteredPrompts.map((prompt, index) => (
+              <li key={index} onClick={() => handlePromptClick(prompt)} className="suggested-prompt-item">
+                {prompt}
+              </li>
+            ))}
+          </ul>
+        )}
         {/* File Upload Section */}
         <form onSubmit={handleFileUpload} className="file-upload-form">
           <input
@@ -346,16 +338,6 @@ function UserChat({
         {uploadStatus && <div className="upload-status d-flex justify-content-center mt-3">{uploadStatus}</div>}
         {/* Input section */}
         <div className="blanter-msg p-4 md:p-6">
-          {/* Display Suggested Prompts */}
-          {showPrompts && filteredPrompts.length > 0 && (
-          <ul className="suggested-prompts-list">
-            {filteredPrompts.map((prompt, index) => (
-              <li key={index} onClick={() => handlePromptClick(prompt)} className="suggested-prompt-item">
-                {prompt}
-              </li>
-            ))}
-          </ul>
-        )}
           <form onSubmit={handleSubmit} className="flex">
             <input
               type="text"
@@ -363,8 +345,8 @@ function UserChat({
               class="form-control"
               placeholder="What can I help you with..."
               value={input}
-              // onChange={(e) => setInput(e.target.value)}
-              onChange={handleInputChange}
+              onChange={(e) => setInput(e.target.value)}
+              // onChange={handleInputChange}
               onKeyPress={handleKeyPress}
               maxLength="400"
             />
