@@ -45,12 +45,10 @@ function UserChat({
     "Guide me on Snowflake Onboarding process",
   ]);
 
- // Modify handlePromptClick to pass the prompt directly to handleSubmit
- const handlePromptClick = (prompt) => {
-  // Pass the clicked prompt directly to handleSubmit
-  handleSubmit({ preventDefault: () => {} }, prompt); // Pass prompt as second argument
-};
-
+  // Modify handlePromptClick to pass the prompt directly to handleSubmit
+  const handlePromptClick = (prompt) => {
+    handleSubmit({ preventDefault: () => {} }, prompt);  // Send prompt to handleSubmit
+ };
 
   // Handle file selection
   const handleFileChange = (e) => {
@@ -87,7 +85,8 @@ function UserChat({
     formData.append('file', selectedFile); // Add the selected file
 
     try {
-      const response = await fetch('http://10.126.192.122:8000/upload_file/?app_cd=user&request_id=8000&route_cd=arb_scheduler', {
+      const response = await fetch(
+        `http://10.126.192.122:8000/upload_file/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`, {
         method: 'POST',
         body: formData, // FormData object
       });
@@ -103,10 +102,10 @@ function UserChat({
     }
   };
 
-   // Updated handleSubmit to handle both user input and prompts
-   async function handleSubmit(e, message = inputValue) {
+  // Updated handleSubmit to handle both user input and prompts
+  async function handleSubmit(e, message = input) {
     e.preventDefault();
-    if (!message.trim()) return; // Prevent empty messages
+   if (!message.trim()) return; // Prevent empty messages
     if (!appCd.trim() || !requestId.trim()) {
       setError('Please provide valid app_cd and request_id.');
       return;
@@ -138,11 +137,13 @@ function UserChat({
       );
 
       if (!response.ok) {
+        console.error('Failed to fetch the response', response);
         throw new Error('Network response was not ok');
-      }
+     }
 
       const data = await response.json();
       setApiResponse(data); // Store the PUT API response in the state
+      console.log("API Response:", data);  // Debug the API response
 
       // If route_cd is updated, send a "hey" message to the API but don't display it
       if (data.route_cd && data.route_cd !== routeCd) {
@@ -168,8 +169,8 @@ function UserChat({
             body: JSON.stringify([...newChatLog, silentMessage])
           }
         );
-
         if (!silentResponse.ok) {
+          console.error('Silent request failed:', silentResponse);
           throw new Error('Network response was not ok');
         }
 
@@ -180,26 +181,28 @@ function UserChat({
         };
 
         // Only add the final response to the chat log
-        setChatLog([...newChatLog, finalBotMessage]);
+        // setChatLog([...newChatLog, finalBotMessage]);
+        setChatLog((prevChatLog) => [...prevChatLog, finalBotMessage]);  // Update chat log with final response
       } else {
         // Normal flow: Add bot's response to chat log
         const botMessage = {
           role: 'assistant',
           content: data.modelreply,
         };
-        setChatLog([...newChatLog, botMessage]);
+        // setChatLog([...newChatLog, botMessage]);
+        setChatLog((prevChatLog) => [...prevChatLog, botMessage]);
       }
     } catch (err) {
       setError('Error communicating with backend');
       console.error(err);
     } finally {
       setIsLoading(false); // Set loading state to false
-      setShowPrompts(false);
+      setShowPrompts(true);
     }
   }
 
   // Handle key press event for disappearing the default chat bot message on user click
-  
+
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       setIsVisible(false); // Hide image and text on Enter

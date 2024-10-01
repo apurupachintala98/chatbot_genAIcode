@@ -22,8 +22,8 @@ function Dashboard() {
    setIsVisible(true); // Show the image and text again
    setResponseReceived(false); // Hide the helpfulness prompt
    setError(''); // Clear any existing error message
-   setShowPrompts(true); // Show suggested prompts again
-   setRouteCdUpdated(false); // Reset route update status
+   setShowPrompts(true);
+      setRouteCdUpdated(false); // Reset route update status
  };
 
 
