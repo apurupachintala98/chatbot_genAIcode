@@ -42,6 +42,13 @@ function UserChat({
     "Guide me on Snowflake Onboarding process",
   ]);
 
+  //creating dummy file for the architecture deck condition as "No"
+  const createDummyFile = () => {
+    const blob = new Blob(["This is a dummy file for Architecture Deck"], { type: 'application/pdf' });
+    const file = new File([blob], "dummy-architecture-deck.pdf", { type: 'application/pdf' });
+    return file;
+  };
+  
   // Modify handlePromptClick to pass the prompt directly to handleSubmit
   const handlePromptClick = (prompt) => {
   };
@@ -148,6 +155,7 @@ function UserChat({
       setError('Please provide valid app_cd and request_id.');
       return;
     }
+  
     const newMessage = {
       role: 'user',
       content: input,
@@ -159,7 +167,7 @@ function UserChat({
     setError(''); // Clear any previous error
     setShowPrompts(false);
     setIsVisible(false); // Hide image and text on Enter
-
+  
     try {
       // Dynamic API URL based on user inputs
       const response = await fetch(
@@ -172,28 +180,69 @@ function UserChat({
           body: JSON.stringify(newChatLog)
         }
       );
-
+  
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const data = await response.json();
+      let data = await response.json();
+  
+      // Convert final_response_flag to a string if it is a boolean true
+      if (data.final_response_flag === true) {
+        data.final_response_flag = "true"; // Change the boolean true to the string "true"
+      }
+  
       setApiResponse(data);
       const modelReply = data.modelreply; // Store model reply
+  
       if (modelReply.includes(' "Architecture Deck": "Yes"')) {
-        // Only set file upload condition if the user's reply was "yes"
         setFileUploadCondition(true); // Show file upload option if user replies with "yes"
       }
+  
+      // Check if the model reply indicates "No"
+      if (modelReply.includes(' "Architecture Deck": "No"')) {
+        const dummyFile = createDummyFile(); // Create the dummy file
+        
+        // Prepare FormData with the dummy file
+        const formData = new FormData();
+        formData.append('app_cd', appCd);
+        formData.append('request_id', requestId);
+        formData.append('route_cd', routeCd);
+        
+        const pureJsonResultModelResponse = JSON.parse(data.app_info.json_result_model_response);
+        formData.append('app_info', JSON.stringify({
+          json_result_model_response: pureJsonResultModelResponse,
+          final_response_flag: "True",
+        }));
+        
+        formData.append('file', dummyFile); // Add the dummy file
+  
+        // Upload the dummy file
+        const fileUploadResponse = await fetch(
+          `http://10.126.192.122:8000/upload_file/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
+  
+        if (fileUploadResponse.ok) {
+          setUploadStatus('Dummy file uploaded successfully!');
+        } else {
+          setUploadStatus('Dummy file upload failed.');
+        }
+      }
+  
       // If route_cd is updated, send a "hey" message to the API but don't display it
       if (data.route_cd && data.route_cd !== routeCd) {
         setRouteCd(data.route_cd);
         setRouteCdUpdated(true);
-
+  
         // Send "Hey" message to the API but don't display it
         const silentMessage = {
           role: 'user',
           content: 'Hey',
         };
-
+  
         const silentResponse = await fetch(
           `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
           {
@@ -204,34 +253,34 @@ function UserChat({
             body: JSON.stringify([...newChatLog, silentMessage])
           }
         );
-
+  
         if (!silentResponse.ok) {
           throw new Error('Network response was not ok');
         }
-
+  
         const silentData = await silentResponse.json();
         const finalBotMessage = {
           role: 'assistant',
           content: silentData.modelreply,
         };
-
+  
         // Only add the final response to the chat log
         setChatLog([...newChatLog, finalBotMessage]);
       } else {
         // Normal flow: Add bot's response to chat log
         const botMessage = {
-          role: 'assistant',
-          content: data.modelreply,
-        };
-        setChatLog([...newChatLog, botMessage]);
+            role: 'assistant',
+            content: data.modelreply,
+          };
+          setChatLog([...newChatLog, botMessage]);
+        }
+      } catch (err) {
+        setError('Error communicating with backend');
+        console.error(err);
+      } finally {
+        setIsLoading(false); // Set loading state to false
+        setShowPrompts(false);
       }
-    } catch (err) {
-      setError('Error communicating with backend');
-      console.error(err);
-    } finally {
-      setIsLoading(false); // Set loading state to false
-      setShowPrompts(false);
-    }
   }
 
   // Handle key press event for disappearing the default chat bot message on user click
