@@ -101,100 +101,6 @@ function UserChat({
   };
 
   // Updated handleSubmit to handle both user input and prompts
-  // async function handleSubmit(e) {
-  //   e.preventDefault();
-  //  if (!input.trim()) return; // Prevent empty messages
-  //   if (!appCd.trim() || !requestId.trim()) {
-  //     setError('Please provide valid app_cd and request_id.');
-  //     return;
-  //   }
-  //   const newMessage = {
-  //     role: 'user',
-  //     content: input,
-  //   };
-  //   const newChatLog = [...chatLog, newMessage]; // Add user's message to chat log
-  //   setChatLog(newChatLog);
-  //   setInput(''); // Clear the input field
-  //   setIsLoading(true); // Set loading state to true
-  //   setError(''); // Clear any previous error
-  //   setShowPrompts(false);
-  //   setIsVisible(false); // Hide image and text on Enter
-
-  //   try {
-  //     // Dynamic API URL based on user inputs
-  //     const response = await fetch(
-  //       `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
-  //       {
-  //         method: 'PUT',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify(newChatLog)
-  //       }
-  //     );
-
-  //     if (!response.ok) {
-  //       console.error('Failed to fetch the response', response);
-  //       throw new Error('Network response was not ok');
-  //    }
-
-  //     const data = await response.json();
-  //     setApiResponse(data); // Store the PUT API response in the state
-  //     console.log("API Response:", data);  // Debug the API response
-  //     const modelReply = data.modelReply;
-  //     if (modelReply.includes(' "Architecture Deck": "Yes"')) {
-  //       setFileUploadCondition(true); // Show file upload option if user replies with "yes"
-  //     }
-  //     // If route_cd is updated, send a "hey" message to the API but don't display it
-  //     if (data.route_cd && data.route_cd !== routeCd) {
-  //       setRouteCd(data.route_cd);
-  //       setRouteCdUpdated(true);
-
-
-  //       // Send "Hey" message to the API but don't display it
-  //       const silentMessage = {
-  //         role: 'user',
-  //         content: 'Hey',
-  //       };
-
-  //       const silentResponse = await fetch(
-  //         `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
-  //         {
-  //           method: 'PUT',
-  //           headers: {
-  //             'Content-Type': 'application/json',
-  //           },
-  //           body: JSON.stringify([...newChatLog, silentMessage])
-  //         }
-  //       );
-  //       if (!silentResponse.ok) {
-  //         console.error('Silent request failed:', silentResponse);
-  //         throw new Error('Network response was not ok');
-  //       }
-
-  //       const silentData = await silentResponse.json();
-  //       const finalBotMessage = {
-  //         role: 'assistant',
-  //         content: silentData.modelreply,
-  //       };
-
-  //       // Only add the final response to the chat log
-  //       setChatLog([...newChatLog, finalBotMessage]);
-  //     } else {
-  //       // Normal flow: Add bot's response to chat log
-  //       const botMessage = {
-  //         role: 'assistant',
-  //         content: data.modelreply,
-  //       };
-  //       setChatLog([...newChatLog, botMessage]);
-  //     }
-  //   } catch (err) {
-  //     setError('Error communicating with backend');
-  //     console.error(err);
-  //   } finally {
-  //     setIsLoading(false); // Set loading state to false
-  //     setShowPrompts(false);    }
-  // }
   async function handleSubmit(e) {
     e.preventDefault();
     if (!input.trim()) return; // Prevent empty messages
@@ -213,7 +119,7 @@ function UserChat({
     setError(''); // Clear any previous error
     setShowPrompts(false);
     setIsVisible(false); // Hide image and text on Enter
-
+ 
     try {
       // Dynamic API URL based on user inputs
       const response = await fetch(
@@ -226,39 +132,39 @@ function UserChat({
           body: JSON.stringify(newChatLog)
         }
       );
-
+ 
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
+ 
       const data = await response.json();
-
-      // Convert final_response_flag to a string with double quotes
       if (data.hasOwnProperty('final_response_flag')) {
         data.final_response_flag = JSON.stringify(data.final_response_flag); // This will add quotes around the value
       }
       setApiResponse(data);
       const modelReply = data.modelreply; // Store model reply
       if (modelReply.includes(' "Architecture Deck": "Yes"')) {
-        // Only set file upload condition if the user's reply was "yes"
-        //   if (input.toLowerCase() === "yes") {
-        setFileUploadCondition(true); // Show file upload option if user replies with "yes"
-        //}
-      }
-
+     // Only set file upload condition if the user's reply was "yes"
+   //   if (input.toLowerCase() === "yes") {
+       setFileUploadCondition(true); // Show file upload option if user replies with "yes"
+     //}
+   }
+ 
+ 
+ 
       // Store the PUT API response in the state
-
+ 
       // If route_cd is updated, send a "hey" message to the API but don't display it
       if (data.route_cd && data.route_cd !== routeCd) {
         setRouteCd(data.route_cd);
         setRouteCdUpdated(true);
-
+ 
         // Send "Hey" message to the API but don't display it
         const silentMessage = {
           role: 'user',
           content: 'Hey',
         };
-
+ 
         const silentResponse = await fetch(
           `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
           {
@@ -269,17 +175,17 @@ function UserChat({
             body: JSON.stringify([...newChatLog, silentMessage])
           }
         );
-
+ 
         if (!silentResponse.ok) {
           throw new Error('Network response was not ok');
         }
-
+ 
         const silentData = await silentResponse.json();
         const finalBotMessage = {
           role: 'assistant',
           content: silentData.modelreply,
         };
-
+ 
         // Only add the final response to the chat log
         setChatLog([...newChatLog, finalBotMessage]);
       } else {
