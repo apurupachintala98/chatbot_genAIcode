@@ -24,3 +24,5 @@ const parseMessageContent = (content) => {
 
   return parts;
 };
+
+export default parseMessageContent;

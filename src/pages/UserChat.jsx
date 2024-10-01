@@ -8,6 +8,7 @@ import chatbot from '../assets/images/chatbot.jpg';
 import user from '../assets/images/user.png';
 import Feedback from "../components/Feedback";
 import SuggestedPrompts from '../components/SuggestedPrompts';
+import parseMessageContent from '../components/parseMessageContent';
 
 function UserChat() {
   const [input, setInput] = useState(''); // User input
