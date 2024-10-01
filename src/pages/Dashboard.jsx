@@ -8,22 +8,22 @@ import UserChat from './UserChat';
 
 function Dashboard() {
 
- // Lift the states up from UserChat
- const [chatLog, setChatLog] = useState([]); // Chat log state
- const [isVisible, setIsVisible] = useState(true); // Show/hide welcome message
- const [responseReceived, setResponseReceived] = useState(false); // Hide helpfulness prompt
- const [error, setError] = useState(''); // Error message state
- const [showPrompts, setShowPrompts] = useState(true); // Show/hide suggested prompts
- const [routeCdUpdated, setRouteCdUpdated] = useState(false); // Track route update
+  // Lift the states up from UserChat
+  const [chatLog, setChatLog] = useState([]); // Chat log state
+  const [isVisible, setIsVisible] = useState(true); // Show/hide welcome message
+  const [responseReceived, setResponseReceived] = useState(false); // Hide helpfulness prompt
+  const [error, setError] = useState(''); // Error message state
+  const [showPrompts, setShowPrompts] = useState(true); // Show/hide suggested prompts
+  const [routeCdUpdated, setRouteCdUpdated] = useState(false); // Track route update
 
- const handleNewChat = () => {
-   setChatLog([]); // Reset chat log with default message
-   setIsVisible(true); // Show the image and text again
-   setResponseReceived(false); // Hide the helpfulness prompt
-   setError(''); // Clear any existing error message
-   setShowPrompts(true);
-      setRouteCdUpdated(false); // Reset route update status
- };
+  const handleNewChat = () => {
+    setChatLog([]); // Reset chat log with default message
+    setIsVisible(true); // Show the image and text again
+    setResponseReceived(false); // Hide the helpfulness prompt
+    setError(''); // Clear any existing error message
+    setShowPrompts(true);
+    setRouteCdUpdated(false); // Reset route update status
+  };
 
 
   return (
@@ -47,28 +47,12 @@ function Dashboard() {
           <img src={elevance} alt="Elevance Health Logo" width={100} height={60} />
         </a>
         <p className="d-flex p-2 ml-3 mb-0 align-items-center justify-content-center chat-assist text-center md:text-left">EDA ARB Scheduler Assistant</p>
-        {/* <div className="p-2 mr-2 header-searchbar">
-          <TextInput type="search" placeholder="Search" icon={HiSearch} className="hidden md:block" />
-        </div> */}
-        <Dropdown
-          label={<Avatar placeholderInitials="AC" rounded />}
-          arrowIcon={false}
-          inline
-        >
-          <Dropdown.Header>
-            <span className="block text-sm">Apurupa</span>
-            <span className="block truncate text-sm font-medium">example@ibm.com</span>
-          </Dropdown.Header>
-          <Dropdown.Item href="/">Dashboard</Dropdown.Item>
-          <Dropdown.Item>Settings</Dropdown.Item>
-          <Dropdown.Divider />
-          <Dropdown.Item>Sign out</Dropdown.Item>
-        </Dropdown>
+        <div></div>
       </Navbar>
 
       {/* Content Area */}
       <div className="flex-grow start-chatbot-fullscreen p-4 md:p-6 d-flex justify-content-between">
-      <UserChat
+        <UserChat
           chatLog={chatLog}
           setChatLog={setChatLog}
           isVisible={isVisible}

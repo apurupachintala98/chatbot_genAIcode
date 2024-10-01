@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
-import { Sidebar, Navbar, TextInput, Avatar, Dropdown, Button, Card, Modal } from 'flowbite-react';
+import { Sidebar, Navbar, TextInput, Avatar, Dropdown, Button } from 'flowbite-react';
 import { HiSearch, HiOutlinePencilAlt, HiUpload } from "react-icons/hi";
 import { FaTelegramPlane } from 'react-icons/fa';
 import "./Dashboard.css";
@@ -30,12 +30,10 @@ function UserChat({
   const [selectedFile, setSelectedFile] = useState(null); // Store selected file
   const [uploadStatus, setUploadStatus] = useState(''); // Track file upload status
   const [apiResponse, setApiResponse] = useState(null); // New state for storing API response
-  const [filteredPrompts, setFilteredPrompts] = useState([]); // Filtered prompts
   const [showPrompts, setShowPrompts] = useState(true); // To toggle the suggestion display
   // New states for user-provided app_cd and request_id
   const [appCd, setAppCd] = useState('user'); // User input for app_cd
   const [requestId, setRequestId] = useState('8000'); // User input for request_id
-
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
     "I want to schedule an ARB meeting",
@@ -66,14 +64,14 @@ function UserChat({
     setIsVisible(false); // Hide the welcome message and categories after clicking
     setRouteCdUpdated(true);
     setShowPrompts(false);
-    
+
     try {
       // Prepare the silent message "Hey"
       const silentMessage = {
         role: 'user',
         content: 'Hey',
       };
- 
+
       // Send the "Hey" message to the API but don't display it in the chatLog
       const response = await fetch(
         `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${categoryRouteCd}`,
@@ -85,19 +83,19 @@ function UserChat({
           body: JSON.stringify([silentMessage])
         }
       );
- 
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
- 
+
       const data = await response.json();
- 
+
       // Add the assistant's response (modelReply) to the chatLog
       const botMessage = {
         role: 'assistant',
         content: data.modelreply, // Assuming modelreply contains the bot's response
       };
- 
+
       setChatLog(prevChatLog => [...prevChatLog, botMessage]); // Only add the bot's response
     } catch (err) {
       setError('Error communicating with backend');
@@ -108,25 +106,21 @@ function UserChat({
   // Handle file upload
   const handleFileUpload = async (e) => {
     e.preventDefault();
-
     if (!selectedFile) {
       setUploadStatus('Please select a file to upload.');
       return;
     }
-    // const json_result_model_response = { "SVRO_APPROVED_YN": "Yes", "SVRO_PROGRAM_NO": "SVR21431", "BUSINESS_FUNDED": "No", "FUNDING_COST_CENTER_NO": "", "TGOV_REQUEST_ID": "TGov2342", "PROJECT_NAME": "Digital", "PROJECT_CODE": "DDS", "APM_NO": "APM1231321", "IT_OWNER_NAME": "Pavan", "ARCHITECT_LEAD_NAME": "Pavan", "BUSINES_OWNER_NAME": "Pavan", "PHI/PII": "No", "Architecture Deck": "Yes", "REVIEW_DATE": "10-03-2024", "Receiver_Email": "Gentela.VNSaiPavan@carelon.com" }
-
     const formData = new FormData();
     formData.append('app_cd', appCd);
     formData.append('request_id', requestId);
     formData.append('route_cd', routeCd);
-     // Convert the string to a pure JSON object
-     const pureJsonResultModelResponse = JSON.parse(apiResponse.app_info.json_result_model_response);
-     console.log(pureJsonResultModelResponse);
-     formData.append('app_info', JSON.stringify({
-   json_result_model_response: pureJsonResultModelResponse,
-   final_response_flag: "True"
-   }));
-    // formData.append('app_info', JSON.stringify(apiResponse.app_info));
+    // Convert the string to a pure JSON object
+    const pureJsonResultModelResponse = JSON.parse(apiResponse.app_info.json_result_model_response);
+    console.log(pureJsonResultModelResponse);
+    formData.append('app_info', JSON.stringify({
+      json_result_model_response: pureJsonResultModelResponse,
+      final_response_flag: "True"
+    }));
     formData.append('file', selectedFile); // Add the selected file
 
     try {
@@ -135,7 +129,6 @@ function UserChat({
         method: 'POST',
         body: formData, // FormData object
       });
-
       if (response.ok) {
         setUploadStatus('File uploaded successfully!');
       } else {
@@ -147,7 +140,7 @@ function UserChat({
     }
   };
 
-  // Updated handleSubmit to handle both user input and prompts
+  // Update handleSubmit
   async function handleSubmit(e) {
     e.preventDefault();
     if (!input.trim()) return; // Prevent empty messages
@@ -166,7 +159,7 @@ function UserChat({
     setError(''); // Clear any previous error
     setShowPrompts(false);
     setIsVisible(false); // Hide image and text on Enter
- 
+
     try {
       // Dynamic API URL based on user inputs
       const response = await fetch(
@@ -179,44 +172,28 @@ function UserChat({
           body: JSON.stringify(newChatLog)
         }
       );
- 
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      let data = await response.json();
- 
-      // Convert final_response_flag to a string if it is a boolean true
-      if (data.final_response_flag === true) {
-        data.final_response_flag = "true"; // Change the boolean true to the string "true"
-      }
-      // const data = await response.json();
-      // if (data.hasOwnProperty('final_response_flag')) {
-      //   data.final_response_flag = data.final_response_flag ? "true" : "false";
-      // }
+      const data = await response.json();
       setApiResponse(data);
       const modelReply = data.modelreply; // Store model reply
       if (modelReply.includes(' "Architecture Deck": "Yes"')) {
-     // Only set file upload condition if the user's reply was "yes"
-   //   if (input.toLowerCase() === "yes") {
-       setFileUploadCondition(true); // Show file upload option if user replies with "yes"
-     //}
-   }
- 
- 
- 
-      // Store the PUT API response in the state
- 
+        // Only set file upload condition if the user's reply was "yes"
+        setFileUploadCondition(true); // Show file upload option if user replies with "yes"
+      }
       // If route_cd is updated, send a "hey" message to the API but don't display it
       if (data.route_cd && data.route_cd !== routeCd) {
         setRouteCd(data.route_cd);
         setRouteCdUpdated(true);
- 
+
         // Send "Hey" message to the API but don't display it
         const silentMessage = {
           role: 'user',
           content: 'Hey',
         };
- 
+
         const silentResponse = await fetch(
           `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
           {
@@ -227,17 +204,17 @@ function UserChat({
             body: JSON.stringify([...newChatLog, silentMessage])
           }
         );
- 
+
         if (!silentResponse.ok) {
           throw new Error('Network response was not ok');
         }
- 
+
         const silentData = await silentResponse.json();
         const finalBotMessage = {
           role: 'assistant',
           content: silentData.modelreply,
         };
- 
+
         // Only add the final response to the chat log
         setChatLog([...newChatLog, finalBotMessage]);
       } else {
@@ -256,9 +233,8 @@ function UserChat({
       setShowPrompts(false);
     }
   }
- 
-  // Handle key press event for disappearing the default chat bot message on user click
 
+  // Handle key press event for disappearing the default chat bot message on user click
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       setIsVisible(false); // Hide image and text on Enter
@@ -283,7 +259,6 @@ function UserChat({
   }, [chatLog]);
 
   return (
-
     <div className='chat-container'>
       {isVisible && (
         <><div className="center-container">
@@ -408,18 +383,12 @@ function UserChat({
               onKeyPress={handleKeyPress}
               maxLength="400"
             />
-
-            {/* <button class="sendBtn" type="submit"> <svg class="w-8 h-6 ml-2" aria-hidden="true" fill="#1a3673" viewBox="0 0 448 448">
-            <path d="M.213 32L0 181.333 320 224 0 266.667.213 416 448 224z" onClick={handleSubmit} />
-          </svg></button> */}
             <button class="sendBtn" type="submit" onClick={handleSubmit}> <FaTelegramPlane className="h-7 w-7 text-cyan-600 dark:text-cyan-500" color="#1a3673" />
             </button>
           </form>
-
         </div>
       </div>
     </div>
-
   );
 }
 
