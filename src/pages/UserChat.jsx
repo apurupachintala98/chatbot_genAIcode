@@ -13,22 +13,28 @@ import faq from '../assets/images/FAQ.jpg';
 import query from '../assets/images/Query.png';
 import scheduler from '../assets/images/scheduler.jpg';
 
-function UserChat() {
+function UserChat({
+  chatLog, setChatLog, 
+  isVisible, setIsVisible, 
+  responseReceived, setResponseReceived, 
+  error, setError, 
+  routeCdUpdated, setRouteCdUpdated 
+}) {
+
   const [input, setInput] = useState(''); // User input
-  const [chatLog, setChatLog] = useState([]);
   const endOfMessagesRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(true); // State to control visibility for default chat image and text
-  const [responseReceived, setResponseReceived] = useState(false); // feedback response icons
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false); // Loading indicator
   const [routeCd, setRouteCd] = useState('None'); // Route code for API
-  const [routeCdUpdated, setRouteCdUpdated] = useState(false);
-
   // New states for file upload functionality
   const [fileUploadCondition, setFileUploadCondition] = useState(false); // Toggle for file upload option
   const [selectedFile, setSelectedFile] = useState(null); // Store selected file
   const [uploadStatus, setUploadStatus] = useState(''); // Track file upload status
   const [apiResponse, setApiResponse] = useState(null); // New state for storing API response
+  const [filteredPrompts, setFilteredPrompts] = useState([]); // Filtered prompts
+  const [showPrompts, setShowPrompts] = useState(false); // To toggle the suggestion display
+  // New states for user-provided app_cd and request_id
+  const [appCd, setAppCd] = useState('user'); // User input for app_cd
+  const [requestId, setRequestId] = useState('8000'); // User input for request_id
 
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
@@ -37,12 +43,7 @@ function UserChat() {
     "Guide me on the TGOV process?",
     "Guide me on Snowflake Onboarding process",
   ]);
-  const [filteredPrompts, setFilteredPrompts] = useState([]); // Filtered prompts
-  const [showPrompts, setShowPrompts] = useState(false); // To toggle the suggestion display
 
-  // New states for user-provided app_cd and request_id
-  const [appCd, setAppCd] = useState('user'); // User input for app_cd
-  const [requestId, setRequestId] = useState('8000'); // User input for request_id
 
   const handleInputChange = (e) => {
     const userInput = e.target.value;

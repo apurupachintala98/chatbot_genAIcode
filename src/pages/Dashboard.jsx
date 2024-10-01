@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
 import { Sidebar, Navbar, Avatar, Dropdown, Button } from 'flowbite-react';
 import { HiSearch, HiOutlinePencilAlt } from "react-icons/hi";
 import "./Dashboard.css";
@@ -8,8 +8,23 @@ import UserChat from './UserChat';
 
 function Dashboard() {
 
-  const handleNewChat = () => {
-  };
+ // Lift the states up from UserChat
+ const [chatLog, setChatLog] = useState([]); // Chat log state
+ const [isVisible, setIsVisible] = useState(true); // Show/hide welcome message
+ const [responseReceived, setResponseReceived] = useState(false); // Hide helpfulness prompt
+ const [error, setError] = useState(''); // Error message state
+ const [showPrompts, setShowPrompts] = useState(true); // Show/hide suggested prompts
+ const [routeCdUpdated, setRouteCdUpdated] = useState(false); // Track route update
+
+ const handleNewChat = () => {
+   setChatLog([]); // Reset chat log with default message
+   setIsVisible(true); // Show the image and text again
+   setResponseReceived(false); // Hide the helpfulness prompt
+   setError(''); // Clear any existing error message
+   setShowPrompts(true); // Show suggested prompts again
+   setRouteCdUpdated(false); // Reset route update status
+ };
+
 
   return (
     <div className="flex flex-col md:flex-row h-screen main-content">
@@ -53,7 +68,20 @@ function Dashboard() {
 
       {/* Content Area */}
       <div className="flex-grow start-chatbot-fullscreen p-4 md:p-6 d-flex justify-content-between">
-      <UserChat />
+      <UserChat
+          chatLog={chatLog}
+          setChatLog={setChatLog}
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+          responseReceived={responseReceived}
+          setResponseReceived={setResponseReceived}
+          error={error}
+          setError={setError}
+          showPrompts={showPrompts}
+          setShowPrompts={setShowPrompts}
+          routeCdUpdated={routeCdUpdated}
+          setRouteCdUpdated={setRouteCdUpdated}
+        />
       </div>
     </div>
   );
