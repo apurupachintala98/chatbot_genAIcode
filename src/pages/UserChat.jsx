@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useRef } from 'react';
+import React, { useState, useLayoutEffect, useRef , useEffect} from 'react';
 import { Sidebar, Navbar, TextInput, Avatar, Dropdown, Button, Card, Modal } from 'flowbite-react';
 import { HiSearch, HiOutlinePencilAlt, HiUpload } from "react-icons/hi";
 import { FaTelegramPlane } from 'react-icons/fa';
@@ -85,15 +85,11 @@ function UserChat() {
       return;
     }
 
-    // const json_result_model_response = { "SVRO_APPROVED_YN": "Yes", "SVRO_PROGRAM_NO": "SVR21431", "BUSINESS_FUNDED": "No", "FUNDING_COST_CENTER_NO": "", "TGOV_REQUEST_ID": "TGov2342", "PROJECT_NAME": "Digital", "PROJECT_CODE": "DDS", "APM_NO": "APM1231321", "IT_OWNER_NAME": "Pavan", "ARCHITECT_LEAD_NAME": "Pavan", "BUSINES_OWNER_NAME": "Pavan", "PHI/PII": "No", "Architecture Deck": "Yes", "REVIEW_DATE": "10-03-2024", "Receiver_Email": "Gentela.VNSaiPavan@carelon.com" }
     const formData = new FormData();
-    formData.append('app_cd', "user");
-    formData.append('request_id', "8000");
-    formData.append('route_cd', "arb_scheduler");
-    formData.append('app_info', JSON.stringify({
-      "json_result_model_response": apiResponse, //Use the stored response
-      "final_response_flag": "True"
-    }));
+    formData.append('app_cd', appCd);
+    formData.append('request_id', requestId);
+    formData.append('route_cd', routeCd);
+    formData.append('app_info', apiResponse.app_info);
     formData.append('file', selectedFile); // Add the selected file
 
     try {
