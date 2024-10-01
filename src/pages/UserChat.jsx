@@ -103,16 +103,16 @@ function UserChat({
   };
 
   // Updated handleSubmit to handle both user input and prompts
-  async function handleSubmit(e, message = input) {
+  async function handleSubmit(e) {
     e.preventDefault();
-   if (!message.trim()) return; // Prevent empty messages
+   if (!input.trim()) return; // Prevent empty messages
     if (!appCd.trim() || !requestId.trim()) {
       setError('Please provide valid app_cd and request_id.');
       return;
     }
     const newMessage = {
       role: 'user',
-      content: message,
+      content: input,
     };
     const newChatLog = [...chatLog, newMessage]; // Add user's message to chat log
     setChatLog(newChatLog);
