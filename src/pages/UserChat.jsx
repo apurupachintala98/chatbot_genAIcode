@@ -31,7 +31,6 @@ function UserChat() {
   const [apiResponse, setApiResponse] = useState(null); // New state for storing API response
 
 
-
   const [suggestedPrompts, setSuggestedPrompts] = useState([
     "I want to schedule an ARB meeting",
     "What is the status of my ARB review?",
