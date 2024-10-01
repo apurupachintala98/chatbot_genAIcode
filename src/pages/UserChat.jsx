@@ -80,6 +80,12 @@ function UserChat() {
     }
   };
 
+    // Handle clicking on a category icon and updating routeCd
+    const handleCategoryClick = (categoryRouteCd) => {
+      setRouteCd(categoryRouteCd); // Update the route_cd based on the clicked category
+      setIsVisible(false); // Hide the welcome message and categories after clicking
+    };
+
   // Handle file upload
   const handleFileUpload = async (e) => {
     e.preventDefault();
@@ -241,15 +247,20 @@ function UserChat() {
             <div className="flex justify-center gap-4">
               <div className="flex flex-col gap-3">
                 <div className="flex flex-wrap gap-6">
-                  <div className="flex flex-col items-center">
+                   {/* ARB Scheduler Category */}
+                   <div className="flex flex-col items-center" onClick={() => handleCategoryClick('arb_scheduler')}>
                     <Avatar img={scheduler} rounded bordered color="gray" size="lg" />
                     <p className="mt-2 text-center text-gray-700 dark:text-gray-300">ARB Scheduler</p>
                   </div>
-                  <div className="flex flex-col items-center">
+
+                  {/* ARB FAQ Category */}
+                  <div className="flex flex-col items-center" onClick={() => handleCategoryClick('arb_faq')}>
                     <Avatar img={faq} rounded bordered color="light" size="lg" />
                     <p className="mt-2 text-center text-gray-700 dark:text-gray-300">ARB FAQ</p>
                   </div>
-                  <div className="flex flex-col items-center">
+
+                  {/* ARB Query Category */}
+                  <div className="flex flex-col items-center" onClick={() => handleCategoryClick('arb_query')}>
                     <Avatar img={query} rounded bordered color="purple" size="lg" />
                     <p className="mt-2 text-center text-gray-700 dark:text-gray-300">ARB Query</p>
                   </div>
