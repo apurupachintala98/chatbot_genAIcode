@@ -89,6 +89,9 @@ function UserChat() {
     formData.append('app_cd', appCd);
     formData.append('request_id', requestId);
     formData.append('route_cd', routeCd);
+    // formData.append('app_info', JSON.stringify(
+    //   apiResponse.app_info
+    // ));
     formData.append('app_info', JSON.stringify(apiResponse.app_info));
     formData.append('file', selectedFile); // Add the selected file
 
@@ -256,7 +259,8 @@ function UserChat() {
                     </div>
                     <div class="info">
                       <div className='message'>
-                        {chat.content}
+                        {/* Parse and render the assistant's message */}
+                      {parseMessageContent(chat.content)}
                       </div>
                     </div>
                   </div>
