@@ -216,6 +216,7 @@ function UserChat({
       });
       if (response.ok) {
         setUploadStatus('File uploaded successfully as an attachment to Confluence!');
+        setSuccessMessage('Record Inserted successfully into Confluence Portal'); // Set success message
         setSuccessMessage('ARB review invitation sent successfully'); // Set success message
       } else {
         setUploadStatus('File upload failed.');
