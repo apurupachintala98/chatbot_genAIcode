@@ -48,7 +48,7 @@ function UserChat({
   //creating dummy file for the architecture deck condition as "No"
   const createDummyFile = () => {
     const blob = new Blob(["This is a dummy file for Architecture Deck"], { type: 'application/pdf' });
-    const file = new File([blob], "dummy-architecture-deck.pdf", { type: 'application/pdf' });
+    const file = new File([blob], "dummy.pdf", { type: 'application/pdf' });
     return file;
   };
 
