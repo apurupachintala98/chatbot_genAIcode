@@ -1,5 +1,5 @@
-import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
-import { Sidebar, Navbar, Avatar, Dropdown, Button } from 'flowbite-react';
+import React, { useState } from 'react';
+import { Sidebar, Navbar, Button } from 'flowbite-react';
 import { HiSearch, HiOutlinePencilAlt } from "react-icons/hi";
 import "./Dashboard.css";
 import elevance from '../assets/images/logo.png';
