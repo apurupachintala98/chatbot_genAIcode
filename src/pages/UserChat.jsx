@@ -477,9 +477,9 @@ function UserChat({
             </div>
           </div>
         ))}
-         {successMessage && <Alert color="success">
-              <span className="font-medium">{successMessage}</span>
-            </Alert>}
+        {successMessage && <Alert color="success">
+          <span className="font-medium">{successMessage}</span>
+        </Alert>}
 
         {/* Loader section */}
         {isLoading && <div className="loader">
