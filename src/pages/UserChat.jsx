@@ -20,13 +20,13 @@ function UserChat({
   error, setError,
   routeCdUpdated, setRouteCdUpdated,
   uploadStatus, setUploadStatus,
-  showPrompts, setShowPrompts
+  showPrompts, setShowPrompts,
+  routeCd, setRouteCd,
 }) {
 
   const [input, setInput] = useState(''); // User input
   const endOfMessagesRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false); // Loading indicator
-  const [routeCd, setRouteCd] = useState('None'); // Route code for API
   // New states for file upload functionality
   const [fileUploadCondition, setFileUploadCondition] = useState(false); // Toggle for file upload option
   const [selectedFile, setSelectedFile] = useState(null); // Store selected file
@@ -36,7 +36,7 @@ function UserChat({
   const [requestId, setRequestId] = useState('8000'); // User input for request_id
   const [categoryLoading, setCategoryLoading] = useState(false); // New loading state for category click
   const [successMessage, setSuccessMessage] = useState(''); // New state for success message
-  
+
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
     "I want to schedule an ARB meeting",
@@ -149,15 +149,15 @@ function UserChat({
     setIsVisible(false); // Hide the welcome message and categories after clicking
     setRouteCdUpdated(true);
     setShowPrompts(false);
-   // setIsLoading(true); // Set loading state for the category click
- 
+    // setIsLoading(true); // Set loading state for the category click
+
     try {
       // Prepare the silent message "Hey"
       const silentMessage = {
         role: 'user',
         content: 'Hey',
       };
- 
+
       // Send the "Hey" message to the API but don't display it in the chatLog
       const response = await fetch(
         `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${categoryRouteCd}`,
@@ -169,29 +169,29 @@ function UserChat({
           body: JSON.stringify([silentMessage])
         }
       );
- 
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
- 
+
       const data = await response.json();
- 
+
       // Add the assistant's response (modelReply) to the chatLog
       const botMessage = {
         role: 'assistant',
         content: data.modelreply, // Assuming modelreply contains the bot's response
       };
- 
+
       setChatLog(prevChatLog => [...prevChatLog, botMessage]); // Only add the bot's response
     } catch (err) {
       setError('Error communicating with backend');
       console.error(err);
     } finally {
-     // setIsLoading(false); // Set loading state to false after the API call
+      // setIsLoading(false); // Set loading state to false after the API call
       setCategoryLoading(false); // Hide loader after the response is processed
     }
   };
- 
+
 
   // Handle file upload
   const handleFileUpload = async (e) => {

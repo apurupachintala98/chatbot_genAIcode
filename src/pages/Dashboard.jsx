@@ -16,6 +16,7 @@ function Dashboard() {
   const [showPrompts, setShowPrompts] = useState(true); // Show/hide suggested prompts
   const [routeCdUpdated, setRouteCdUpdated] = useState(false); // Track route update
   const [uploadStatus, setUploadStatus] = useState(''); // Track file upload status
+  const [routeCd, setRouteCd] = useState('None');
 
   const handleNewChat = () => {
     setChatLog([]); // Reset chat log with default message
@@ -25,6 +26,7 @@ function Dashboard() {
     setShowPrompts(true);
     setRouteCdUpdated(false); // Reset route update status
     setUploadStatus(false);
+    setRouteCd('None');
   };
 
 
@@ -68,6 +70,8 @@ function Dashboard() {
           setRouteCdUpdated={setRouteCdUpdated}
           uploadStatus={uploadStatus}
           setUploadStatus={setUploadStatus}
+          routeCd={routeCd}
+          setRouteCd={setRouteCd}
         />
       </div>
     </div>
