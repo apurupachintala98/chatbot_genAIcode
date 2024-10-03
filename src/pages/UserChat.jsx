@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
-import { Sidebar, Navbar, TextInput, Avatar, Dropdown, Button } from 'flowbite-react';
+import { Avatar, Alert } from 'flowbite-react';
 import { HiSearch, HiOutlinePencilAlt, HiUpload } from "react-icons/hi";
 import { FaTelegramPlane } from 'react-icons/fa';
 import "./Dashboard.css";
@@ -36,6 +36,7 @@ function UserChat({
   const [appCd, setAppCd] = useState('user'); // User input for app_cd
   const [requestId, setRequestId] = useState('8000'); // User input for request_id
   const [categoryLoading, setCategoryLoading] = useState(false); // New loading state for category click
+  const [successMessage, setSuccessMessage] = useState(''); // New state for success message
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
     "I want to schedule an ARB meeting",
@@ -57,7 +58,7 @@ function UserChat({
       role: 'user',
       content: prompt, // Use the clicked prompt as the message content
     };
-    
+
     const newChatLog = [...chatLog, newMessage]; // Add new user message to chat log
     setChatLog(newChatLog); // Update the chat log state
     setInput(''); // Clear the input field
@@ -214,7 +215,8 @@ function UserChat({
         body: formData, // FormData object
       });
       if (response.ok) {
-        setUploadStatus('File uploaded successfully!');
+        setUploadStatus('File uploaded successfully as an attachment to Confluence!');
+        setSuccessMessage('ARB review invitation sent successfully'); // Set success message
       } else {
         setUploadStatus('File upload failed.');
       }
@@ -467,6 +469,10 @@ function UserChat({
                 </div>
               </div>
             </div>
+            {successMessage && <Alert color="success">
+              <span className="font-medium">{successMessage}</span>
+            </Alert>}
+
           </div>
         ))}
 
