@@ -23,19 +23,19 @@ function UserChat({
   showPrompts, setShowPrompts,
   routeCd, setRouteCd,
   isLoading, setIsLoading,
+  successMessage, setSuccessMessage,
+  fileUploadCondition, setFileUploadCondition
 }) {
 
   const [input, setInput] = useState(''); // User input
   const endOfMessagesRef = useRef(null);
   // New states for file upload functionality
-  const [fileUploadCondition, setFileUploadCondition] = useState(false); // Toggle for file upload option
   const [selectedFile, setSelectedFile] = useState(null); // Store selected file
   const [apiResponse, setApiResponse] = useState(null); // New state for storing API response
   // New states for user-provided app_cd and request_id
   const [appCd, setAppCd] = useState('ARB_Bot'); // User input for app_cd
   const [requestId, setRequestId] = useState('8000'); // User input for request_id
   const [categoryLoading, setCategoryLoading] = useState(false); // New loading state for category click
-  const [successMessage, setSuccessMessage] = useState(''); // New state for success message
 
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
@@ -310,11 +310,11 @@ function UserChat({
           }
         );
 
-        if (fileUploadResponse.ok) {
-          setUploadStatus('Dummy file uploaded successfully!');
-        } else {
-          setUploadStatus('Dummy file upload failed.');
-        }
+        // if (fileUploadResponse.ok) {
+        //   setUploadStatus('Dummy file uploaded successfully!');
+        // } else {
+        //   setUploadStatus('Dummy file upload failed.');
+        // }
       }
 
       // If route_cd is updated, send a "hey" message to the API but don't display it

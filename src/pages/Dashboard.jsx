@@ -18,6 +18,10 @@ function Dashboard() {
   const [uploadStatus, setUploadStatus] = useState(''); // Track file upload status
   const [routeCd, setRouteCd] = useState('None');
   const [isLoading, setIsLoading] = useState(false); // Loading indicator
+  const [successMessage, setSuccessMessage] = useState(''); // New state for success message
+  const [fileUploadCondition, setFileUploadCondition] = useState(false); // Toggle for file upload option
+
+
 
 
   const handleNewChat = () => {
@@ -30,6 +34,8 @@ function Dashboard() {
     setUploadStatus(false);
     setRouteCd('None');
     setIsLoading(false);
+    setSuccessMessage('');
+    setFileUploadCondition(false);
   };
 
 
@@ -77,6 +83,10 @@ function Dashboard() {
           setRouteCd={setRouteCd}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
+          successMessage={successMessage}
+          setSuccessMessage={setSuccessMessage}
+          fileUploadCondition={fileUploadCondition}
+          setFileUploadCondition={setFileUploadCondition}
         />
       </div>
     </div>
