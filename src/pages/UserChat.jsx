@@ -12,7 +12,7 @@ import parseMessageContent from '../components/parseMessageContent';
 import faq from '../assets/images/FAQ.jpg';
 import query from '../assets/images/Query.png';
 import scheduler from '../assets/images/scheduler.jpg';
-import { GooSpinner, PulseSpinner, PacmanLoader } from "react-spinners-kit";
+import HashLoader from "react-spinners/HashLoader";
 
 function UserChat({
   chatLog, setChatLog,
@@ -35,6 +35,7 @@ function UserChat({
   // New states for user-provided app_cd and request_id
   const [appCd, setAppCd] = useState('user'); // User input for app_cd
   const [requestId, setRequestId] = useState('8000'); // User input for request_id
+  const [categoryLoading, setCategoryLoading] = useState(false); // New loading state for category click
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
     "I want to schedule an ARB meeting",
@@ -49,55 +50,84 @@ function UserChat({
     const file = new File([blob], "dummy-architecture-deck.pdf", { type: 'application/pdf' });
     return file;
   };
-  
-// Handle clicking on a suggested prompt
-const handlePromptClick = async (prompt) => {
-  const newMessage = {
-    role: 'user',
-    content: prompt, // Use the clicked prompt as the message content
-  };
-  
-  const newChatLog = [...chatLog, newMessage]; // Add new user message to chat log
-  setChatLog(newChatLog); // Update the chat log state
-  setInput(''); // Clear the input field
-  setIsLoading(true); // Set loading state to true
-  setError(''); // Clear any previous error
-  setShowPrompts(false); // Hide prompts
-  setIsVisible(false);
 
-  try {
-    // Send the new message to the API
-    const response = await fetch(
-      `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newChatLog) // Send the updated chat log
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-
-    // Add the assistant's response to the chat log
-    const botMessage = {
-      role: 'assistant',
-      content: data.modelreply, // Assuming modelreply contains the bot's response
+  // Handle clicking on a suggested prompt
+  const handlePromptClick = async (prompt) => {
+    const newMessage = {
+      role: 'user',
+      content: prompt, // Use the clicked prompt as the message content
     };
-
-    setChatLog(prevChatLog => [...prevChatLog, botMessage]); // Update chat log with bot's response
-  } catch (err) {
-    setError('Error communicating with backend'); // Handle errors
-    console.error(err);
-  } finally {
-    setIsLoading(false); // Set loading state to false
-  }
-};
-
+    
+    const newChatLog = [...chatLog, newMessage]; // Add new user message to chat log
+    setChatLog(newChatLog); // Update the chat log state
+    setInput(''); // Clear the input field
+    setIsLoading(true); // Set loading state to true
+    setError(''); // Clear any previous error
+    setShowPrompts(false); // Hide prompts
+    setIsVisible(false);
+    try {
+      // Send the new message to the API
+      const response = await fetch(
+        `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newChatLog) // Send the updated chat log
+        }
+      );
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      // Handle route_cd change
+      if (data.route_cd && data.route_cd !== routeCd) {
+        const previousRouteCd = routeCd; // Store the previous routeCd
+        setRouteCd(data.route_cd); // Update the route_cd
+        setRouteCdUpdated(true);
+        // Prepare the silent message "Hey"
+        const silentMessage = {
+          role: 'user',
+          content: 'Hey',
+        };
+        // Send the "Hey" message to the API but don't display it in the chatLog
+        const silentResponse = await fetch(
+          `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify([...newChatLog, silentMessage]) // Include the new chat log and the silent message
+          }
+        );
+        if (!silentResponse.ok) {
+          throw new Error('Network response was not ok while sending silent message');
+        }
+        const silentData = await silentResponse.json();
+        // Only store the final assistant's response from the silent call
+        const finalBotMessage = {
+          role: 'assistant',
+          content: silentData.modelreply,
+        };
+        // Update chat log without the silent message
+        setChatLog(prevChatLog => [...prevChatLog, finalBotMessage]); // Only add the final response to the chat log
+      } else {
+        // Add the assistant's response to the chat log
+        const botMessage = {
+          role: 'assistant',
+          content: data.modelreply, // Assuming modelreply contains the bot's response
+        };
+        setChatLog(prevChatLog => [...prevChatLog, botMessage]); // Update chat log with bot's response
+      }
+    } catch (err) {
+      setError('Error communicating with backend'); // Handle errors
+      console.error(err);
+    } finally {
+      setIsLoading(false); // Set loading state to false
+    }
+  };
 
   // Handle file selection
   const handleFileChange = (e) => {
@@ -113,6 +143,7 @@ const handlePromptClick = async (prompt) => {
 
   // Handle clicking on a category icon and updating routeCd
   const handleCategoryClick = async (categoryRouteCd) => {
+    setCategoryLoading(true); // Show loader when the category is clicked
     setRouteCd(categoryRouteCd); // Update the route_cd based on the clicked category
     setIsVisible(false); // Hide the welcome message and categories after clicking
     setRouteCdUpdated(true);
@@ -201,7 +232,7 @@ const handlePromptClick = async (prompt) => {
       setError('Please provide valid app_cd and request_id.');
       return;
     }
-  
+
     const newMessage = {
       role: 'user',
       content: input,
@@ -213,7 +244,7 @@ const handlePromptClick = async (prompt) => {
     setError(''); // Clear any previous error
     setShowPrompts(false);
     setIsVisible(false); // Hide image and text on Enter
-  
+
     try {
       // Dynamic API URL based on user inputs
       const response = await fetch(
@@ -226,42 +257,42 @@ const handlePromptClick = async (prompt) => {
           body: JSON.stringify(newChatLog)
         }
       );
-  
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       let data = await response.json();
-  
+
       // Convert final_response_flag to a string if it is a boolean true
       if (data.final_response_flag === true) {
         data.final_response_flag = "true"; // Change the boolean true to the string "true"
       }
-  
+
       setApiResponse(data);
       const modelReply = data.modelreply; // Store model reply
-  
+
       if (modelReply.includes(' "Architecture Deck": "Yes"')) {
         setFileUploadCondition(true); // Show file upload option if user replies with "yes"
       }
-  
+
       // Check if the model reply indicates "No"
       if (modelReply.includes(' "Architecture Deck": "No"')) {
         const dummyFile = createDummyFile(); // Create the dummy file
-        
+
         // Prepare FormData with the dummy file
         const formData = new FormData();
         formData.append('app_cd', appCd);
         formData.append('request_id', requestId);
         formData.append('route_cd', routeCd);
-        
+
         const pureJsonResultModelResponse = JSON.parse(data.app_info.json_result_model_response);
         formData.append('app_info', JSON.stringify({
           json_result_model_response: pureJsonResultModelResponse,
           final_response_flag: "True",
         }));
-        
+
         formData.append('file', dummyFile); // Add the dummy file
-  
+
         // Upload the dummy file
         const fileUploadResponse = await fetch(
           `http://10.126.192.122:8000/upload_file/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
@@ -270,25 +301,25 @@ const handlePromptClick = async (prompt) => {
             body: formData,
           }
         );
-  
+
         if (fileUploadResponse.ok) {
           setUploadStatus('Dummy file uploaded successfully!');
         } else {
           setUploadStatus('Dummy file upload failed.');
         }
       }
-  
+
       // If route_cd is updated, send a "hey" message to the API but don't display it
       if (data.route_cd && data.route_cd !== routeCd) {
         setRouteCd(data.route_cd);
         setRouteCdUpdated(true);
-  
+
         // Send "Hey" message to the API but don't display it
         const silentMessage = {
           role: 'user',
           content: 'Hey',
         };
-  
+
         const silentResponse = await fetch(
           `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
           {
@@ -299,34 +330,34 @@ const handlePromptClick = async (prompt) => {
             body: JSON.stringify([...newChatLog, silentMessage])
           }
         );
-  
+
         if (!silentResponse.ok) {
           throw new Error('Network response was not ok');
         }
-  
+
         const silentData = await silentResponse.json();
         const finalBotMessage = {
           role: 'assistant',
           content: silentData.modelreply,
         };
-  
+
         // Only add the final response to the chat log
         setChatLog([...newChatLog, finalBotMessage]);
       } else {
         // Normal flow: Add bot's response to chat log
         const botMessage = {
-            role: 'assistant',
-            content: data.modelreply,
-          };
-          setChatLog([...newChatLog, botMessage]);
-        }
-      } catch (err) {
-        setError('Error communicating with backend');
-        console.error(err);
-      } finally {
-        setIsLoading(false); // Set loading state to false
-        setShowPrompts(false);
+          role: 'assistant',
+          content: data.modelreply,
+        };
+        setChatLog([...newChatLog, botMessage]);
       }
+    } catch (err) {
+      setError('Error communicating with backend');
+      console.error(err);
+    } finally {
+      setIsLoading(false); // Set loading state to false
+      setShowPrompts(false);
+    }
   }
 
   // Handle key press event for disappearing the default chat bot message on user click
@@ -389,10 +420,13 @@ const handlePromptClick = async (prompt) => {
           </div></>
       )}
       <div className='user-chat-container'>
-      {/* <GooSpinner size={90} color="#686769" />
-<PulseSpinner size={90} color="#686769" /> */}
-{/* <PacmanLoader /> */}
-      
+        {/* Show the loader when a category is clicked */}
+        {categoryLoading && (
+          <div className="flex justify-center mt-6">
+            <HashLoader color="#1a3673" size={30} aria-label="Loading Spinner" data-testid="loader" />
+            <span className='fw-bold ml-3'>Generating the response</span>
+          </div>
+        )}
         {chatLog.map((chat, index) => (
           <div key={index} style={{
             backgroundColor: 'lightblue',
@@ -451,8 +485,8 @@ const handlePromptClick = async (prompt) => {
         {/* This empty div is to ensure scrolling to the last message */}
         <div ref={endOfMessagesRef} />
 
-         {/* Display Suggested Prompts */}
-         {showPrompts && (
+        {/* Display Suggested Prompts */}
+        {showPrompts && (
           <div className="suggested-prompts">
             <SuggestedPrompts prompts={suggestedPrompts} onPromptClick={handlePromptClick} />
           </div>
@@ -470,7 +504,7 @@ const handlePromptClick = async (prompt) => {
               Upload
             </button>
           </form>)}
-           {uploadStatus && <div className="upload-status d-flex justify-content-center mt-3">{uploadStatus}</div>} 
+        {uploadStatus && <div className="upload-status d-flex justify-content-center mt-3">{uploadStatus}</div>}
 
         {/* Input section */}
         <div className="blanter-msg p-4 md:p-6">
