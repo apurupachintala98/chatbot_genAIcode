@@ -50,9 +50,53 @@ function UserChat({
     return file;
   };
   
-  // Modify handlePromptClick to pass the prompt directly to handleSubmit
-  const handlePromptClick = (prompt) => {
+// Handle clicking on a suggested prompt
+const handlePromptClick = async (prompt) => {
+  const newMessage = {
+    role: 'user',
+    content: prompt, // Use the clicked prompt as the message content
   };
+  
+  const newChatLog = [...chatLog, newMessage]; // Add new user message to chat log
+  setChatLog(newChatLog); // Update the chat log state
+  setInput(''); // Clear the input field
+  setIsLoading(true); // Set loading state to true
+  setError(''); // Clear any previous error
+  setShowPrompts(false); // Hide prompts
+
+  try {
+    // Send the new message to the API
+    const response = await fetch(
+      `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newChatLog) // Send the updated chat log
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+
+    // Add the assistant's response to the chat log
+    const botMessage = {
+      role: 'assistant',
+      content: data.modelreply, // Assuming modelreply contains the bot's response
+    };
+
+    setChatLog(prevChatLog => [...prevChatLog, botMessage]); // Update chat log with bot's response
+  } catch (err) {
+    setError('Error communicating with backend'); // Handle errors
+    console.error(err);
+  } finally {
+    setIsLoading(false); // Set loading state to false
+  }
+};
+
 
   // Handle file selection
   const handleFileChange = (e) => {
@@ -406,9 +450,11 @@ function UserChat({
         {/* This empty div is to ensure scrolling to the last message */}
         <div ref={endOfMessagesRef} />
 
-        {/* Display Suggested Prompts */}
-        {showPrompts && (
-          <SuggestedPrompts prompts={suggestedPrompts} onPromptClick={handlePromptClick} />
+         {/* Display Suggested Prompts */}
+         {showPrompts && (
+          <div className="suggested-prompts">
+            <SuggestedPrompts prompts={suggestedPrompts} onPromptClick={handlePromptClick} />
+          </div>
         )}
         {/* File Upload Section */}
         {fileUploadCondition && (
