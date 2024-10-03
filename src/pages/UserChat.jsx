@@ -33,10 +33,11 @@ function UserChat({
   const [selectedFile, setSelectedFile] = useState(null); // Store selected file
   const [apiResponse, setApiResponse] = useState(null); // New state for storing API response
   // New states for user-provided app_cd and request_id
-  const [appCd, setAppCd] = useState('user'); // User input for app_cd
+  const [appCd, setAppCd] = useState('ARB_Bot'); // User input for app_cd
   const [requestId, setRequestId] = useState('8000'); // User input for request_id
   const [categoryLoading, setCategoryLoading] = useState(false); // New loading state for category click
   const [successMessage, setSuccessMessage] = useState(''); // New state for success message
+  
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
     "I want to schedule an ARB meeting",
