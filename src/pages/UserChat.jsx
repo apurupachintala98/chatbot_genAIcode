@@ -63,6 +63,7 @@ const handlePromptClick = async (prompt) => {
   setIsLoading(true); // Set loading state to true
   setError(''); // Clear any previous error
   setShowPrompts(false); // Hide prompts
+  setIsVisible(false);
 
   try {
     // Send the new message to the API
