@@ -15,6 +15,7 @@ function Dashboard() {
   const [error, setError] = useState(''); // Error message state
   const [showPrompts, setShowPrompts] = useState(true); // Show/hide suggested prompts
   const [routeCdUpdated, setRouteCdUpdated] = useState(false); // Track route update
+  const [uploadStatus, setUploadStatus] = useState(''); // Track file upload status
 
   const handleNewChat = () => {
     setChatLog([]); // Reset chat log with default message
@@ -23,6 +24,7 @@ function Dashboard() {
     setError(''); // Clear any existing error message
     setShowPrompts(true);
     setRouteCdUpdated(false); // Reset route update status
+    setUploadStatus(false);
   };
 
 
@@ -37,7 +39,6 @@ function Dashboard() {
               <HiOutlinePencilAlt className="ml-2 h-5 w-5" />
             </Button>
           </Sidebar.ItemGroup>
-
         </Sidebar.Items>
       </Sidebar>
       {/* Navbar */}
@@ -65,6 +66,8 @@ function Dashboard() {
           setShowPrompts={setShowPrompts}
           routeCdUpdated={routeCdUpdated}
           setRouteCdUpdated={setRouteCdUpdated}
+          uploadStatus={uploadStatus}
+          setUploadStatus={setUploadStatus}
         />
       </div>
     </div>

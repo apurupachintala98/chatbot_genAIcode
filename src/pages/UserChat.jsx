@@ -4,7 +4,7 @@ import { HiSearch, HiOutlinePencilAlt, HiUpload } from "react-icons/hi";
 import { FaTelegramPlane } from 'react-icons/fa';
 import "./Dashboard.css";
 import elevance from '../assets/images/logo.png';
-import chatbot from '../assets/images/chatbot.jpg';
+import chatbot from '../assets/images/chatbot.png';
 import user from '../assets/images/user.png';
 import Feedback from "../components/Feedback";
 import SuggestedPrompts from '../components/SuggestedPrompts';
@@ -12,6 +12,7 @@ import parseMessageContent from '../components/parseMessageContent';
 import faq from '../assets/images/FAQ.jpg';
 import query from '../assets/images/Query.png';
 import scheduler from '../assets/images/scheduler.jpg';
+import { GooSpinner, PulseSpinner, PacmanLoader } from "react-spinners-kit";
 
 function UserChat({
   chatLog, setChatLog,
@@ -19,6 +20,7 @@ function UserChat({
   responseReceived, setResponseReceived,
   error, setError,
   routeCdUpdated, setRouteCdUpdated,
+  uploadStatus, setUploadStatus,
 }) {
 
   const [input, setInput] = useState(''); // User input
@@ -28,7 +30,6 @@ function UserChat({
   // New states for file upload functionality
   const [fileUploadCondition, setFileUploadCondition] = useState(false); // Toggle for file upload option
   const [selectedFile, setSelectedFile] = useState(null); // Store selected file
-  const [uploadStatus, setUploadStatus] = useState(''); // Track file upload status
   const [apiResponse, setApiResponse] = useState(null); // New state for storing API response
   const [showPrompts, setShowPrompts] = useState(true); // To toggle the suggestion display
   // New states for user-provided app_cd and request_id
@@ -343,6 +344,10 @@ function UserChat({
           </div></>
       )}
       <div className='user-chat-container'>
+      {/* <GooSpinner size={90} color="#686769" />
+<PulseSpinner size={90} color="#686769" /> */}
+{/* <PacmanLoader /> */}
+      
         {chatLog.map((chat, index) => (
           <div key={index} style={{
             backgroundColor: 'lightblue',
@@ -352,7 +357,7 @@ function UserChat({
           }} className={`chat_message ${chat.role === 'assistant' ? 'ai' : ''}`}>
             <div className='chat_message_center'>
               <div className='avatar'>
-                <div className={`flex ${chat.role === 'assistant' ? 'justify-start' : 'justify-end'} mb-4`}>
+                <div className={`flex ${chat.role === 'assistant' ? 'justify-start' : 'justify-end'}`}>
                   {chat.role !== 'assistant' && (
                     <div class="container">
                       <div class="info">
@@ -418,7 +423,8 @@ function UserChat({
               Upload
             </button>
           </form>)}
-        {uploadStatus && <div className="upload-status d-flex justify-content-center mt-3">{uploadStatus}</div>}
+           {uploadStatus && <div className="upload-status d-flex justify-content-center mt-3">{uploadStatus}</div>} 
+
         {/* Input section */}
         <div className="blanter-msg p-4 md:p-6">
           <form onSubmit={handleSubmit} className="flex">
