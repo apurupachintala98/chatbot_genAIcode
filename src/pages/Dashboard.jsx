@@ -17,6 +17,8 @@ function Dashboard() {
   const [routeCdUpdated, setRouteCdUpdated] = useState(false); // Track route update
   const [uploadStatus, setUploadStatus] = useState(''); // Track file upload status
   const [routeCd, setRouteCd] = useState('None');
+  const [isLoading, setIsLoading] = useState(false); // Loading indicator
+
 
   const handleNewChat = () => {
     setChatLog([]); // Reset chat log with default message
@@ -27,6 +29,7 @@ function Dashboard() {
     setRouteCdUpdated(false); // Reset route update status
     setUploadStatus(false);
     setRouteCd('None');
+    setIsLoading(false);
   };
 
 
@@ -72,6 +75,8 @@ function Dashboard() {
           setUploadStatus={setUploadStatus}
           routeCd={routeCd}
           setRouteCd={setRouteCd}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
         />
       </div>
     </div>

@@ -22,11 +22,11 @@ function UserChat({
   uploadStatus, setUploadStatus,
   showPrompts, setShowPrompts,
   routeCd, setRouteCd,
+  isLoading, setIsLoading,
 }) {
 
   const [input, setInput] = useState(''); // User input
   const endOfMessagesRef = useRef(null);
-  const [isLoading, setIsLoading] = useState(false); // Loading indicator
   // New states for file upload functionality
   const [fileUploadCondition, setFileUploadCondition] = useState(false); // Toggle for file upload option
   const [selectedFile, setSelectedFile] = useState(null); // Store selected file
@@ -399,7 +399,7 @@ function UserChat({
           <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
           <p className="center-text">Hello there, I am your ARB Scheduler Assistant. How can I help you today? </p>
         </div><div className="text-center space-y-6">
-            <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+            <h3 className="mb-5 text-lg fw-bold text-gray-500 dark:text-gray-400">
               Choose a ARB Category
             </h3>
             <div className="flex justify-center gap-4">
