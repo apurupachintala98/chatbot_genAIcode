@@ -21,6 +21,7 @@ function UserChat({
   error, setError,
   routeCdUpdated, setRouteCdUpdated,
   uploadStatus, setUploadStatus,
+  showPrompts, setShowPrompts
 }) {
 
   const [input, setInput] = useState(''); // User input
@@ -31,7 +32,6 @@ function UserChat({
   const [fileUploadCondition, setFileUploadCondition] = useState(false); // Toggle for file upload option
   const [selectedFile, setSelectedFile] = useState(null); // Store selected file
   const [apiResponse, setApiResponse] = useState(null); // New state for storing API response
-  const [showPrompts, setShowPrompts] = useState(true); // To toggle the suggestion display
   // New states for user-provided app_cd and request_id
   const [appCd, setAppCd] = useState('user'); // User input for app_cd
   const [requestId, setRequestId] = useState('8000'); // User input for request_id
