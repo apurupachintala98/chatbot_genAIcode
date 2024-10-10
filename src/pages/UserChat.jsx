@@ -10,9 +10,12 @@ import parseMessageContent from '../components/parseMessageContent';
 import ARBCategories from '../components/ARBCategories';
 import FileUploader from '../components/FileUploader'; // A new reusable component for file upload
 import ChatMessage from '../components/ChatMessage'; // A new reusable component for chat message
-import { Box, Grid, TextField, Button, IconButton, Typography, InputAdornment } from '@mui/material'; // Import MUI components
+import { Box, Grid, TextField, Button, IconButton, Typography, InputAdornment, Toolbar,  useTheme, useMediaQuery } from '@mui/material'; // Import MUI components
 
 function UserChat(props) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTabletOrMobile = useMediaQuery(theme.breakpoints.down('md'));
   const {
     chatLog, setChatLog,
     isVisible, setIsVisible,
@@ -379,22 +382,18 @@ function UserChat(props) {
   };
 
   useEffect(() => {
-    // Check if isVisible state changes unexpectedly
-    console.log(isVisible);
-  }, [isVisible]);
-
+    if (responseReceived) {
+      setIsVisible(false); // Hide the welcome message after response is received
+    }
+  }, [responseReceived]);
+  
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        minHeight: '100vh',
-        padding: '10px', // Padding for layout
         boxSizing: 'border-box',
-        overflow: 'hidden', // Disable page scroll
-        width: '60%',
-        marginTop: '50px'
       }}
     >
       {isVisible && (
@@ -440,32 +439,16 @@ function UserChat(props) {
         )}
       </Box>
 
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', marginTop: '60px', width: '100%' }}>
-        {/* Chat Log */}
-        <ChatMessage chatLog={chatLog} parseMessageContent={parseMessageContent} />
-        <div ref={endOfMessagesRef} />
-      </Box>
-      {successMessage && <Alert color="success">
-          <span className="font-medium">{successMessage}</span>
-        </Alert>}
-      {/* Loader section */}
-      {isLoading && <Loader />}
-
-      {/* Feedback icons */}
-      {responseReceived && <Feedback />}
-
-      {/* This empty div is to ensure scrolling to the last message */}
-      {/* <div ref={endOfMessagesRef} /> */}
-
+     
       {showPrompts && (
         <Box
           sx={{
             position: 'absolute',
             marginBottom: '30px',
-            bottom: '60px', // Just above the input field
+            bottom: '50px', // Just above the input field
             width: '100%', // Full width of the input
             maxWidth: '600px', // Limit for larger screens
-            left: '51%',
+            left: '50%',
             transform: 'translateX(-50%)', // Center align the prompts to match the input field
             zIndex: 1000,
             // overflowY: 'auto', // Ensure it stays on top of other elements
@@ -485,12 +468,13 @@ function UserChat(props) {
         sx={{
           position: 'absolute',
           bottom: '50px', // Aligns the input to the bottom of the container
-          left: '51%',
+          left: '50%',
           transform: 'translateX(-50%)', // Centers the input horizontally
           width: '100%', // Ensures it takes the full width of the container
           maxWidth: '600px', // Optional: limit the max width of the input field
           backgroundColor: 'white',
           boxShadow: '1.7px 1.4px 5.4px hsl(0deg 0% 0% / 0.2)', // Optional: set background color
+          zIndex: 10,
         }}
       >
         <form onSubmit={handleSubmit} className="flex">

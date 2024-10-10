@@ -117,7 +117,7 @@ const drawerWidth = 180;
 
 const Dashboard = () => {
   // Media query to detect if the screen size is mobile or desktop
-  const isMobile = useMediaQuery("(max-width:600px)");
+  const isMobile = useMediaQuery("(max-width:950px)");
    // Lift the states up from UserChat
    const [chatLog, setChatLog] = useState([]); // Chat log state
    const [isVisible, setIsVisible] = useState(true); // Show/hide welcome message
@@ -157,6 +157,7 @@ const Dashboard = () => {
           zIndex: (theme) => theme.zIndex.drawer + 1,
           backgroundColor: "#1a3673",
           boxShadow: "-1px -4px 14px #000",
+          height: '64px',
         }}
       >
         <Toolbar sx={{ justifyContent: isMobile ? "space-between" : "flex-start" }}>
@@ -231,6 +232,7 @@ const Dashboard = () => {
           p: 3,
           height: "100vh",
           overflow: "hidden",
+          paddingTop: '64px',
         }}
       >
         <Toolbar />
@@ -261,8 +263,8 @@ const Dashboard = () => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            height: "100%",
-            paddingTop: '150px' // Take up full height minus the AppBar height
+            // height: "100%",
+            // paddingTop: '150px' // Take up full height minus the AppBar height
           }}
         >
          <UserChat
