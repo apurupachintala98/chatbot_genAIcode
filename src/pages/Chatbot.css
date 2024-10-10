@@ -1,5 +1,4 @@
-
-/* chat css */
+/* 
 :root {
     font-family: 'Open Sans', sans-serif !important;
     font-style: light;
@@ -184,7 +183,6 @@ input#chat-input {
     border-radius: 19px;
     font-family: 'Open Sans', sans-serif !important;
     font-size: 10.5px;
-    /* width: 100%; */
     height: 20px;
     outline: none;
     resize: none;
@@ -206,7 +204,6 @@ input#chat-input:focus {
     display: inline;
     position: sticky;
     left: 0;
-    /* bottom: 0; */
     border-top: solid 1px var(--primary-bg);
 }
 
@@ -328,7 +325,6 @@ a.close-chat {
 }
 
 .start-chatbot {
-    /* background-color: rgba(155, 155, 155, .5); */
     width: 100%;
     overflow-x: hidden;
     height: 100vh;
@@ -350,25 +346,19 @@ a.close-chat {
 }
 
 
-/* OnlineStatus css */
 
 .online-status {
     display: table-cell;
     align-items: center;
     margin-top: 11px;
-    /* animation: slideIn 0.5s ease-in-out;  */
-    /* Animation for the whole component */
 }
 
 .online-icon {
     color: #b2ff58;
     width: 10px;
     font-size: 10px;
-    /* Adjust size as needed */
     margin-right: 5px;
-    /* Space between icon and text */
     position: relative;
-    /* Position relative to the parent container */
 
 }
 
@@ -376,41 +366,28 @@ a.close-chat {
     height: 7px;
 }
 
-/* Text that slides from right to left */
 .sliding-text {
     font-size: 11px;
-    /* Adjust text size */
     color: #fff;
-    /* Text color */
     margin-top: 5px;
     display: inline-block;
-    /* Ensure the text is treated as a block element for positioning */
     position: absolute;
-    /* Position absolutely within the container */
     white-space: nowrap;
-    /* Prevent text from wrapping */
     animation: slideLeft 7s ease-out forwards;
-    /* Apply animation */
 }
 
-/* Keyframes for sliding effect */
 @keyframes slideLeft {
     from {
         transform: translateX(100%);
-        /* Start off-screen to the right */
         opacity: 0;
-        /* Start invisible */
     }
 
     to {
         transform: translateX(0);
-        /* Move to original position */
         opacity: 1;
-        /* Fade in */
     }
 }
 
-/* Feedback section Css */
 
 .feedback-container {
     position: relative;
@@ -430,7 +407,7 @@ a.close-chat {
   }
   
   .feedback-button.active {
-    color: #0070f3; /* Active color */
+    color: #0070f3; 
   }
   
   .comment-box {
@@ -460,54 +437,48 @@ a.close-chat {
     cursor: pointer;
   }
 
-/* Feedback section Css */
-
-/* default chat text */
 
 .center-container {
     margin-top: 10px;
     display: flex;
-    flex-direction: column; /* Align items vertically */
-    align-items: center; /* Center items horizontally */
-    text-align: center; /* Center text */
+    flex-direction: column; 
+    align-items: center;
+    text-align: center; 
   }
   
   .center-text {
     margin-top: 10px;
     font-size: 12.5px;
     font-weight: 600;
-     /* Space between image and text */
   }
 
-/* Loader */
 
 .loader {
     display: flex;
-    /* height: 100vh; Full screen height */
   }
   
   .dot {
     width: 5px;
     height: 5px;
     margin: 0 5px;
-    background-color: #5009b5; /* Customize color as needed */
+    background-color: #5009b5; 
     border-radius: 50%;
     animation: loading 0.8s infinite alternate;
   }
   
   .dot:nth-child(2) {
     animation-delay: 0.2s;
-    background-color: #794cff; /* Stagger the animation delay */
+    background-color: #794cff; 
   }
   
   .dot:nth-child(3) {
     animation-delay: 0.4s;
-    background-color: #00bbba; /* Stagger the animation delay */
+    background-color: #00bbba; 
   }
 
   .dot:nth-child(4) {
     animation-delay: 0.6s; 
-    background-color: #44b8f3;/* Stagger the animation delay */
+    background-color: #44b8f3;
   }
 
   @keyframes loading {
@@ -521,9 +492,6 @@ a.close-chat {
     }
   }
 
-/* Loader */
-
-/* Button on top of the Input */
 .sendBtn {
     background: #03A9F4;
     border-radius: 50px;
@@ -534,4 +502,4 @@ a.close-chat {
     right: 3px;
     border-top-left-radius: none !important; 
      border-bottom-left-radius: none !important;
-} 
+}  */

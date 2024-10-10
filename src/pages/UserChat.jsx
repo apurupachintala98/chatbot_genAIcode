@@ -8,16 +8,16 @@ import Feedback from '../components/Feedback';
 import Loader from '../components/Loader';
 import parseMessageContent from '../components/parseMessageContent';
 import ARBCategories from '../components/ARBCategories';
-import FileUploader from '../components/FileUploader'; // A new reusable component for file upload
-import ChatMessage from '../components/ChatMessage'; // A new reusable component for chat message
-import { Box, Grid, TextField, Button, IconButton, Typography, InputAdornment, Toolbar,  useTheme, useMediaQuery } from '@mui/material'; // Import MUI components
+import FileUploader from '../components/FileUploader';
+import ChatMessage from '../components/ChatMessage';
+import { Box, Grid, TextField, Button, IconButton, Typography, InputAdornment, Toolbar, useTheme, useMediaQuery } from '@mui/material';
 
 function UserChat(props) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTabletOrMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery("(max-width:950px)");
   const {
     chatLog, setChatLog,
+    themeColor,
     isVisible, setIsVisible,
     responseReceived, setResponseReceived,
     error, setError,
@@ -381,19 +381,17 @@ function UserChat(props) {
     }, 1000); // Simulated delay (1 second)
   };
 
-  useEffect(() => {
-    if (responseReceived) {
-      setIsVisible(false); // Hide the welcome message after response is received
-    }
-  }, [responseReceived]);
-  
+ 
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
+        height: isMobile ? '100vh' : 'auto',
+        overflowY: isMobile ? 'auto' : 'visible',
         boxSizing: 'border-box',
+        width: '100%',
       }}
     >
       {isVisible && (
@@ -404,21 +402,17 @@ function UserChat(props) {
             justifyContent: 'flex-start',
             alignItems: 'center',
             textAlign: 'center',
-            // mb: 2,
-            // height: '100%',
-            // mt: 8
+            padding: '10px',
           }}
         >
           <Avatar img={chatbot} altText="Chatbot" rounded />
-
-          {/* Apply the styles to the <p> tag */}
           <Box
             component="p"
             sx={{
               marginTop: '10px',
               fontSize: '16.5px',
               fontWeight: 600,
-              color: '#1a3673',
+              color: themeColor,
             }}
           >
             Hello there, I am your ARB Scheduler Assistant. How can I help you today?
@@ -426,7 +420,7 @@ function UserChat(props) {
           {/* ARB Categories Component */}
           <ARBCategories
             handleCategoryClick={handleCategoryClick}
-            selectedCategory={selectedCategory} // Pass selected category for styling
+            selectedCategory={selectedCategory}
           />  </Box>
       )}
       <Box>
@@ -438,69 +432,90 @@ function UserChat(props) {
           </Box>
         )}
       </Box>
-
-     
-      {showPrompts && (
-        <Box
-          sx={{
-            position: 'absolute',
-            marginBottom: '30px',
-            bottom: '50px', // Just above the input field
-            width: '100%', // Full width of the input
-            maxWidth: '600px', // Limit for larger screens
-            left: '50%',
-            transform: 'translateX(-50%)', // Center align the prompts to match the input field
-            zIndex: 1000,
-            // overflowY: 'auto', // Ensure it stays on top of other elements
-          }}
-        >
-          <SuggestedPrompts prompts={suggestedPrompts} onPromptClick={handlePromptClick} />
-        </Box>
-      )}
-      {/* File Upload Section */}
-      {fileUploadCondition && (
-        <FileUploader
-          handleFileUpload={handleFileUpload}
-          uploadStatus={uploadStatus}
-        />)}
-
       <Box
         sx={{
-          position: 'absolute',
-          bottom: '50px', // Aligns the input to the bottom of the container
-          left: '50%',
-          transform: 'translateX(-50%)', // Centers the input horizontally
-          width: '100%', // Ensures it takes the full width of the container
-          maxWidth: '600px', // Optional: limit the max width of the input field
-          backgroundColor: 'white',
-          boxShadow: '1.7px 1.4px 5.4px hsl(0deg 0% 0% / 0.2)', // Optional: set background color
-          zIndex: 10,
+          width: '100%',
+          maxWidth: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
         }}
       >
-        <form onSubmit={handleSubmit} className="flex">
-          <TextField
-            fullWidth
-            placeholder="What can I help you with..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            inputProps={{ maxLength: 400 }}
-            InputProps={{
-              sx: {
-                '& .MuiInputBase-input': {
-                  padding: '12px',
-                  fontSize: '12.5px' // Custom padding for the input
-                },
-              },
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton type="submit" onClick={handleSubmit}>
-                    <FaTelegramPlane className="h-6 w-6" color="#1a3673" />
-                  </IconButton>
-                </InputAdornment>
-              ),
+        <ChatMessage chatLog={chatLog} parseMessageContent={parseMessageContent} />
+        <div ref={endOfMessagesRef} />
+        {/* Loader section */}
+        {isLoading && <Loader />}
+        {/* Feedback icons */}
+        {responseReceived && <Feedback />}
+        {/* File Upload Section */}
+        {fileUploadCondition && (
+          <FileUploader
+            handleFileUpload={handleFileUpload}
+            uploadStatus={uploadStatus}
+          />)}
+      </Box>
+      {successMessage && <Alert color="success">
+        <span className="font-medium">{successMessage}</span>
+      </Alert>}
+      <Box sx={{ width: '100%', marginTop: 'auto' }}>
+        {showPrompts && (
+          <Box
+            sx={{
+              position: isMobile ? 'relative' : 'absolute',
+              marginBottom: isMobile ? '' : '30px',
+              bottom: isMobile ? '' : '50px',
+              width: isMobile ? 'auto' : '100%',
+              maxWidth: '600px',
+              left: isMobile ? '' : '50%',
+              transform: isMobile ? '' : 'translateX(-50%)',
+              zIndex: isMobile ? '' : 1000,
             }}
-          />
-        </form>
+          >
+            <SuggestedPrompts prompts={suggestedPrompts} onPromptClick={handlePromptClick} />
+          </Box>
+        )}
+        <Box
+          sx={{
+            position: isMobile ? 'relative' : 'absolute',
+            bottom: isMobile ? 'initial' : '50px',
+            left: isMobile ? 'initial' : '50%',
+            transform: isMobile ? 'initial' : 'translateX(-50%)',
+            width: '100%',
+            maxWidth: '600px',
+            marginTop: isMobile ? '20px' : '0',
+            backgroundColor: 'white',
+            boxShadow: '1.7px 1.4px 5.4px hsl(0deg 0% 0% / 0.2)',
+            zIndex: 10,
+          }}
+        >
+          <form onSubmit={handleSubmit} className="flex">
+            <TextField
+              fullWidth
+              placeholder="What can I help you with..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              inputProps={{ maxLength: 400 }}
+              InputProps={{
+                sx: {
+                  '& .MuiInputBase-input': {
+                    padding: '12px',
+                    fontSize: '12.5px'
+                  },
+                  '& .MuiInputAdornment-root button': {
+                    color: themeColor,
+                  },
+                },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton type="submit" onClick={handleSubmit}>
+                      <FaTelegramPlane className="h-6 w-6" color={themeColor} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </form>
+        </Box>
       </Box>
     </Box>
   );

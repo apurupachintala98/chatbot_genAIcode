@@ -1,10 +1,10 @@
 import React from 'react';
 
 function Loader() {
-    return (
-        <div>
-            {/* Inline style tag for the CSS */}
-            <style jsx="true">{`
+  return (
+    <div>
+      {/* Inline style tag for the CSS */}
+      <style jsx="true">{`
         .loader {
             display: flex;
          width: 100%;
@@ -46,14 +46,14 @@ function Loader() {
         }
       `}</style>
 
-            <div className="loader">
-                <div className="dot"></div>
-                <div className="dot"></div>
-                <div className="dot"></div>
-                <div className="dot"></div>
-            </div>
-        </div>
-    );
+      <div className="loader">
+        <div className="dot"></div>
+        <div className="dot"></div>
+        <div className="dot"></div>
+        <div className="dot"></div>
+      </div>
+    </div>
+  );
 }
 
 export default Loader;
