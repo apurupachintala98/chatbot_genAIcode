@@ -1,42 +1,41 @@
-import React, { useState, useLayoutEffect, useRef, useEffect } from 'react';
+import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import { Avatar, Alert } from 'flowbite-react';
-import { HiUpload } from "react-icons/hi";
 import { FaTelegramPlane } from 'react-icons/fa';
-import "./Dashboard.css";
 import chatbot from '../assets/images/chatbot.png';
-import user from '../assets/images/user.png';
-import Feedback from "../components/Feedback";
+import HashLoader from 'react-spinners/HashLoader';
 import SuggestedPrompts from '../components/SuggestedPrompts';
+import Feedback from '../components/Feedback';
+import Loader from '../components/Loader';
 import parseMessageContent from '../components/parseMessageContent';
-import faq from '../assets/images/FAQ.jpg';
-import query from '../assets/images/Query.png';
-import scheduler from '../assets/images/scheduler.jpg';
-import HashLoader from "react-spinners/HashLoader";
+import ARBCategories from '../components/ARBCategories';
+import FileUploader from '../components/FileUploader'; // A new reusable component for file upload
+import ChatMessage from '../components/ChatMessage'; // A new reusable component for chat message
+import { Box, Grid, TextField, Button, IconButton, Typography, InputAdornment } from '@mui/material'; // Import MUI components
 
-function UserChat({
-  chatLog, setChatLog,
-  isVisible, setIsVisible,
-  responseReceived, setResponseReceived,
-  error, setError,
-  routeCdUpdated, setRouteCdUpdated,
-  uploadStatus, setUploadStatus,
-  showPrompts, setShowPrompts,
-  routeCd, setRouteCd,
-  isLoading, setIsLoading,
-  successMessage, setSuccessMessage,
-  fileUploadCondition, setFileUploadCondition
-}) {
+function UserChat(props) {
+  const {
+    chatLog, setChatLog,
+    isVisible, setIsVisible,
+    responseReceived, setResponseReceived,
+    error, setError,
+    routeCdUpdated, setRouteCdUpdated,
+    uploadStatus, setUploadStatus,
+    showPrompts, setShowPrompts,
+    routeCd, setRouteCd,
+    isLoading, setIsLoading,
+    successMessage, setSuccessMessage,
+    fileUploadCondition, setFileUploadCondition,
+    setCategoryLoading, categoryLoading,
+  } = props;
 
-  const [input, setInput] = useState(''); // User input
+  const [input, setInput] = useState('');
   const endOfMessagesRef = useRef(null);
-  // New states for file upload functionality
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null); // Store selected file
   const [apiResponse, setApiResponse] = useState(null); // New state for storing API response
   // New states for user-provided app_cd and request_id
   const [appCd, setAppCd] = useState('ARB_Bot'); // User input for app_cd
   const [requestId, setRequestId] = useState('8000'); // User input for request_id
-  const [categoryLoading, setCategoryLoading] = useState(false); // New loading state for category click
-
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
     "I want to schedule an ARB meeting",
@@ -44,6 +43,13 @@ function UserChat({
     "Guide me on the TGOV process?",
     "Guide me on Snowflake Onboarding process",
   ]);
+
+  // Scroll to the bottom when a new message is added
+  useLayoutEffect(() => {
+    if (endOfMessagesRef.current) {
+      endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [chatLog]);
 
   //creating dummy file for the architecture deck condition as "No"
   const createDummyFile = () => {
@@ -130,18 +136,6 @@ function UserChat({
     }
   };
 
-  // Handle file selection
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file && (file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
-      setSelectedFile(file);
-      setUploadStatus('');
-    } else {
-      setSelectedFile(null);
-      setUploadStatus('Please select a valid PDF or PPTX file.');
-    }
-  };
-
   // Handle clicking on a category icon and updating routeCd
   const handleCategoryClick = async (categoryRouteCd) => {
     setCategoryLoading(true); // Show loader when the category is clicked
@@ -191,7 +185,6 @@ function UserChat({
       setCategoryLoading(false); // Hide loader after the response is processed
     }
   };
-
 
   // Handle file upload
   const handleFileUpload = async (e) => {
@@ -385,157 +378,147 @@ function UserChat({
     }, 1000); // Simulated delay (1 second)
   };
 
-  // chat Scroll to the bottom when a new message is added
-  useLayoutEffect(() => {
-    if (endOfMessagesRef.current) {
-      endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [chatLog]);
+  useEffect(() => {
+    // Check if isVisible state changes unexpectedly
+    console.log(isVisible);
+  }, [isVisible]);
 
   return (
-    <div className='chat-container'>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        minHeight: '100vh',
+        padding: '10px', // Padding for layout
+        boxSizing: 'border-box',
+        overflow: 'hidden', // Disable page scroll
+        width: '60%',
+        marginTop: '50px'
+      }}
+    >
       {isVisible && (
-        <><div className="center-container">
-          <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
-          <p className="center-text">Hello there, I am your ARB Scheduler Assistant. How can I help you today? </p>
-        </div><div className="text-center space-y-6">
-            <h3 className="mb-5 text-lg fw-bold text-gray-500 dark:text-gray-400">
-              Choose a ARB Category
-            </h3>
-            <div className="flex justify-center gap-4">
-              <div className="flex flex-col gap-3">
-                <div className="flex flex-wrap gap-6">
-                  {/* ARB Scheduler Category */}
-                  <div className="flex flex-col items-center" onClick={() => handleCategoryClick('arb_scheduler')}>
-                    <Avatar img={scheduler} rounded bordered color="gray" size="lg" />
-                    <p className="mt-2 text-center text-gray-700 dark:text-gray-300">ARB Scheduler</p>
-                  </div>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            textAlign: 'center',
+            // mb: 2,
+            // height: '100%',
+            // mt: 8
+          }}
+        >
+          <Avatar img={chatbot} altText="Chatbot" rounded />
 
-                  {/* ARB FAQ Category */}
-                  <div className="flex flex-col items-center" onClick={() => handleCategoryClick('arb_faq')}>
-                    <Avatar img={faq} rounded bordered color="light" size="lg" />
-                    <p className="mt-2 text-center text-gray-700 dark:text-gray-300">ARB FAQ</p>
-                  </div>
-
-                  {/* ARB Query Category */}
-                  <div className="flex flex-col items-center" onClick={() => handleCategoryClick('arb_query')}>
-                    <Avatar img={query} rounded bordered color="purple" size="lg" />
-                    <p className="mt-2 text-center text-gray-700 dark:text-gray-300">ARB Query</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div></>
+          {/* Apply the styles to the <p> tag */}
+          <Box
+            component="p"
+            sx={{
+              marginTop: '10px',
+              fontSize: '16.5px',
+              fontWeight: 600,
+              color: '#1a3673',
+            }}
+          >
+            Hello there, I am your ARB Scheduler Assistant. How can I help you today?
+          </Box>
+          {/* ARB Categories Component */}
+          <ARBCategories
+            handleCategoryClick={handleCategoryClick}
+            selectedCategory={selectedCategory} // Pass selected category for styling
+          />  </Box>
       )}
-      <div className='user-chat-container'>
+      <Box>
         {/* Show the loader when a category is clicked */}
         {categoryLoading && (
-          <div className="flex justify-center mt-6">
+          <Box display="flex" justifyContent="center" mt={8}>
             <HashLoader color="#1a3673" size={30} aria-label="Loading Spinner" data-testid="loader" />
-            <span className='fw-bold ml-3'>Generating the response</span>
-          </div>
+            <Typography variant="h6" sx={{ ml: 3, fontWeight: 'bold' }}>Generating the response</Typography>
+          </Box>
         )}
-        {chatLog.map((chat, index) => (
-          <div key={index} style={{
-            backgroundColor: 'lightblue',
-            padding: '10px',
-            transition: 'width 0.3s ease',
-            overflowY: 'auto'
-          }} className={`chat_message ${chat.role === 'assistant' ? 'ai' : ''}`}>
-            <div className='chat_message_center'>
-              <div className='avatar'>
-                <div className={`flex ${chat.role === 'assistant' ? 'justify-start' : 'justify-end'}`}>
-                  {chat.role !== 'assistant' && (
-                    <div class="container">
-                      <div class="info">
-                        <div className='message'>
-                          {chat.content}
-                        </div>
+      </Box>
 
-                      </div>
-
-                      <div class="image">
-                        <Avatar img={user} altText="User" className='mb-0' rounded></Avatar>
-                      </div>
-                    </div>
-                  )}
-                  {chat.role === 'assistant' && (
-                    <div class="container">
-                      <div class="image">
-                        <Avatar img={chatbot} altText="Chatbot" rounded></Avatar>
-                      </div>
-                      <div class="info">
-                        <div className='message'>
-                          {/* Parse and render the assistant's message */}
-                          {parseMessageContent(chat.content)}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-        {successMessage && <Alert color="success">
+      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', marginTop: '60px', width: '100%' }}>
+        {/* Chat Log */}
+        <ChatMessage chatLog={chatLog} parseMessageContent={parseMessageContent} />
+        <div ref={endOfMessagesRef} />
+      </Box>
+      {successMessage && <Alert color="success">
           <span className="font-medium">{successMessage}</span>
         </Alert>}
+      {/* Loader section */}
+      {isLoading && <Loader />}
 
-        {/* Loader section */}
-        {isLoading && <div className="loader">
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
-        </div>}
+      {/* Feedback icons */}
+      {responseReceived && <Feedback />}
 
-        {/* Feedback icons */}
-        {responseReceived && (
-          <Feedback />
-        )}
-        {/* This empty div is to ensure scrolling to the last message */}
-        <div ref={endOfMessagesRef} />
+      {/* This empty div is to ensure scrolling to the last message */}
+      {/* <div ref={endOfMessagesRef} /> */}
 
-        {/* Display Suggested Prompts */}
-        {showPrompts && (
-          <div className="suggested-prompts">
-            <SuggestedPrompts prompts={suggestedPrompts} onPromptClick={handlePromptClick} />
-          </div>
-        )}
-        {/* File Upload Section */}
-        {fileUploadCondition && (
-          <form onSubmit={handleFileUpload} className="file-upload-form">
-            <input
-              type="file"
-              onChange={handleFileChange}
-              accept=".pdf,.pptx"  // Allow only PDF and PPTX files
-            />
-            <button type="submit" className="upload-button">
-              <HiUpload className="inline-block mr-2" /> {/* Upload Icon */}
-              Upload
-            </button>
-          </form>)}
-        {uploadStatus && <div className="upload-status d-flex justify-content-center mt-3">{uploadStatus}</div>}
+      {showPrompts && (
+        <Box
+          sx={{
+            position: 'absolute',
+            marginBottom: '30px',
+            bottom: '60px', // Just above the input field
+            width: '100%', // Full width of the input
+            maxWidth: '600px', // Limit for larger screens
+            left: '51%',
+            transform: 'translateX(-50%)', // Center align the prompts to match the input field
+            zIndex: 1000,
+            // overflowY: 'auto', // Ensure it stays on top of other elements
+          }}
+        >
+          <SuggestedPrompts prompts={suggestedPrompts} onPromptClick={handlePromptClick} />
+        </Box>
+      )}
+      {/* File Upload Section */}
+      {fileUploadCondition && (
+        <FileUploader
+          handleFileUpload={handleFileUpload}
+          uploadStatus={uploadStatus}
+        />)}
 
-        {/* Input section */}
-        <div className="blanter-msg p-4 md:p-6">
-          <form onSubmit={handleSubmit} className="flex">
-            <input
-              type="text"
-              id="chat-input"
-              class="form-control"
-              placeholder="What can I help you with..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              maxLength="400"
-            />
-            <button class="sendBtn" type="submit" onClick={handleSubmit}> <FaTelegramPlane className="h-7 w-7 text-cyan-600 dark:text-cyan-500" color="#1a3673" />
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: '50px', // Aligns the input to the bottom of the container
+          left: '51%',
+          transform: 'translateX(-50%)', // Centers the input horizontally
+          width: '100%', // Ensures it takes the full width of the container
+          maxWidth: '600px', // Optional: limit the max width of the input field
+          backgroundColor: 'white',
+          boxShadow: '1.7px 1.4px 5.4px hsl(0deg 0% 0% / 0.2)', // Optional: set background color
+        }}
+      >
+        <form onSubmit={handleSubmit} className="flex">
+          <TextField
+            fullWidth
+            placeholder="What can I help you with..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            inputProps={{ maxLength: 400 }}
+            InputProps={{
+              sx: {
+                '& .MuiInputBase-input': {
+                  padding: '12px',
+                  fontSize: '12.5px' // Custom padding for the input
+                },
+              },
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton type="submit" onClick={handleSubmit}>
+                    <FaTelegramPlane className="h-6 w-6" color="#1a3673" />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </form>
+      </Box>
+    </Box>
   );
 }
 
