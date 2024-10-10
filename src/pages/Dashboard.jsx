@@ -8,17 +8,18 @@ import {
   Box,
   Button as MuiButton,
   useMediaQuery,
+  Button,
 } from "@mui/material";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { SketchPicker } from "react-color"; // Import color picker
 import { createTheme, ThemeProvider } from "@mui/material/styles"; // For dynamic theme changes
 import elevance from "../assets/images/logo.png"; // Replace with your actual path
 import UserChat from './UserChat';
+import color from "../assets/images/color.png";
 
 const drawerWidth = 180;
 
 const Dashboard = () => {
-  // Media query to detect if the screen size is mobile or desktop
   const isMobile = useMediaQuery("(max-width:950px)");
   // Lift the states up from UserChat
   const [chatLog, setChatLog] = useState([]); // Chat log state
@@ -34,12 +35,16 @@ const Dashboard = () => {
   const [fileUploadCondition, setFileUploadCondition] = useState(false); // Toggle for file upload option
   const [categoryLoading, setCategoryLoading] = useState(false); // New loading state for category click
   const [themeColor, setThemeColor] = useState("#1a3673"); // Default theme color
+  const [showPicker, setShowPicker] = useState(false); // State to manage picker visibility
 
   // Function to handle color change
   const handleColorChange = (color) => {
     setThemeColor(color.hex); // Update the theme color state
   };
 
+  const togglePicker = () => {
+    setShowPicker((prev) => !prev); // Toggle visibility on button click
+  };
 
   const handleNewChat = () => {
     setChatLog([]); // Reset chat log with default message
@@ -123,10 +128,33 @@ const Dashboard = () => {
             }}
           >
             <Toolbar />
-            <Box sx={{ position: "relative", height: "100%", padding: 2 }}>
-              <Box sx={{ width: '125px', margin: '0 auto' }}>
-                <SketchPicker color={themeColor} onChangeComplete={handleColorChange} />
-              </Box>
+            <Box sx={{ position: "relative", height: "100%", padding: 2, textAlign: 'center' }}>
+              <Button
+                variant="contained"
+                onClick={togglePicker}
+                startIcon={<img src={color} alt="icon" style={{ width: '15px', height: '15px' }} />}
+                sx={{
+                  marginBottom: '10px',
+                  '&:hover': {
+                    backgroundColor: '#1769aa', // Hover color
+                  },
+                }}
+              >
+                Color
+              </Button>
+              {showPicker && (
+                <Box sx={{ margin: '0 auto' }}>
+                  <SketchPicker color={themeColor} onChangeComplete={handleColorChange}
+                    styles={{
+                      default: {
+                        picker: {
+                          width: '125px',
+                        },
+                      },
+                    }}
+                  />
+                </Box>
+              )}
               <MuiButton
                 variant="contained"
                 size="large"
