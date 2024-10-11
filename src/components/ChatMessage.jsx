@@ -18,13 +18,6 @@ const ChatMessage = ({ chatLog, parseMessageContent }) => {
           <Paper
             elevation={2}
             sx={{
-              // backgroundColor: chat.role === 'assistant' ? '#fff' : '#e0f7fa',
-              // boxShadow: '0px 0px 7px #898080',
-              // padding: '10px 15px',
-              // color: '#1a3673',
-              // maxWidth: '70%', // Make message container dynamic based on content size
-              // display: 'flex',
-              // alignItems: 'center',
               backgroundColor: chat.role === 'assistant' ? '#fff' : '#e0f7fa',
             padding: '12px',
             transition: 'width 0.3s ease',
@@ -37,6 +30,13 @@ const ChatMessage = ({ chatLog, parseMessageContent }) => {
             color: '#1a3673',
             }}
           >
+            <Box 
+  sx={{
+    display: 'flex',
+    justifyContent: chat.role === 'assistant' ? 'flex-start' : 'flex-end',
+    marginBottom: '10px',
+  }}
+>
             {chat.role === 'assistant' ? (
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Avatar
@@ -60,6 +60,7 @@ const ChatMessage = ({ chatLog, parseMessageContent }) => {
                 />
               </Box>
             )}
+            </Box>
           </Paper>
         </Box>
       ))}
