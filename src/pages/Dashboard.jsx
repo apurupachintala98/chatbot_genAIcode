@@ -129,7 +129,7 @@ const Dashboard = () => {
           >
             <Toolbar />
             <Box sx={{ position: "relative", height: "100%", padding: 2, textAlign: 'center' }}>
-              <Button
+              {/* <Button
                 variant="contained"
                 onClick={togglePicker}
                 startIcon={<img src={color} alt="icon" style={{ width: '15px', height: '15px' }} />}
@@ -154,7 +154,7 @@ const Dashboard = () => {
                     }}
                   />
                 </Box>
-              )}
+              )} */}
               <MuiButton
                 variant="contained"
                 size="large"

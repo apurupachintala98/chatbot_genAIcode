@@ -391,7 +391,7 @@ function UserChat(props) {
         height: isMobile ? '100vh' : 'auto',
         overflowY: isMobile ? 'auto' : 'visible',
         boxSizing: 'border-box',
-        width: '100%',
+        width: '50%',
       }}
     >
       {isVisible && (
@@ -434,8 +434,8 @@ function UserChat(props) {
       </Box>
       <Box
         sx={{
-          width: '100%',
-          maxWidth: '100%',
+          // width: '100%',
+          // maxWidth: '100%',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',

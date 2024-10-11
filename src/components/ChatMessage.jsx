@@ -7,43 +7,54 @@ const ChatMessage = ({ chatLog, parseMessageContent }) => {
   return (
     <Box sx={{ width: '100%', padding: '10px 0' }}>
       {chatLog.map((chat, index) => (
-        <Paper
+        <Box
           key={index}
-          elevation={2}
           sx={{
-            backgroundColor: chat.role === 'assistant' ? '#fff' : '#e0f7fa',
-            boxShadow: '0px 0px 7px #898080',
-            padding: '15px',
-            color: '#1a3673',
-            margin: '0 -22px',
+            display: 'flex',
+            justifyContent: chat.role === 'assistant' ? 'flex-start' : 'flex-end',
+            marginBottom: '10px',
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', 
-            backgroundColor: chat.role === 'assistant' ? '#fff' : '#e0f7fa',
-            justifyContent: 'center' }}>
-            {chat.role !== 'assistant' ? (
+          <Paper
+            elevation={2}
+            sx={{
+              backgroundColor: chat.role === 'assistant' ? '#fff' : '#e0f7fa',
+              boxShadow: '0px 0px 7px #898080',
+              padding: '10px 15px',
+              color: '#1a3673',
+              maxWidth: '70%', // Make message container dynamic based on content size
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            {chat.role === 'assistant' ? (
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box sx={{ mr: 1 }}>
-                  <Typography variant="body2" sx={{ fontSize: 14 }}>
-                    {chat.content}
-                  </Typography>
-                </Box>
-                <Avatar src={user} alt="User" sx={{ borderRadius: '50%' }} />
-              </Box>
-            ) : (
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Avatar src={chatbot} alt="Chatbot" sx={{ mr: 4, borderRadius: '50%' }} />
+                <Avatar
+                  src={chatbot}
+                  alt="Chatbot"
+                  sx={{ mr: 2, borderRadius: '50%', width: 32, height: 32 }}
+                />
                 <Typography variant="body2" sx={{ fontSize: 14 }}>
                   {parseMessageContent(chat.content)}
                 </Typography>
               </Box>
+            ) : (
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography variant="body2" sx={{ fontSize: 14, mr: 2 }}>
+                  {chat.content}
+                </Typography>
+                <Avatar
+                  src={user}
+                  alt="User"
+                  sx={{ borderRadius: '50%', width: 32, height: 32 }}
+                />
+              </Box>
             )}
-          </Box>
-        </Paper>
+          </Paper>
+        </Box>
       ))}
     </Box>
   );
 };
 
 export default ChatMessage;
-
