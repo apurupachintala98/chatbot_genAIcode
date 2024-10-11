@@ -22,7 +22,6 @@ const ChatMessage = ({ chatLog, parseMessageContent }) => {
             padding: '12px',
             transition: 'width 0.3s ease',
             borderRadius: '15px',
-            margin: '10px auto',
             maxWidth: '80%', // Limits width to 80% of container
             width: 'fit-content',
             alignSelf: chat.role === 'assistant' ? 'flex-start' : 'flex-end', // Align messages based on role
