@@ -7,8 +7,8 @@ const ARBCategories = ({ handleCategoryClick, selectedCategory }) => {
   const theme = useTheme();
   const categories = [
     { name: 'ARB Scheduler', key: 'arb_scheduler', image: scheduler },
-    { name: 'ARB FAQ', key: 'arb_faq', image: faq },
-    { name: 'ARB Query', key: 'arb_query', image: query }
+    { name: 'FAQ', key: 'arb_faq', image: faq },
+    { name: 'Query', key: 'arb_query', image: query }
   ];
 
   return (

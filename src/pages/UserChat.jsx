@@ -428,7 +428,7 @@ function UserChat(props) {
         {categoryLoading && (
           <Box display="flex" justifyContent="center" mt={8}>
             <HashLoader color="#1a3673" size={30} aria-label="Loading Spinner" data-testid="loader" />
-            <Typography variant="h6" sx={{ ml: 3, fontWeight: 'bold' }}>Generating the response</Typography>
+            <Typography variant="h6" sx={{ ml: 3, fontWeight: 'bold', color: '#1a3673' }}>Generating the response</Typography>
           </Box>
         )}
       </Box>
