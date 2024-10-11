@@ -6,7 +6,7 @@ import { Grid, Box, Avatar, Typography, useTheme } from '@mui/material';
 const ARBCategories = ({ handleCategoryClick, selectedCategory }) => {
   const theme = useTheme();
   const categories = [
-    { name: 'ARB Scheduler', key: 'arb_scheduler', image: scheduler },
+    { name: 'Scheduler', key: 'arb_scheduler', image: scheduler },
     { name: 'FAQ', key: 'arb_faq', image: faq },
     { name: 'Query', key: 'arb_query', image: query }
   ];

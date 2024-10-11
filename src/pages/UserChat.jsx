@@ -499,7 +499,9 @@ function UserChat(props) {
                 sx: {
                   '& .MuiInputBase-input': {
                     padding: '12px',
-                    fontSize: '12.5px'
+                    fontSize: '12.5px',
+                    fontWeight: 'bold',
+                    color: themeColor,
                   },
                   '& .MuiInputAdornment-root button': {
                     color: themeColor,
