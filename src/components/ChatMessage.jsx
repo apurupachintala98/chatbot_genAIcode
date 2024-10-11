@@ -18,7 +18,9 @@ const ChatMessage = ({ chatLog, parseMessageContent }) => {
             margin: '0 -22px',
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', backgroundColor: '#e0f7fa', justifyContent: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', 
+            backgroundColor: chat.role === 'assistant' ? '#fff' : '#e0f7fa',
+            justifyContent: 'center' }}>
             {chat.role !== 'assistant' ? (
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Box sx={{ mr: 1 }}>
