@@ -444,7 +444,9 @@ function UserChat(props) {
         <ChatMessage chatLog={chatLog} parseMessageContent={parseMessageContent} />
         <div ref={endOfMessagesRef} />
         {/* Loader section */}
-        {isLoading && <Loader />}
+        {/* {isLoading && <Loader />} */}
+        {isLoading && <HashLoader color="#1a3673" size={30} aria-label="Loading Spinner" data-testid="loader" />
+      }
         {/* Feedback icons */}
         {responseReceived && <Feedback />}
         {/* File Upload Section */}
