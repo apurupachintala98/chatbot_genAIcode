@@ -454,6 +454,7 @@ function UserChat(props) {
           <FileUploader
             handleFileUpload={handleFileUpload}
             uploadStatus={uploadStatus}
+            setUploadStatus={setUploadStatus}
           />)}
       </Box>
       {successMessage && <Alert color="success">
@@ -504,7 +505,7 @@ function UserChat(props) {
                     fontSize: '13px',
                     fontWeight: 'bold',
                     color: themeColor,
-                  },
+                 },
                   '& .MuiInputAdornment-root button': {
                     color: themeColor,
                   },
