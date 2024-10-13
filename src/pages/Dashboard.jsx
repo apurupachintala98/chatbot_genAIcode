@@ -23,10 +23,8 @@ const Dashboard = () => {
   const isMobile = useMediaQuery("(max-width:950px)");
   // Lift the states up from UserChat
   const [chatLog, setChatLog] = useState([]); // Chat log state
-  const [isVisible, setIsVisible] = useState(true); // Show/hide welcome message
   const [responseReceived, setResponseReceived] = useState(false); // Hide helpfulness prompt
   const [error, setError] = useState(''); // Error message state
-  const [showPrompts, setShowPrompts] = useState(true); // Show/hide suggested prompts
   const [routeCdUpdated, setRouteCdUpdated] = useState(false); // Track route update
   const [uploadStatus, setUploadStatus] = useState(''); // Track file upload status
   const [routeCd, setRouteCd] = useState('None');
@@ -36,6 +34,10 @@ const Dashboard = () => {
   const [categoryLoading, setCategoryLoading] = useState(false); // New loading state for category click
   const [themeColor, setThemeColor] = useState("#1a3673"); // Default theme color
   const [showPicker, setShowPicker] = useState(false); // State to manage picker visibility
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+   // New state to control visibility of the initial view (avatar, prompts, categories)
+   const [showInitialView, setShowInitialView] = useState(true);
 
   // Function to handle color change
   const handleColorChange = (color) => {
@@ -46,19 +48,20 @@ const Dashboard = () => {
     setShowPicker((prev) => !prev); // Toggle visibility on button click
   };
 
-  const handleNewChat = () => {
-    setChatLog([]); // Reset chat log with default message
-    setIsVisible(true); // Show the image and text again
-    setResponseReceived(false); // Hide the helpfulness prompt
-    setError(''); // Clear any existing error message
-    setShowPrompts(true);
-    setRouteCdUpdated(false); // Reset route update status
+   // Handle New Chat button click
+   const handleNewChat = () => {
+    setChatLog([]); // Reset chat log
+    setResponseReceived(false);
+    setError('');
+    setRouteCdUpdated(false);
     setUploadStatus(false);
     setRouteCd('None');
     setIsLoading(false);
     setSuccessMessage('');
     setFileUploadCondition(false);
     setCategoryLoading(false);
+    setSelectedCategory(null);
+    setShowInitialView(true); // Show avatar, categories, etc.
   };
 
   // Define the theme dynamically based on selected color
@@ -106,6 +109,7 @@ const Dashboard = () => {
                 textAlign: "center",
                 fontWeight: "bold",
                 fontSize: isMobile ? "1rem" : "1.5rem",
+                marginLeft: '-90px'
               }}
             >
               EDA ARB Scheduler Assistant
@@ -209,19 +213,14 @@ const Dashboard = () => {
             </Box>
           )}
 
-          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-
+          <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: '100%' }}>
             <UserChat
               chatLog={chatLog}
               setChatLog={setChatLog}
-              isVisible={isVisible}
-              setIsVisible={setIsVisible}
               responseReceived={responseReceived}
               setResponseReceived={setResponseReceived}
               error={error}
               setError={setError}
-              showPrompts={showPrompts}
-              setShowPrompts={setShowPrompts}
               routeCdUpdated={routeCdUpdated}
               setRouteCdUpdated={setRouteCdUpdated}
               uploadStatus={uploadStatus}
@@ -237,6 +236,10 @@ const Dashboard = () => {
               categoryLoading={categoryLoading}
               setCategoryLoading={setCategoryLoading}
               themeColor={themeColor}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              showInitialView={showInitialView} 
+              setShowInitialView={setShowInitialView} 
             />
           </Box>
         </Box>

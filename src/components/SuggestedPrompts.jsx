@@ -3,7 +3,7 @@ import { Box, Typography, Paper } from '@mui/material';
 
 const SuggestedPrompts = ({ prompts, onPromptClick }) => {
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 2 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       {/* Title for Suggested Prompts */}
       <Typography
         variant="h6"
@@ -13,7 +13,7 @@ const SuggestedPrompts = ({ prompts, onPromptClick }) => {
       </Typography>
 
       {/* List of Prompts */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, textAlign: 'left' }}>
         {prompts.map((prompt, index) => (
           <Paper
             key={index}

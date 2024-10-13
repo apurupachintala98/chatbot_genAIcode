@@ -5,7 +5,7 @@ import chatbot from '../assets/images/chatbot.png';
 import HashLoader from 'react-spinners/HashLoader';
 import SuggestedPrompts from '../components/SuggestedPrompts';
 import Feedback from '../components/Feedback';
-import Loader from '../components/Loader';
+// import Loader from '../components/Loader';
 import parseMessageContent from '../components/parseMessageContent';
 import ARBCategories from '../components/ARBCategories';
 import FileUploader from '../components/FileUploader';
@@ -14,31 +14,33 @@ import { Box, Grid, TextField, Button, IconButton, Typography, InputAdornment, T
 
 function UserChat(props) {
   const theme = useTheme();
-  const isMobile = useMediaQuery("(max-width:950px)");
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+
   const {
     chatLog, setChatLog,
     themeColor,
-    isVisible, setIsVisible,
     responseReceived, setResponseReceived,
     error, setError,
     routeCdUpdated, setRouteCdUpdated,
     uploadStatus, setUploadStatus,
-    showPrompts, setShowPrompts,
     routeCd, setRouteCd,
     isLoading, setIsLoading,
     successMessage, setSuccessMessage,
     fileUploadCondition, setFileUploadCondition,
     setCategoryLoading, categoryLoading,
+    selectedCategory, setSelectedCategory,
+    showInitialView, setShowInitialView,
   } = props;
 
-  const [input, setInput] = useState('');
   const endOfMessagesRef = useRef(null);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const fileInputRef = useRef(null); // Create a ref for the file input
   const [selectedFile, setSelectedFile] = useState(null); // Store selected file
   const [apiResponse, setApiResponse] = useState(null); // New state for storing API response
-  // New states for user-provided app_cd and request_id
   const [appCd, setAppCd] = useState('ARB_Bot'); // User input for app_cd
   const [requestId, setRequestId] = useState('8000'); // User input for request_id
+  const [input, setInput] = useState('');
+  const layoutWidth = isSmallScreen ? '100%' : isMediumScreen ? '80%' : '70%';
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
     "I want to schedule an ARB meeting",
@@ -65,7 +67,7 @@ function UserChat(props) {
   const handlePromptClick = async (prompt) => {
     const newMessage = {
       role: 'user',
-      content: prompt, // Use the clicked prompt as the message content
+      content: prompt,
     };
 
     const newChatLog = [...chatLog, newMessage]; // Add new user message to chat log
@@ -73,8 +75,8 @@ function UserChat(props) {
     setInput(''); // Clear the input field
     setIsLoading(true); // Set loading state to true
     setError(''); // Clear any previous error
-    setShowPrompts(false); // Hide prompts
-    setIsVisible(false);
+    setShowInitialView(false);
+
     try {
       // Send the new message to the API
       const response = await fetch(
@@ -143,10 +145,8 @@ function UserChat(props) {
   const handleCategoryClick = async (categoryRouteCd) => {
     setCategoryLoading(true); // Show loader when the category is clicked
     setRouteCd(categoryRouteCd); // Update the route_cd based on the clicked category
-    setIsVisible(false); // Hide the welcome message and categories after clicking
     setRouteCdUpdated(true);
-    setShowPrompts(false);
-    // setIsLoading(true); // Set loading state for the category click
+    setShowInitialView(false);
 
     try {
       // Prepare the silent message "Hey"
@@ -225,6 +225,11 @@ function UserChat(props) {
     } catch (error) {
       console.error('Error uploading file:', error);
       setUploadStatus('An error occurred while uploading the file.');
+    } finally {
+      // After file upload logic, reset the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''; // Clear the file input
+      }
     }
   };
 
@@ -246,9 +251,7 @@ function UserChat(props) {
     setInput(''); // Clear the input field
     setIsLoading(true); // Set loading state to true
     setError(''); // Clear any previous error
-    setShowPrompts(false);
-    setIsVisible(false); // Hide image and text on Enter
-
+    setShowInitialView(false);
     try {
       // Dynamic API URL based on user inputs
       const response = await fetch(
@@ -305,12 +308,11 @@ function UserChat(props) {
             body: formData,
           }
         );
+      }
 
-        // if (fileUploadResponse.ok) {
-        //   setUploadStatus('Dummy file uploaded successfully!');
-        // } else {
-        //   setUploadStatus('Dummy file upload failed.');
-        // }
+       // After handling the file upload, reset the file input and clear upload status
+       if (fileInputRef.current) {
+        fileInputRef.current.value = ''; // Clear the file input
       }
 
       // If route_cd is updated, send a "hey" message to the API but don't display it
@@ -360,16 +362,15 @@ function UserChat(props) {
       console.error(err);
     } finally {
       setIsLoading(false); // Set loading state to false
-      setShowPrompts(false);
+      // setHidePrompts(false);
     }
   }
 
   // Handle key press event for disappearing the default chat bot message on user click
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
-      setIsVisible(false); // Hide image and text on Enter
       simulateChatbotResponse(); // Simulate receiving a response from the chatbot
-      setShowPrompts(false);
+      setShowInitialView(false);
     }
   };
 
@@ -381,30 +382,27 @@ function UserChat(props) {
     }, 1000); // Simulated delay (1 second)
   };
 
- 
+
+  // Handle focus or input changes
+  const handleInputFocusOrChange = () => {
+    setShowInitialView(false);// Hide avatar, categories, and prompts when the input field is clicked or typed
+  };
+
+
   return (
     <Box
       sx={{
         display: 'flex',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        width: layoutWidth,
         flexDirection: 'column',
-        justifyContent: 'space-between',
-        height: isMobile ? '100vh' : 'auto',
-        overflowY: isMobile ? 'auto' : 'visible',
-        boxSizing: 'border-box',
-        width: '80%',
+        margin: 'auto',
       }}
     >
-      {isVisible && (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            textAlign: 'center',
-            padding: '10px',
-          }}
-        >
+      {/* Conditionally render content based on category, prompt click, or text input */}
+      {showInitialView && (
+        <>
           <Avatar img={chatbot} altText="Chatbot" rounded />
           <Box
             component="p"
@@ -413,114 +411,120 @@ function UserChat(props) {
               fontSize: '16.5px',
               fontWeight: 600,
               color: themeColor,
+              textAlign: 'center',
+              marginBottom: '19%',
             }}
           >
             Hello there, I am your ARB Scheduler Assistant. How can I help you today?
+
+            {/* ARB Categories Component */}
+            <ARBCategories
+              handleCategoryClick={handleCategoryClick}
+              selectedCategory={selectedCategory}
+            />
           </Box>
-          {/* ARB Categories Component */}
-          <ARBCategories
-            handleCategoryClick={handleCategoryClick}
-            selectedCategory={selectedCategory}
-          />  </Box>
+
+        </>
       )}
-      <Box>
-        {/* Show the loader when a category is clicked */}
-        {categoryLoading && (
+      {categoryLoading && (
+        <>
           <Box display="flex" justifyContent="center" mt={8}>
             <HashLoader color="#1a3673" size={30} aria-label="Loading Spinner" data-testid="loader" />
-            <Typography variant="h6" sx={{ ml: 3, fontWeight: 'bold', color: '#1a3673' }}>Generating response</Typography>
+            <Typography variant="h6" sx={{ ml: 3, fontWeight: 'bold', color: '#1a3673' }}>
+              Generating response
+            </Typography>
           </Box>
-        )}
-      </Box>
+        </>
+      )}
       <Box
         sx={{
-          // width: '100%',
-          // maxWidth: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
+          flex: 1,
+          width: '100%',
+          overflowY: 'auto',
+          maxHeight: '73vh',
+          padding: '10px',
         }}
       >
         <ChatMessage chatLog={chatLog} parseMessageContent={parseMessageContent} />
         <div ref={endOfMessagesRef} />
-        {/* Loader section */}
-        {/* {isLoading && <Loader />} */}
-        {isLoading && <HashLoader color="#1a3673" size={30} aria-label="Loading Spinner" data-testid="loader" />
-      }
-        {/* Feedback icons */}
-        {responseReceived && <Feedback />}
-        {/* File Upload Section */}
+        {isLoading && <HashLoader color="#1a3673" size={30} aria-label="Loading Spinner" data-testid="loader" />}
         {fileUploadCondition && (
           <FileUploader
             handleFileUpload={handleFileUpload}
             uploadStatus={uploadStatus}
             setUploadStatus={setUploadStatus}
-          />)}
-      </Box>
-      {successMessage && <Alert color="success">
-        <span className="font-medium">{successMessage}</span>
-      </Alert>}
-      <Box sx={{ width: '100%', marginTop: 'auto' }}>
-        {showPrompts && (
-          <Box
-            sx={{
-              position: isMobile ? 'relative' : 'absolute',
-              marginBottom: isMobile ? '' : '30px',
-              bottom: isMobile ? '' : '50px',
-              width: isMobile ? 'auto' : '100%',
-              maxWidth: '600px',
-              left: isMobile ? '' : '50%',
-              transform: isMobile ? '' : 'translateX(-50%)',
-              zIndex: isMobile ? '' : 1000,
-            }}
-          >
-            <SuggestedPrompts prompts={suggestedPrompts} onPromptClick={handlePromptClick} />
-          </Box>
+            fileInputRef={fileInputRef}
+          />
         )}
-        <Box
-          sx={{
-            position: isMobile ? 'relative' : 'absolute',
-            bottom: isMobile ? 'initial' : '50px',
-            left: isMobile ? 'initial' : '50%',
-            transform: isMobile ? 'initial' : 'translateX(-50%)',
-            width: '100%',
-            maxWidth: '600px',
-            marginTop: isMobile ? '20px' : '0',
-            backgroundColor: 'white',
-            boxShadow: '1.7px 1.4px 5.4px hsl(0deg 0% 0% / 0.2)',
-            zIndex: 10,
-          }}
-        >
-          <form onSubmit={handleSubmit} className="flex">
-            <TextField
-              fullWidth
-              placeholder="What can I help you with..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              inputProps={{ maxLength: 400 }}
-              InputProps={{
-                sx: {
-                  '& .MuiInputBase-input': {
-                    padding: '12px',
-                    fontSize: '13px',
-                    fontWeight: 'bold',
-                    color: themeColor,
-                 },
-                  '& .MuiInputAdornment-root button': {
-                    color: themeColor,
+        {responseReceived && <Feedback />}
+        {successMessage && (
+          <Alert color="success">
+            <span className="font-medium">{successMessage}</span>
+          </Alert>
+        )}
+      </Box>
+
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          width: '100%', // Ensure they take up full width of the container
+          maxWidth: '100%',
+          flexDirection: 'column'
+        }}
+      >
+        <Grid container spacing={2} sx={{ width: '100%', maxWidth: '100%', position: 'fixed', bottom: '50px', left: '67%', transform: 'translateX(-50%)', width: '70%', marginLeft: '8px', flexDirection: 'column' }}>
+          {/* Suggested Prompts */}
+          {showInitialView && (
+            <Grid item xs={12} sm={6}>
+              <SuggestedPrompts
+                prompts={suggestedPrompts}
+                onPromptClick={handlePromptClick}
+                sx={{
+                  mb: 2,
+                  textAlign: 'center',
+                }}
+              />
+            </Grid>
+          )}
+
+          {/* Input Field */}
+          <Grid item xs={12} sm={6}>
+            <form onSubmit={handleSubmit} style={{ width: '100%', backgroundColor: '#fff', boxShadow: '0px -2px 5px rgba(0, 0, 0, 0.1)' }}>
+              <TextField
+                fullWidth
+                placeholder="What can I help you with..."
+                value={input}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  handleInputFocusOrChange(); // Ensure elements disappear when typing
+                }}
+                onFocus={handleInputFocusOrChange}
+                inputProps={{ maxLength: 400 }}
+                InputProps={{
+                  sx: {
+                    '& .MuiInputBase-input': {
+                      padding: '12px',
+                      fontSize: '13px',
+                      fontWeight: 'bold',
+                      color: themeColor,
+                    },
+                    '& .MuiInputAdornment-root button': {
+                      color: themeColor,
+                    },
                   },
-                },
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton type="submit" onClick={handleSubmit}>
-                      <FaTelegramPlane className="h-6 w-6" color={themeColor} />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </form>
-        </Box>
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton type="submit">
+                        <FaTelegramPlane className="h-6 w-6" color={themeColor} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </form>
+          </Grid>
+        </Grid>
       </Box>
     </Box>
   );
