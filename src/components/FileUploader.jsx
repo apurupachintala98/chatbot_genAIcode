@@ -16,7 +16,8 @@ function FileUploader({ uploadStatus, setUploadStatus, handleFileUpload, setSele
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       {/* File Upload Section */}
-      <form onSubmit={handleFileUpload} style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+      {/* <form onSubmit={handleFileUpload} style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}> */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
         <input
           type="file"
           ref={fileInputRef}
@@ -34,13 +35,14 @@ function FileUploader({ uploadStatus, setUploadStatus, handleFileUpload, setSele
             padding: '4px 8px',
             fontSize: '11px',
           }}
+          onClick={handleFileUpload}
           onMouseOver={(e) => (e.target.style.backgroundColor = '#135bb5')}
           onMouseOut={(e) => (e.target.style.backgroundColor = '#18181a')}
         >
           Upload
         </Button>
-      </form>
-
+      {/* </form> */}
+</div>
       {uploadStatus && (
         <Typography
           variant="body2"
