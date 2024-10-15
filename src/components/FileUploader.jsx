@@ -2,10 +2,11 @@ import React from 'react';
 import { HiUpload } from 'react-icons/hi';
 import { Button, Typography } from '@mui/material';
 
-function FileUploader({ uploadStatus, setUploadStatus, handleFileUpload, fileInputRef }) {
+function FileUploader({ uploadStatus, setUploadStatus, handleFileUpload, setSelectedFile, fileInputRef }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && (file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
+      setSelectedFile(file); 
       setUploadStatus('Uploading...');
     } else {
       setUploadStatus('Please select a valid PDF or PPTX file.');

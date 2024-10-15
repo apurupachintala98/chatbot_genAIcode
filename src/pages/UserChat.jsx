@@ -230,6 +230,7 @@ function UserChat(props) {
       if (fileInputRef.current) {
         fileInputRef.current.value = ''; // Clear the file input
       }
+      setSelectedFile(null); 
     }
   };
 
@@ -454,6 +455,7 @@ function UserChat(props) {
             uploadStatus={uploadStatus}
             setUploadStatus={setUploadStatus}
             fileInputRef={fileInputRef}
+            setSelectedFile={setSelectedFile}
           />
         )}
         {responseReceived && <Feedback />}
