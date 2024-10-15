@@ -36,8 +36,8 @@ function FileUploader({ uploadStatus, setUploadStatus, handleFileUpload, setSele
             fontSize: '11px',
           }}
           onClick={handleFileUpload}
-          onMouseOver={(e) => (e.target.style.backgroundColor = '#135bb5')}
-          onMouseOut={(e) => (e.target.style.backgroundColor = '#18181a')}
+          // onMouseOver={(e) => (e.target.style.backgroundColor = '#135bb5')}
+          // onMouseOut={(e) => (e.target.style.backgroundColor = '#18181a')}
         >
           Upload
         </Button>
