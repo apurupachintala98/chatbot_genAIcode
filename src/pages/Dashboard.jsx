@@ -7,16 +7,19 @@ import {
   Drawer,
   Box,
   Button as MuiButton,
-  useMediaQuery,
-  Button,
+  useMediaQuery, Modal,
+ IconButton
 } from "@mui/material";
 import { HiOutlinePencilAlt } from "react-icons/hi";
+import DescriptionIcon from '@mui/icons-material/Description';
 import { SketchPicker } from "react-color"; // Import color picker
 import { createTheme, ThemeProvider } from "@mui/material/styles"; // For dynamic theme changes
 import elevance from "../assets/images/logo.png"; // Replace with your actual path
 import UserChat from './UserChat';
 import color from "../assets/images/color.png";
 import { v4 as uuidv4 } from 'uuid';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+
 
 const drawerWidth = 180;
 
@@ -48,6 +51,21 @@ const Dashboard = () => {
   const togglePicker = () => {
     setShowPicker((prev) => !prev); // Toggle visibility on button click
   };
+
+  const [open, setOpen] = useState(false);
+  const [copySuccess, setCopySuccess] = useState('');
+  const jsonData = JSON.stringify({ key: "value", anotherKey: "anotherValue" }, null, 2); // Example JSON data
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(jsonData).then(() => {
+      setCopySuccess('Copied!');
+      setTimeout(() => setCopySuccess(''), 2000); // Reset copy message after 2 seconds
+    });
+  };
+
 
    // Handle New Chat button click
    const handleNewChat = () => {
@@ -161,6 +179,68 @@ const Dashboard = () => {
                   />
                 </Box>
               )} */}
+              <MuiButton
+        variant="contained"
+        size="large"
+        sx={{ fontWeight: 'bold' }}
+        startIcon={<DescriptionIcon />}
+        onClick={handleOpen}
+      >
+        Json
+      </MuiButton>
+              <Modal open={open} onClose={handleClose} aria-labelledby="json-modal-title">
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            borderRadius: '8px',
+            boxShadow: 24,
+            p: 3,
+          }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography id="json-modal-title" variant="h6" component="h2">
+              JSON Data
+            </Typography>
+            <IconButton
+              onClick={handleCopy}
+              sx={{
+                color: 'primary.main',
+                fontSize: '18px',
+              }}
+            >
+              <ContentCopyIcon />
+            </IconButton>
+          </Box>
+
+          <Box
+            component="pre"
+            sx={{
+              whiteSpace: 'pre-wrap',
+              wordWrap: 'break-word',
+              maxHeight: '200px',
+              overflowY: 'auto',
+              mt: 2,
+              p: 2,
+              bgcolor: '#f5f5f5',
+              borderRadius: '4px',
+            }}
+          >
+            {jsonData}
+          </Box>
+
+          {copySuccess && (
+            <Typography variant="body2" color="success.main" sx={{ mt: 1 }}>
+              {copySuccess}
+            </Typography>
+          )}
+        </Box>
+      </Modal>
               <MuiButton
                 variant="contained"
                 size="large"
