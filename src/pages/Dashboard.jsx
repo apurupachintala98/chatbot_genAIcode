@@ -16,6 +16,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles"; // For dynami
 import elevance from "../assets/images/logo.png"; // Replace with your actual path
 import UserChat from './UserChat';
 import color from "../assets/images/color.png";
+import { v4 as uuidv4 } from 'uuid';
 
 const drawerWidth = 180;
 
@@ -35,7 +36,7 @@ const Dashboard = () => {
   const [themeColor, setThemeColor] = useState("#1a3673"); // Default theme color
   const [showPicker, setShowPicker] = useState(false); // State to manage picker visibility
   const [selectedCategory, setSelectedCategory] = useState(null);
-
+  const [requestId, setRequestId] = useState(uuidv4());
    // New state to control visibility of the initial view (avatar, prompts, categories)
    const [showInitialView, setShowInitialView] = useState(true);
 
@@ -62,6 +63,7 @@ const Dashboard = () => {
     setCategoryLoading(false);
     setSelectedCategory(null);
     setShowInitialView(true); // Show avatar, categories, etc.
+    setRequestId(uuidv4()); 
   };
 
   // Define the theme dynamically based on selected color
@@ -240,6 +242,8 @@ const Dashboard = () => {
               setSelectedCategory={setSelectedCategory}
               showInitialView={showInitialView} 
               setShowInitialView={setShowInitialView} 
+              requestId={requestId}
+              setRequestId={setRequestId}  
             />
           </Box>
         </Box>

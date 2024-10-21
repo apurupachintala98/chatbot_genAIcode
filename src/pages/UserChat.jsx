@@ -31,6 +31,7 @@ function UserChat(props) {
     setCategoryLoading, categoryLoading,
     selectedCategory, setSelectedCategory,
     showInitialView, setShowInitialView,
+    requestId, setRequestId,
   } = props;
 
   const endOfMessagesRef = useRef(null);
@@ -38,8 +39,8 @@ function UserChat(props) {
   const [selectedFile, setSelectedFile] = useState(null); // Store selected file
   const [apiResponse, setApiResponse] = useState(null); // New state for storing API response
   const [appCd, setAppCd] = useState('ARB_Bot'); // User input for app_cd
-  const [requestId, setRequestId] = useState('8000'); // User input for request_id
   const [input, setInput] = useState('');
+  const [serverError, setServerError] = useState(null);
   const layoutWidth = isSmallScreen ? '100%' : isMediumScreen ? '80%' : '70%';
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
@@ -253,6 +254,7 @@ function UserChat(props) {
     setIsLoading(true); // Set loading state to true
     setError(''); // Clear any previous error
     setShowInitialView(false);
+    setServerError(null);
     try {
       // Dynamic API URL based on user inputs
       const response = await fetch(
@@ -267,7 +269,11 @@ function UserChat(props) {
       );
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        if (response.status >= 500) {
+          throw new Error('Server is unavailable. Please try again later.');
+        } else {
+          throw new Error('Error communicating with the server.');
+        }
       }
       let data = await response.json();
 
@@ -404,7 +410,7 @@ function UserChat(props) {
       {/* Conditionally render content based on category, prompt click, or text input */}
       {showInitialView && (
         <>
-          <Avatar img={chatbot} altText="Chatbot" rounded />
+          <Avatar img={chatbot} rounded />
           <Box
             component="p"
             sx={{
@@ -459,6 +465,7 @@ function UserChat(props) {
           />
         )}
         {responseReceived && <Feedback />}
+        {serverError && <Alert color="failure"><span>{serverError}</span></Alert>}
         {successMessage && (
           <Alert color="success">
             <span className="font-medium">{successMessage}</span>
