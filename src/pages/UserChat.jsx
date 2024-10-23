@@ -520,31 +520,43 @@ function UserChat(props) {
           justifyContent: 'center',
           width: '100%', // Ensure they take up full width of the container
           maxWidth: '100%',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          position: 'relative',
         }}
       >
-        <Grid container spacing={2} sx={{ width: '100%', maxWidth: '100%', position: 'fixed', bottom: '50px', left: '67%', transform: 'translateX(-50%)', width: '70%', marginLeft: '8px', flexDirection: 'column' }}>
+        <Grid container spacing={isSmallScreen || isMediumScreen ? 4 : 2} 
+        sx={{ width: '100%', maxWidth: '100%', position: 'fixed', bottom: '50px', left: '67%', transform: 'translateX(-50%)', width: '70%', marginLeft: '8px', flexDirection: 'column' }}>
           {/* Suggested Prompts */}
           {showInitialView && (
             <Grid item xs={12} sm={6}>
               <SuggestedPrompts
                 prompts={suggestedPrompts}
                 onPromptClick={handlePromptClick}
+                // sx={{
+                //   mb: 2,
+                //   textAlign: 'center',
+                //   width: '100%',
+                //   maxWidth: '600px', // Ensure a consistent width
+                //   marginLeft: 'auto', // Center it
+                //   marginRight: 'auto', // Center it
+                //   marginBottom: '16px',
+                // }}
                 sx={{
-                  mb: 2,
+                  mb: isSmallScreen || isMediumScreen ? '32px' : '24px', // Add extra margin for smaller or zoomed screens
                   textAlign: 'center',
                   width: '100%',
-                  maxWidth: '600px', // Ensure a consistent width
-                  marginLeft: 'auto', // Center it
-                  marginRight: 'auto', // Center it
-                  marginBottom: '16px',
+                  maxWidth: '600px',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
                 }}
               />
             </Grid>
           )}
 
           {/* Input Field */}
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} sx={{
+        marginBottom: isSmallScreen || isMediumScreen ? '16px' : '8px',
+      }}>
             <form onSubmit={handleSubmit} style={{ width: '100%', backgroundColor: '#fff', boxShadow: '0px -2px 5px rgba(0, 0, 0, 0.1)' }}>
               <TextField
                 fullWidth
