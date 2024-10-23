@@ -118,8 +118,7 @@ const CommentIcon = () => (
   </svg>
 );
 
-const Feedback = ({fdbk_id , routeCd , requestId, appCd}) => {
-
+const Feedback = ({ fdbk_id, routeCd, requestId, appCd }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
   const [isCommentBoxVisible, setIsCommentBoxVisible] = useState(false);
@@ -143,7 +142,6 @@ const Feedback = ({fdbk_id , routeCd , requestId, appCd}) => {
       fdbk_id,
       liked: type === 'like' ? !isLiked : null,
       disliked: type === 'dislike' ? !isDisliked : null,
-      comment: comment.trim() !== '' ? comment : null,
     };
 
     try {
@@ -158,13 +156,6 @@ const Feedback = ({fdbk_id , routeCd , requestId, appCd}) => {
       if (!response.ok) {
         throw new Error('Failed to update feedback status');
       }
-
-      // If feedback was sent successfully and there’s a comment, clear the comment box
-      if (comment.trim() !== '') {
-        setComment('');
-        setIsCommentBoxVisible(false);
-      }
-
     } catch (error) {
       console.error('Error updating feedback status:', error);
       // Optionally, revert state changes if the API call fails
@@ -176,16 +167,38 @@ const Feedback = ({fdbk_id , routeCd , requestId, appCd}) => {
     }
   };
 
-  const handleButtonClick = () => {
-    setIsCommentBoxVisible(!isCommentBoxVisible);
-  };
-
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     if (comment.trim() === '') return;
 
-    // If the comment box is submitted
-    await handleFeedback('comment'); // This just treats submitting a comment as action after checking its validity
+    const payload = {
+      fdbk_id,
+      comment: comment.trim(),
+    };
+
+    try {
+      const response = await fetch(`http://10.126.192.122:8000/get_llm_feedback/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit comment');
+      }
+
+      // Clear the comment box
+      setComment('');
+      setIsCommentBoxVisible(false);
+    } catch (error) {
+      console.error('Error submitting comment:', error);
+    }
+  };
+
+  const handleButtonClick = () => {
+    setIsCommentBoxVisible(!isCommentBoxVisible);
   };
 
   return (
@@ -213,7 +226,6 @@ const Feedback = ({fdbk_id , routeCd , requestId, appCd}) => {
           </button>
         </div>
       </div>
-
       {isCommentBoxVisible && (
         <div className="comment-box mt-4">
           <form onSubmit={handleCommentSubmit} className="w-60">
