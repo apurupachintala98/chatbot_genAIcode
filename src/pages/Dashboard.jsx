@@ -7,53 +7,42 @@ import {
   Drawer,
   Box,
   Button as MuiButton,
-  useMediaQuery, Modal,
- IconButton
+  useMediaQuery,
+  Modal,
+  IconButton
 } from "@mui/material";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import DescriptionIcon from '@mui/icons-material/Description';
-import { SketchPicker } from "react-color"; // Import color picker
-import { createTheme, ThemeProvider } from "@mui/material/styles"; // For dynamic theme changes
-import elevance from "../assets/images/logo.png"; // Replace with your actual path
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import elevance from "../assets/images/logo.png"; 
 import UserChat from './UserChat';
-import color from "../assets/images/color.png";
 import { v4 as uuidv4 } from 'uuid';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-
 
 const drawerWidth = 180;
 
 const Dashboard = () => {
   const isMobile = useMediaQuery("(max-width:950px)");
-  // Lift the states up from UserChat
-  const [chatLog, setChatLog] = useState([]); // Chat log state
-  const [responseReceived, setResponseReceived] = useState(false); // Hide helpfulness prompt
-  const [error, setError] = useState(''); // Error message state
-  const [routeCdUpdated, setRouteCdUpdated] = useState(false); // Track route update
-  const [uploadStatus, setUploadStatus] = useState(''); // Track file upload status
+  
+  const [chatLog, setChatLog] = useState([]);
+  const [responseReceived, setResponseReceived] = useState(false);
+  const [error, setError] = useState('');
+  const [routeCdUpdated, setRouteCdUpdated] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState('');
   const [routeCd, setRouteCd] = useState('None');
-  const [isLoading, setIsLoading] = useState(false); // Loading indicator
-  const [successMessage, setSuccessMessage] = useState(''); // New state for success message
-  const [fileUploadCondition, setFileUploadCondition] = useState(false); // Toggle for file upload option
-  const [categoryLoading, setCategoryLoading] = useState(false); // New loading state for category click
-  const [themeColor, setThemeColor] = useState("#1a3673"); // Default theme color
-  const [showPicker, setShowPicker] = useState(false); // State to manage picker visibility
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [fileUploadCondition, setFileUploadCondition] = useState(false);
+  const [categoryLoading, setCategoryLoading] = useState(false);
+  const [themeColor, setThemeColor] = useState("#1a3673");
+  const [showPicker, setShowPicker] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [requestId, setRequestId] = useState(uuidv4());
-   // New state to control visibility of the initial view (avatar, prompts, categories)
-   const [showInitialView, setShowInitialView] = useState(true);
-
-  // Function to handle color change
-  const handleColorChange = (color) => {
-    setThemeColor(color.hex); // Update the theme color state
-  };
-
-  const togglePicker = () => {
-    setShowPicker((prev) => !prev); // Toggle visibility on button click
-  };
+  const [showInitialView, setShowInitialView] = useState(true);
 
   const [open, setOpen] = useState(false);
   const [copySuccess, setCopySuccess] = useState('');
+  
   const jsonData = JSON.stringify({
     "SVRO_APPROVED_YN": " ",
     "SVRO_PROGRAM_NO": " ",
@@ -69,7 +58,7 @@ const Dashboard = () => {
     "Architecture Deck": " ",
     "REVIEW_DATE": " ",
     "Receiver_Email": " "
-  }, null, 2); // Example JSON data
+  }, null, 2);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -77,14 +66,12 @@ const Dashboard = () => {
   const handleCopy = () => {
     navigator.clipboard.writeText(jsonData).then(() => {
       setCopySuccess('Copied!');
-      setTimeout(() => setCopySuccess(''), 2000); // Reset copy message after 2 seconds
+      setTimeout(() => setCopySuccess(''), 2000);
     });
   };
 
-
-   // Handle New Chat button click
-   const handleNewChat = () => {
-    setChatLog([]); // Reset chat log
+  const handleNewChat = () => {
+    setChatLog([]);
     setResponseReceived(false);
     setError('');
     setRouteCdUpdated(false);
@@ -95,11 +82,10 @@ const Dashboard = () => {
     setFileUploadCondition(false);
     setCategoryLoading(false);
     setSelectedCategory(null);
-    setShowInitialView(true); // Show avatar, categories, etc.
+    setShowInitialView(true);
     setRequestId(uuidv4()); 
   };
 
-  // Define the theme dynamically based on selected color
   const theme = createTheme({
     palette: {
       primary: {
@@ -134,7 +120,6 @@ const Dashboard = () => {
               src={elevance}
               alt="Elevance Health Logo"
             />
-
             <Typography
               variant="h6"
               noWrap
@@ -168,94 +153,68 @@ const Dashboard = () => {
           >
             <Toolbar />
             <Box sx={{ position: "relative", height: "100%", padding: 2, textAlign: 'center' }}>
-              {/* <Button
-                variant="contained"
-                onClick={togglePicker}
-                startIcon={<img src={color} alt="icon" style={{ width: '15px', height: '15px' }} />}
-                sx={{
-                  marginBottom: '10px',
-                  '&:hover': {
-                    backgroundColor: '#1769aa', // Hover color
-                  },
-                }}
-              >
-                Color
-              </Button>
-              {showPicker && (
-                <Box sx={{ margin: '0 auto' }}>
-                  <SketchPicker color={themeColor} onChangeComplete={handleColorChange}
-                    styles={{
-                      default: {
-                        picker: {
-                          width: '125px',
-                        },
-                      },
-                    }}
-                  />
-                </Box>
-              )} */}
-              <MuiButton
-        variant="contained"
-        size="large"
-        sx={{ fontWeight: 'bold' }}
-        startIcon={<DescriptionIcon />}
-        onClick={handleOpen}
-      >
-        Json
-      </MuiButton>
+              {routeCd === 'arb_scheduler' && (
+                <MuiButton
+                  variant="contained"
+                  size="large"
+                  sx={{ fontWeight: 'bold' }}
+                  startIcon={<DescriptionIcon />}
+                  onClick={handleOpen}
+                >
+                  Json
+                </MuiButton>
+              )}
               <Modal open={open} onClose={handleClose} aria-labelledby="json-modal-title">
-        <Box
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 400,
-            bgcolor: 'background.paper',
-            border: '2px solid #000',
-            borderRadius: '8px',
-            boxShadow: 24,
-            p: 3,
-          }}
-        >
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography id="json-modal-title" variant="h6" component="h2">
-              JSON Data
-            </Typography>
-            <IconButton
-              onClick={handleCopy}
-              sx={{
-                color: 'primary.main',
-                fontSize: '18px',
-              }}
-            >
-              <ContentCopyIcon />
-            </IconButton>
-          </Box>
-
-          <Box
-            component="pre"
-            sx={{
-              whiteSpace: 'pre-wrap',
-              wordWrap: 'break-word',
-              maxHeight: '200px',
-              overflowY: 'auto',
-              mt: 2,
-              p: 2,
-              bgcolor: '#f5f5f5',
-              borderRadius: '4px',
-            }}
-          >
-            {jsonData}
-          </Box>
-
-          {copySuccess && (
-            <Typography variant="body2" color="success.main" sx={{ mt: 1 }}>
-              {copySuccess}
-            </Typography>
-          )}
-        </Box>
-      </Modal>
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 400,
+                    bgcolor: 'background.paper',
+                    border: '2px solid #000',
+                    borderRadius: '8px',
+                    boxShadow: 24,
+                    p: 3,
+                  }}
+                >
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography id="json-modal-title" variant="h6" component="h2">
+                      JSON Data
+                    </Typography>
+                    <IconButton
+                      onClick={handleCopy}
+                      sx={{
+                        color: 'primary.main',
+                        fontSize: '18px',
+                      }}
+                    >
+                      <ContentCopyIcon />
+                    </IconButton>
+                  </Box>
+                  <Box
+                    component="pre"
+                    sx={{
+                      whiteSpace: 'pre-wrap',
+                      wordWrap: 'break-word',
+                      maxHeight: '200px',
+                      overflowY: 'auto',
+                      mt: 2,
+                      p: 2,
+                      bgcolor: '#f5f5f5',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    {jsonData}
+                  </Box>
+                  {copySuccess && (
+                    <Typography variant="body2" color="success.main" sx={{ mt: 1 }}>
+                      {copySuccess}
+                    </Typography>
+                  )}
+                </Box>
+              </Modal>
               <MuiButton
                 variant="contained"
                 size="large"
@@ -289,15 +248,8 @@ const Dashboard = () => {
           }}
         >
           <Toolbar />
-
           {isMobile && (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                marginBottom: 2,
-              }}
-            >
+            <Box sx={{ display: "flex", justifyContent: "center", marginBottom: 2 }}>
               <MuiButton
                 variant="contained"
                 size="large"
@@ -309,7 +261,6 @@ const Dashboard = () => {
               </MuiButton>
             </Box>
           )}
-
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: '100%' }}>
             <UserChat
               chatLog={chatLog}
@@ -335,10 +286,10 @@ const Dashboard = () => {
               themeColor={themeColor}
               selectedCategory={selectedCategory}
               setSelectedCategory={setSelectedCategory}
-              showInitialView={showInitialView} 
-              setShowInitialView={setShowInitialView} 
+              showInitialView={showInitialView}
+              setShowInitialView={setShowInitialView}
               requestId={requestId}
-              setRequestId={setRequestId}  
+              setRequestId={setRequestId}
             />
           </Box>
         </Box>
