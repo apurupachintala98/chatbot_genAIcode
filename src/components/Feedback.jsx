@@ -81,11 +81,11 @@ const Feedback = ({ fdbk_id, routeCd, requestId, appCd }) => {
   const handleFeedback = async (type) => {
     // Update states based on the feedback type
     if (type === 'like') {
-      setIsLiked((prevLiked) => !prevLiked);
-      setIsDisliked(false); // Dislike remains unaffected
+      setIsLiked(!isLiked);
+      if (!isLiked) setIsDisliked(false); // Clear dislike when liking
     } else if (type === 'dislike') {
-      setIsDisliked((prevDisliked) => !prevDisliked);
-      setIsLiked(false); // Like remains unaffected
+      setIsDisliked(!isDisliked);
+      if (!isDisliked) setIsLiked(false); // Clear like when disliking
     }
   
 
