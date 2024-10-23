@@ -68,87 +68,93 @@ function UserChat(props) {
   // Handle clicking on a suggested prompt
   const handlePromptClick = async (prompt) => {
     const newMessage = {
-      role: 'user',
-      content: prompt,
+        role: 'user',
+        content: prompt,
     };
 
     const newChatLog = [...chatLog, newMessage]; // Add new user message to chat log
     setChatLog(newChatLog); // Update the chat log state
     setInput(''); // Clear the input field
-    setIsLoading(true);// Set loading state to true
-    setResponseReceived(false)
+    setIsLoading(true); // Set loading state to true
+    setResponseReceived(false);
     setError(''); // Clear any previous error
     setShowInitialView(false);
     setServerError(null);
 
     try {
-      // Send the new message to the API
-      const response = await fetch(
-        `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(newChatLog) // Send the updated chat log
-        }
-      );
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      const newResId = data.res_id; // Assuming res_id is part of the response
-      setResId(newResId)
-      // Handle route_cd change
-      if (data.route_cd && data.route_cd !== routeCd) {
-        const previousRouteCd = routeCd; // Store the previous routeCd
-        setRouteCd(data.route_cd); // Update the route_cd
-        setRouteCdUpdated(true);
-        // Prepare the silent message "Hey"
-        const silentMessage = {
-          role: 'user',
-          content: 'Hey',
-        };
-        // Send the "Hey" message to the API but don't display it in the chatLog
-        const silentResponse = await fetch(
-          `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify([...newChatLog, silentMessage]) // Include the new chat log and the silent message
-          }
+        // Send the new message to the API
+        const response = await fetch(
+            `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newChatLog) // Send the updated chat log
+            }
         );
-        if (!silentResponse.ok) {
-          throw new Error('Network response was not ok while sending silent message');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
-        const silentData = await silentResponse.json();
-        const newResId = silentData.res_id; // Assuming res_id is part of the response
+        const data = await response.json();
+        const newResId = data.fdbk_id; // Assuming fdbk_id is part of the response
         setResId(newResId);
-        // Only store the final assistant's response from the silent call
-        const finalBotMessage = {
-          role: 'assistant',
-          content: silentData.modelreply,
-        };
-        // Update chat log without the silent message
-        setChatLog(prevChatLog => [...prevChatLog, finalBotMessage]); // Only add the final response to the chat log
-      } else {
-        // Add the assistant's response to the chat log
-        const botMessage = {
-          role: 'assistant',
-          content: data.modelreply, // Assuming modelreply contains the bot's response
-        };
-        setChatLog(prevChatLog => [...prevChatLog, botMessage]); // Update chat log with bot's response
-      }
+        // Handle route_cd change
+        if (data.route_cd && data.route_cd !== routeCd) {
+            const previousRouteCd = routeCd; // Store the previous routeCd
+            setRouteCd(data.route_cd); // Update the route_cd
+            setRouteCdUpdated(true);
+            // Prepare the silent message "Hey"
+            const silentMessage = {
+                role: 'user',
+                content: 'Hey',
+            };
+            // Send the "Hey" message to the API but don't display it in the chatLog
+            const silentResponse = await fetch(
+                `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify([...newChatLog, silentMessage]) // Include the new chat log and the silent message
+                }
+            );
+            if (!silentResponse.ok) {
+                throw new Error('Network response was not ok while sending silent message');
+            }
+            const silentData = await silentResponse.json();
+            const newResId = silentData.fdbk_id; // Assuming fdbk_id is part of the response
+            setResId(newResId);
+            // Only store the final assistant's response from the silent call
+            const finalBotMessage = {
+                role: 'assistant',
+                content: silentData.modelreply,
+            };
+            // Update chat log without the silent message
+            setChatLog(prevChatLog => [...prevChatLog, finalBotMessage]); // Only add the final response to the chat log
+        } else {
+            // Add the assistant's response to the chat log
+            const botMessage = {
+                role: 'assistant',
+                content: data.modelreply, // Assuming modelreply contains the bot's response
+            };
+            setChatLog(prevChatLog => [...prevChatLog, botMessage]); // Update chat log with bot's response
+        }
     } catch (err) {
-      setServerError('Failed to connect to the backend. Please try again later.'); // Handle errors
-      console.error(err);
+        // Create an error message object
+        const errorMessage = {
+            role: 'assistant',
+            content: 'Unable to fetch data from the server ...', // Error message
+        };
+        // Update the chat log with the error message
+        setChatLog(prevChatLog => [...prevChatLog, errorMessage]); // Add error message to chat log
+        console.error(err);
     } finally {
-      setIsLoading(false);
-      setResponseReceived(true) // Set loading state to false
+        setIsLoading(false);
+        setResponseReceived(true); // Set loading state to false
     }
-  };
+};
 
   // Handle clicking on a category icon and updating routeCd
   const handleCategoryClick = async (categoryRouteCd) => {
@@ -181,7 +187,7 @@ function UserChat(props) {
       }
 
       const data = await response.json();
-      const newResId = data.res_id; // Assuming res_id is part of the response
+      const newResId = data.fdbk_id; // Assuming fdbk_id is part of the response
       setResId(newResId)
 
       // Add the assistant's response (modelReply) to the chatLog
@@ -192,7 +198,13 @@ function UserChat(props) {
 
       setChatLog(prevChatLog => [...prevChatLog, botMessage]); // Only add the bot's response
     } catch (err) {
-      setError('Error communicating with backend');
+      const errorMessage = {
+        role: 'assistant',
+        content: 'Unable to fetch data from the server ...', // Error message
+    };
+    // Update the chat log with the error message
+    setChatLog(prevChatLog => [...prevChatLog, errorMessage]); // Add error message to chat log
+    console.error(err);
       console.error(err);
     } finally {
       // setIsLoading(false); // Set loading state to false after the API call
@@ -288,7 +300,7 @@ function UserChat(props) {
         }
       }
       let data = await response.json();
-      const newResId = data.res_id; // Assuming res_id is part of the response
+      const newResId = data.fdbk_id; // Assuming fdbk_id is part of the response
       setResId(newResId)
 
       // Convert final_response_flag to a string if it is a boolean true
@@ -364,9 +376,9 @@ function UserChat(props) {
 
         const silentData = await silentResponse.json();
 
-        // Update the state with the new res_id
+        // Update the state with the new fdbk_id
 
-        // Assuming you have a state setter function for res_id
+        // Assuming you have a state setter function for fdbk_id
 
 
 
@@ -374,7 +386,7 @@ function UserChat(props) {
           role: 'assistant',
           content: silentData.modelreply,
         };
-        const newResId = silentData.res_id; // Adjust this line if res_id is located elsewhere
+        const newResId = silentData.fdbk_id; // Adjust this line if fdbk_id is located elsewhere
         setResId(newResId);
 
         // Only add the final response to the chat log
@@ -391,7 +403,13 @@ function UserChat(props) {
         setChatLog([...newChatLog, botMessage]);
       }
     } catch (err) {
-      setServerError('Failed to connect to the backend. Please try again later.');
+      const errorMessage = {
+        role: 'assistant',
+        content: 'Unable to fetch data from the server  ...', // Error message
+    };
+    // Update the chat log with the error message
+    setChatLog(prevChatLog => [...prevChatLog, errorMessage]); // Add error message to chat log
+    console.error(err);
       console.error(err);
     } finally {
       setIsLoading(false);
