@@ -76,9 +76,10 @@ function UserChat(props) {
     setChatLog(newChatLog); // Update the chat log state
     setInput(''); // Clear the input field
     setIsLoading(true);// Set loading state to true
-    setResponseReceived(false) 
+    setResponseReceived(false)
     setError(''); // Clear any previous error
     setShowInitialView(false);
+    setServerError(null);
 
     try {
       // Send the new message to the API
@@ -141,7 +142,7 @@ function UserChat(props) {
         setChatLog(prevChatLog => [...prevChatLog, botMessage]); // Update chat log with bot's response
       }
     } catch (err) {
-      setError('Error communicating with backend'); // Handle errors
+      setServerError('Failed to connect to the backend. Please try again later.'); // Handle errors
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -261,9 +262,9 @@ function UserChat(props) {
     const newChatLog = [...chatLog, newMessage]; // Add user's message to chat log
     setChatLog(newChatLog);
     setInput(''); // Clear the input field
-    setIsLoading(true); 
+    setIsLoading(true);
+    setError('');
     setResponseReceived(false)// Set loading state to true
-    setError(''); // Clear any previous error
     setShowInitialView(false);
     setServerError(null);
     try {
@@ -390,7 +391,7 @@ function UserChat(props) {
         setChatLog([...newChatLog, botMessage]);
       }
     } catch (err) {
-      setError('Error communicating with backend');
+      setServerError('Failed to connect to the backend. Please try again later.');
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -447,9 +448,9 @@ function UserChat(props) {
               textAlign: 'center',
               marginBottom: '19%',
               width: '100%', // Adjust the width to prevent overflow
-        maxWidth: '600px', // Limit the maximum width
-        marginLeft: 'auto', // Center the content
-        marginRight: 'auto', // Center the content
+              maxWidth: '600px', // Limit the maximum width
+              marginLeft: 'auto', // Center the content
+              marginRight: 'auto', // Center the content
             }}
           >
             Hello there, I am your ARB Scheduler Assistant. How can I help you today?
@@ -495,13 +496,17 @@ function UserChat(props) {
           />
         )}
         {responseReceived && (
-        <Feedback
-          resId={resId}
-          routeCd={routeCd}
-          requestId={requestId}
-          appCd={appCd} 
+          <Feedback
+            resId={resId}
+            routeCd={routeCd}
+            requestId={requestId}
+            appCd={appCd}
           />)}
-        {serverError && <Alert color="failure"><span>{serverError}</span></Alert>}
+        {serverError && (
+          <Alert color="failure">
+            <span>{serverError}</span>
+          </Alert>
+        )}
         {successMessage && (
           <Alert color="success">
             <span className="font-medium">{successMessage}</span>
