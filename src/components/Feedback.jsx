@@ -118,7 +118,7 @@ const CommentIcon = () => (
   </svg>
 );
 
-const Feedback = ({resId , routeCd , requestId, appCd}) => {
+const Feedback = ({fdbk_id , routeCd , requestId, appCd}) => {
 
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
@@ -140,7 +140,7 @@ const Feedback = ({resId , routeCd , requestId, appCd}) => {
 
     // Prepare payload based on feedback type
     const payload = {
-      resId,
+      fdbk_id,
       liked: type === 'like' ? !isLiked : null,
       disliked: type === 'dislike' ? !isDisliked : null,
       comment: comment.trim() !== '' ? comment : null,

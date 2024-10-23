@@ -515,7 +515,7 @@ function UserChat(props) {
         )}
         {responseReceived && (
           <Feedback
-            resId={resId}
+            fdbk_id={resId}
             routeCd={routeCd}
             requestId={requestId}
             appCd={appCd}
