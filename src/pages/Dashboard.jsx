@@ -54,7 +54,22 @@ const Dashboard = () => {
 
   const [open, setOpen] = useState(false);
   const [copySuccess, setCopySuccess] = useState('');
-  const jsonData = JSON.stringify({ key: "value", anotherKey: "anotherValue" }, null, 2); // Example JSON data
+  const jsonData = JSON.stringify({
+    "SVRO_APPROVED_YN": " ",
+    "SVRO_PROGRAM_NO": " ",
+    "BUSINESS_FUNDED": " ",
+    "FUNDING_COST_CENTER_NO": " ",
+    "TGOV_REQUEST_ID": " ",
+    "PROJECT_NAME": " ",
+    "PROJECT_CODE": " ",
+    "APM_NO": " ",
+    "IT_OWNER_NAME": " ",
+    "ARCHITECT_LEAD_NAME": "  ",
+    "BUSINES_OWNER_NAME": "  ",
+    "Architecture Deck": " ",
+    "REVIEW_DATE": " ",
+    "Receiver_Email": " "
+  }, null, 2); // Example JSON data
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);

@@ -42,6 +42,7 @@ function UserChat(props) {
   const [input, setInput] = useState('');
   const [serverError, setServerError] = useState(null);
   const layoutWidth = isSmallScreen ? '100%' : isMediumScreen ? '80%' : '70%';
+  const [resId, setResId] = useState(null);
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
     "I want to schedule an ARB meeting",
@@ -74,7 +75,8 @@ function UserChat(props) {
     const newChatLog = [...chatLog, newMessage]; // Add new user message to chat log
     setChatLog(newChatLog); // Update the chat log state
     setInput(''); // Clear the input field
-    setIsLoading(true); // Set loading state to true
+    setIsLoading(true);// Set loading state to true
+    setResponseReceived(false) 
     setError(''); // Clear any previous error
     setShowInitialView(false);
 
@@ -94,6 +96,8 @@ function UserChat(props) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
+      const newResId = data.res_id; // Assuming res_id is part of the response
+      setResId(newResId)
       // Handle route_cd change
       if (data.route_cd && data.route_cd !== routeCd) {
         const previousRouteCd = routeCd; // Store the previous routeCd
@@ -119,6 +123,8 @@ function UserChat(props) {
           throw new Error('Network response was not ok while sending silent message');
         }
         const silentData = await silentResponse.json();
+        const newResId = silentData.res_id; // Assuming res_id is part of the response
+        setResId(newResId);
         // Only store the final assistant's response from the silent call
         const finalBotMessage = {
           role: 'assistant',
@@ -138,7 +144,8 @@ function UserChat(props) {
       setError('Error communicating with backend'); // Handle errors
       console.error(err);
     } finally {
-      setIsLoading(false); // Set loading state to false
+      setIsLoading(false);
+      setResponseReceived(true) // Set loading state to false
     }
   };
 
@@ -173,6 +180,8 @@ function UserChat(props) {
       }
 
       const data = await response.json();
+      const newResId = data.res_id; // Assuming res_id is part of the response
+      setResId(newResId)
 
       // Add the assistant's response (modelReply) to the chatLog
       const botMessage = {
@@ -186,7 +195,8 @@ function UserChat(props) {
       console.error(err);
     } finally {
       // setIsLoading(false); // Set loading state to false after the API call
-      setCategoryLoading(false); // Hide loader after the response is processed
+      setCategoryLoading(false);
+      setResponseReceived(true) // Hide loader after the response is processed
     }
   };
 
@@ -231,7 +241,7 @@ function UserChat(props) {
       if (fileInputRef.current) {
         fileInputRef.current.value = ''; // Clear the file input
       }
-      setSelectedFile(null); 
+      setSelectedFile(null);
     }
   };
 
@@ -251,7 +261,8 @@ function UserChat(props) {
     const newChatLog = [...chatLog, newMessage]; // Add user's message to chat log
     setChatLog(newChatLog);
     setInput(''); // Clear the input field
-    setIsLoading(true); // Set loading state to true
+    setIsLoading(true); 
+    setResponseReceived(false)// Set loading state to true
     setError(''); // Clear any previous error
     setShowInitialView(false);
     setServerError(null);
@@ -276,6 +287,8 @@ function UserChat(props) {
         }
       }
       let data = await response.json();
+      const newResId = data.res_id; // Assuming res_id is part of the response
+      setResId(newResId)
 
       // Convert final_response_flag to a string if it is a boolean true
       if (data.final_response_flag === true) {
@@ -317,8 +330,8 @@ function UserChat(props) {
         );
       }
 
-       // After handling the file upload, reset the file input and clear upload status
-       if (fileInputRef.current) {
+      // After handling the file upload, reset the file input and clear upload status
+      if (fileInputRef.current) {
         fileInputRef.current.value = ''; // Clear the file input
       }
 
@@ -349,15 +362,27 @@ function UserChat(props) {
         }
 
         const silentData = await silentResponse.json();
+
+        // Update the state with the new res_id
+
+        // Assuming you have a state setter function for res_id
+
+
+
         const finalBotMessage = {
           role: 'assistant',
           content: silentData.modelreply,
         };
+        const newResId = silentData.res_id; // Adjust this line if res_id is located elsewhere
+        setResId(newResId);
 
         // Only add the final response to the chat log
         setChatLog([...newChatLog, finalBotMessage]);
+
       } else {
         // Normal flow: Add bot's response to chat log
+
+
         const botMessage = {
           role: 'assistant',
           content: data.modelreply,
@@ -368,7 +393,8 @@ function UserChat(props) {
       setError('Error communicating with backend');
       console.error(err);
     } finally {
-      setIsLoading(false); // Set loading state to false
+      setIsLoading(false);
+      setResponseReceived(true)// Set loading state to false
       // setHidePrompts(false);
     }
   }
@@ -464,7 +490,13 @@ function UserChat(props) {
             setSelectedFile={setSelectedFile}
           />
         )}
-        {responseReceived && <Feedback />}
+        {responseReceived && (
+        <Feedback
+          resId={resId}
+          routeCd={routeCd}
+          requestId={requestId}
+          appCd={appCd} 
+          />)}
         {serverError && <Alert color="failure"><span>{serverError}</span></Alert>}
         {successMessage && (
           <Alert color="success">
