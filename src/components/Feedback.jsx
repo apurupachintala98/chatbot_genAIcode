@@ -191,7 +191,7 @@ const Feedback = ({resId , routeCd , requestId, appCd}) => {
   return (
     <div className="feedback-container">
       <div className="flex items-center space-x-4">
-        <p className="feedback-text font-bold">Was this response helpful?</p>
+        <p className="feedback-text font-bold m-0">Was this response helpful?</p>
         <div className="flex items-center space-x-2">
           <button
             onClick={() => handleFeedback('like')}

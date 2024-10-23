@@ -446,6 +446,10 @@ function UserChat(props) {
               color: themeColor,
               textAlign: 'center',
               marginBottom: '19%',
+              width: '100%', // Adjust the width to prevent overflow
+        maxWidth: '600px', // Limit the maximum width
+        marginLeft: 'auto', // Center the content
+        marginRight: 'auto', // Center the content
             }}
           >
             Hello there, I am your ARB Scheduler Assistant. How can I help you today?
@@ -524,6 +528,11 @@ function UserChat(props) {
                 sx={{
                   mb: 2,
                   textAlign: 'center',
+                  width: '100%',
+                  maxWidth: '600px', // Ensure a consistent width
+                  marginLeft: 'auto', // Center it
+                  marginRight: 'auto', // Center it
+                  marginBottom: '16px',
                 }}
               />
             </Grid>
