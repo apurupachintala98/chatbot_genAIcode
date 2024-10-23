@@ -520,11 +520,6 @@ function UserChat(props) {
             requestId={requestId}
             appCd={appCd}
           />)}
-        {serverError && (
-          <Alert color="failure">
-            <span>{serverError}</span>
-          </Alert>
-        )}
         {successMessage && (
           <Alert color="success">
             <span className="font-medium">{successMessage}</span>

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
-const ThumbsUpIcon = () => (
+const ThumbsUpIcon = ({ isSelected }) => (
   <svg
-    className="w-[16px] h-[16px] text-gray-800 dark:text-white"
-    aria-hidden="true"
+  className={`w-[16px] h-[16px] ${isSelected ? 'text-blue-600' : 'text-gray-800 dark:text-white'}`}
+      aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     width="16"
     height="16"
@@ -25,10 +25,10 @@ const ThumbsUpIcon = () => (
   </svg>
 );
 
-const ThumbsDownIcon = () => (
-  <svg
-    className="w-[16px] h-[16px] text-gray-800 dark:text-white"
-    aria-hidden="true"
+const ThumbsDownIcon = ({ isSelected }) => (
+    <svg
+    className={`w-[16px] h-[16px] ${isSelected ? 'text-red-600' : 'text-gray-800 dark:text-white'}`}
+        aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     width="16"
     height="16"
@@ -50,51 +50,51 @@ const ThumbsDownIcon = () => (
   </svg>
 );
 
-const ThumbsUpIconDark = () => (
-  <svg
-    className="w-6 h-6 text-gray-800 dark:text-white"
-    aria-hidden="true"
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      fillRule="evenodd"
-      d="M15.03 9.684h3.965c.322 0 .64.08.925.232.286.153.532.374.717.645a2.109
-       2.109 0 0 1 .242 1.883l-2.36 7.201c-.288.814-.48 1.355-1.884 1.355-2.072
-       0-4.276-.677-6.157-1.256-.472-.145-.924-.284-1.348-.404h-.115V9.478a25.485
-        25.485 0 0 0 4.238-5.514 1.8 1.8 0 0 1 .901-.83 1.74 1.74 0 0 1 
-        1.21-.048c.396.13.736.397.96.757.225.36.32.788.269 1.211l-1.562 
-        4.63ZM4.177 10H7v8a2 2 0 1 1-4 0v-6.823C3 10.527 3.527 10 4.176 10Z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
+// const ThumbsUpIconDark = () => (
+//   <svg
+//     className="w-6 h-6 text-gray-800 dark:text-white"
+//     aria-hidden="true"
+//     xmlns="http://www.w3.org/2000/svg"
+//     width="16"
+//     height="16"
+//     fill="currentColor"
+//     viewBox="0 0 24 24"
+//   >
+//     <path
+//       fillRule="evenodd"
+//       d="M15.03 9.684h3.965c.322 0 .64.08.925.232.286.153.532.374.717.645a2.109
+//        2.109 0 0 1 .242 1.883l-2.36 7.201c-.288.814-.48 1.355-1.884 1.355-2.072
+//        0-4.276-.677-6.157-1.256-.472-.145-.924-.284-1.348-.404h-.115V9.478a25.485
+//         25.485 0 0 0 4.238-5.514 1.8 1.8 0 0 1 .901-.83 1.74 1.74 0 0 1 
+//         1.21-.048c.396.13.736.397.96.757.225.36.32.788.269 1.211l-1.562 
+//         4.63ZM4.177 10H7v8a2 2 0 1 1-4 0v-6.823C3 10.527 3.527 10 4.176 10Z"
+//       clipRule="evenodd"
+//     />
+//   </svg>
+// );
 
-const ThumbsDownIconDark = () => (
-  <svg
-    className="w-6 h-6 text-gray-800 dark:text-white"
-    aria-hidden="true"
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      fillRule="evenodd"
-      d="M8.97 14.316H5.004c-.322 0-.64-.08-.925-.232a2.022 2.022 0 0 
-      1-.717-.645 2.108 2.108 0 0 1-.242-1.883l2.36-7.201C5.769 3.54 5.96 
-      3 7.365 3c2.072 0 4.276.678 6.156 1.256.473.145.925.284 1.35.404h.114v9.862a25.485 
-      25.485 0 0 0-4.238 5.514c-.197.376-.516.67-.901.83a1.74 1.74 0 0 1-1.21.048 1.79 
-      1.79 0 0 1-.96-.757 1.867 1.867 0 0 1-.269-1.211l1.562-4.63ZM19.822 14H17V6a2 2 0 
-      1 1 4 0v6.823c0 .65-.527 1.177-1.177 1.177Z"
-      clipRule="evenodd"
-    />
-  </svg>
-);
+// const ThumbsDownIconDark = () => (
+//   <svg
+//     className="w-6 h-6 text-gray-800 dark:text-white"
+//     aria-hidden="true"
+//     xmlns="http://www.w3.org/2000/svg"
+//     width="16"
+//     height="16"
+//     fill="currentColor"
+//     viewBox="0 0 24 24"
+//   >
+//     <path
+//       fillRule="evenodd"
+//       d="M8.97 14.316H5.004c-.322 0-.64-.08-.925-.232a2.022 2.022 0 0 
+//       1-.717-.645 2.108 2.108 0 0 1-.242-1.883l2.36-7.201C5.769 3.54 5.96 
+//       3 7.365 3c2.072 0 4.276.678 6.156 1.256.473.145.925.284 1.35.404h.114v9.862a25.485 
+//       25.485 0 0 0-4.238 5.514c-.197.376-.516.67-.901.83a1.74 1.74 0 0 1-1.21.048 1.79 
+//       1.79 0 0 1-.96-.757 1.867 1.867 0 0 1-.269-1.211l1.562-4.63ZM19.822 14H17V6a2 2 0 
+//       1 1 4 0v6.823c0 .65-.527 1.177-1.177 1.177Z"
+//       clipRule="evenodd"
+//     />
+//   </svg>
+// );
 
 const CommentIcon = () => (
   <svg
@@ -125,23 +125,19 @@ const Feedback = ({ fdbk_id, routeCd, requestId, appCd }) => {
   const [comment, setComment] = useState('');
 
   const handleFeedback = async (type) => {
-    const newIsLiked = type === 'like' ? !isLiked : isLiked;
-    const newIsDisliked = type === 'dislike' ? !isDisliked : isDisliked;
-
-    // Toggle the appropriate state
+    // Update states based on the feedback type
     if (type === 'like') {
-      setIsLiked(!isLiked);
-      if (isDisliked) setIsDisliked(false);
+      setIsLiked(true);   // Set liked to true
+      setIsDisliked(false); // Set disliked to false
     } else if (type === 'dislike') {
-      setIsDisliked(!isDisliked);
-      if (isLiked) setIsLiked(false);
+      setIsLiked(false);   // Set liked to false
+      setIsDisliked(true);  // Set disliked to true
     }
 
     // Prepare payload based on feedback type
     const payload = {
       fdbk_id,
-      liked: type === 'like' ? !isLiked : null,
-      disliked: type === 'dislike' ? !isDisliked : null,
+      fdbk_actn: type === 'like' ? true : false, // Set feedback to true for like, false for dislike
     };
 
     try {
@@ -160,9 +156,11 @@ const Feedback = ({ fdbk_id, routeCd, requestId, appCd }) => {
       console.error('Error updating feedback status:', error);
       // Optionally, revert state changes if the API call fails
       if (type === 'like') {
-        setIsLiked(isLiked);
+        setIsLiked(false);
+        setIsDisliked(true); // Revert dislike if like fails
       } else if (type === 'dislike') {
-        setIsDisliked(isDisliked);
+        setIsDisliked(false);
+        setIsLiked(true); // Revert like if dislike fails
       }
     }
   };
@@ -206,17 +204,35 @@ const Feedback = ({ fdbk_id, routeCd, requestId, appCd }) => {
       <div className="flex items-center space-x-4">
         <p className="feedback-text font-bold m-0">Was this response helpful?</p>
         <div className="flex items-center space-x-2">
+          {/* <button
+            onClick={() => handleFeedback('like')}
+            className={`text-gray-500 hover:text-gray-800 ${isLiked ? 'text-blue-600' : ''}`} // Change color if liked
+          >
+            <ThumbsUpIcon />
+          </button>
           <button
+            onClick={() => handleFeedback('dislike')}
+            className={`text-gray-500 hover:text-gray-800 ${isDisliked ? 'text-red-600' : ''}`} // Change color if disliked
+          >
+            <ThumbsDownIcon />
+          </button>
+          <button
+            onClick={handleButtonClick}
+            className="text-gray-500 hover:text-gray-800"
+          >
+            <CommentIcon />
+          </button> */}
+           <button
             onClick={() => handleFeedback('like')}
             className="text-gray-500 hover:text-gray-800"
           >
-            {isLiked ? <ThumbsUpIcon /> : <ThumbsUpIcon />}
+            <ThumbsUpIcon isSelected={isLiked} />
           </button>
           <button
             onClick={() => handleFeedback('dislike')}
             className="text-gray-500 hover:text-gray-800"
           >
-            {isDisliked ? <ThumbsDownIcon /> : <ThumbsDownIcon />}
+            <ThumbsDownIcon isSelected={isDisliked} />
           </button>
           <button
             onClick={handleButtonClick}
