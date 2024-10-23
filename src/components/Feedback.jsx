@@ -81,11 +81,19 @@ const Feedback = ({ fdbk_id, routeCd, requestId, appCd }) => {
   const handleFeedback = async (type) => {
     // Update states based on the feedback type
     if (type === 'like') {
-      setIsLiked(!isLiked);
-      if (!isLiked) setIsDisliked(false); // Clear dislike when liking
+      // Toggle the isLiked state, without affecting isDisliked
+      setIsLiked((prevLiked) => !prevLiked);
+      // If the like is toggled to true, reset dislike to false
+      if (!isLiked) {
+        setIsDisliked(false);
+      }
     } else if (type === 'dislike') {
-      setIsDisliked(!isDisliked);
-      if (!isDisliked) setIsLiked(false); // Clear like when disliking
+      // Toggle the isDisliked state, without affecting isLiked
+      setIsDisliked((prevDisliked) => !prevDisliked);
+      // If the dislike is toggled to true, reset like to false
+      if (!isDisliked) {
+        setIsLiked(false);
+      }
     }
   
 
@@ -110,13 +118,13 @@ const Feedback = ({ fdbk_id, routeCd, requestId, appCd }) => {
     } catch (error) {
       console.error('Error updating feedback status:', error);
       // Optionally, revert state changes if the API call fails
-      if (type === 'like') {
-        setIsLiked(false);
-        setIsDisliked(true); // Revert dislike if like fails
-      } else if (type === 'dislike') {
-        setIsDisliked(false);
-        setIsLiked(true); // Revert like if dislike fails
-      }
+      // if (type === 'like') {
+      //   setIsLiked(false);
+      //   setIsDisliked(true); // Revert dislike if like fails
+      // } else if (type === 'dislike') {
+      //   setIsDisliked(false);
+      //   setIsLiked(true); // Revert like if dislike fails
+      // }
     }
   };
 
