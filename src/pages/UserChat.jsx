@@ -328,10 +328,6 @@ function UserChat(props) {
       };
       setResponseReceived(false);
       setIsLoading(false);
-
-
-
-
       setChatLog(prevChatLog => [...prevChatLog, botMessage]);// Store model reply
 
       if (modelReply.includes(' "Architecture Deck": "Yes"')) {
@@ -341,10 +337,7 @@ function UserChat(props) {
 
       // Check if the model reply indicates "No"
       if (modelReply.includes(' "Architecture Deck": "No"')) {
-
-
         const dummyFile = createDummyFile(); // Create the dummy file
-
         // Prepare FormData with the dummy file
         const formData = new FormData();
         formData.append('app_cd', appCd);
@@ -399,7 +392,6 @@ function UserChat(props) {
         }
       }
 
-
       // After handling the file upload, reset the file input and clear upload status
       if (fileInputRef.current) {
         fileInputRef.current.value = ''; // Clear the file input
@@ -434,11 +426,7 @@ function UserChat(props) {
         const silentData = await silentResponse.json();
 
         // Update the state with the new fdbk_id
-
         // Assuming you have a state setter function for fdbk_id
-
-
-
         const finalBotMessage = {
           role: 'assistant',
           content: silentData.modelreply,
@@ -451,8 +439,6 @@ function UserChat(props) {
 
       } else {
         // Normal flow: Add bot's response to chat log
-
-
         const botMessage = {
           role: 'assistant',
           content: data.modelreply,
@@ -522,10 +508,10 @@ function UserChat(props) {
               color: themeColor,
               textAlign: 'center',
               marginBottom: '19%',
-              width: '100%', // Adjust the width to prevent overflow
-              maxWidth: '600px', // Limit the maximum width
-              marginLeft: 'auto', // Center the content
-              marginRight: 'auto', // Center the content
+              width: '100%', 
+              maxWidth: '600px', 
+              marginLeft: 'auto', 
+              marginRight: 'auto', 
             }}
           >
             Hello there, I am your ARB Scheduler Assistant. How can I help you today?
@@ -577,11 +563,6 @@ function UserChat(props) {
             requestId={requestId}
             appCd={appCd}
           />)}
-        {successMessage && (
-          <Alert color="success">
-            <span className="font-medium">{successMessage}</span>
-          </Alert>
-        )}
       </Box>
 
       <Box

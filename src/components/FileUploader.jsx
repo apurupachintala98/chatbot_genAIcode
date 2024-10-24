@@ -7,7 +7,7 @@ function FileUploader({ uploadStatus, setUploadStatus, handleFileUpload, setSele
     const file = e.target.files[0];
     if (file && (file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
       setSelectedFile(file); 
-      setUploadStatus('Uploading...');
+      // setUploadStatus('Uploading...');
     } else {
       setUploadStatus('Please select a valid PDF or PPTX file.');
     }
