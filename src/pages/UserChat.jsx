@@ -5,7 +5,6 @@ import chatbot from '../assets/images/chatbot.png';
 import HashLoader from 'react-spinners/HashLoader';
 import SuggestedPrompts from '../components/SuggestedPrompts';
 import Feedback from '../components/Feedback';
-// import Loader from '../components/Loader';
 import parseMessageContent from '../components/parseMessageContent';
 import ARBCategories from '../components/ARBCategories';
 import FileUploader from '../components/FileUploader';
@@ -72,13 +71,12 @@ function UserChat(props) {
       role: 'user',
       content: prompt,
     };
-
-    const newChatLog = [...chatLog, newMessage]; // Add new user message to chat log
-    setChatLog(newChatLog); // Update the chat log state
-    setInput(''); // Clear the input field
-    setIsLoading(true); // Set loading state to true
+    const newChatLog = [...chatLog, newMessage];
+    setChatLog(newChatLog);
+    setInput('');
+    setIsLoading(true);
     setResponseReceived(false);
-    setError(''); // Clear any previous error
+    setError('');
     setShowInitialView(false);
     setServerError(null);
 
@@ -91,7 +89,7 @@ function UserChat(props) {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(newChatLog) // Send the updated chat log
+          body: JSON.stringify(newChatLog)
         }
       );
       if (!response.ok) {
@@ -483,6 +481,22 @@ function UserChat(props) {
     setShowInitialView(false);// Hide avatar, categories, and prompts when the input field is clicked or typed
   };
 
+  const handleNewChat = () => {
+    setChatLog([]); // Clear chat log
+    setResponseReceived(false); // Reset response received
+    setError(''); // Clear any errors
+    setRouteCdUpdated(false);
+    setUploadStatus(''); // Reset upload status
+    setRouteCd('None');
+    setIsLoading(false);
+    setSuccessMessage('');
+    setFileUploadCondition(false);
+    setCategoryLoading(false);
+    setSelectedCategory(null);
+    setShowInitialView(true); // Show initial view with categories
+    setRequestId(uuidv4()); // Reset the request ID for the new session
+    setOpenPopup(false); // Close the popup after starting a new chat
+  };
 
   return (
     <Box
@@ -495,7 +509,6 @@ function UserChat(props) {
         margin: 'auto',
       }}
     >
-      {/* Conditionally render content based on category, prompt click, or text input */}
       {showInitialView && (
         <>
           <Avatar img={chatbot} rounded />
@@ -508,10 +521,10 @@ function UserChat(props) {
               color: themeColor,
               textAlign: 'center',
               marginBottom: '19%',
-              width: '100%', 
-              maxWidth: '600px', 
-              marginLeft: 'auto', 
-              marginRight: 'auto', 
+              width: '100%',
+              maxWidth: '600px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
             }}
           >
             Hello there, I am your ARB Scheduler Assistant. How can I help you today?
@@ -569,7 +582,7 @@ function UserChat(props) {
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          width: '100%', // Ensure they take up full width of the container
+          width: '100%',
           maxWidth: '100%',
           flexDirection: 'column',
           position: 'relative',
@@ -604,7 +617,6 @@ function UserChat(props) {
             </Grid>
           )}
 
-          {/* Input Field */}
           <Grid item xs={12} sm={6} sx={{
             marginBottom: isSmallScreen || isMediumScreen ? '16px' : '8px',
           }}>
@@ -615,7 +627,7 @@ function UserChat(props) {
                 value={input}
                 onChange={(e) => {
                   setInput(e.target.value);
-                  handleInputFocusOrChange(); // Ensure elements disappear when typing
+                  handleInputFocusOrChange();
                 }}
                 onFocus={handleInputFocusOrChange}
                 inputProps={{ maxLength: 400 }}
@@ -645,45 +657,51 @@ function UserChat(props) {
         </Grid>
       </Box>
       <Modal open={openPopup}
-    onClose={(event, reason) => {
-      if (reason !== "backdropClick") {
-        setOpenPopup(false);
-      }
-    }}
-    closeAfterTransition
-    BackdropComponent={Backdrop}
-    BackdropProps={{
-      timeout: 500,
-    }}>
-    <Fade in={openPopup}>
-      <Box sx={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 500,
-        bgcolor: 'background.paper',
-        borderRadius: '8px',
-        boxShadow: 24,
-        p: 4,
-        textAlign: 'center',
-      }}>
-        <Typography variant="h6">Session Ended</Typography>
-        <Typography sx={{ mt: 2 }}>File uploaded successfully as an attachment to Confluence!
-        </Typography>
-        <Typography sx={{ mt: 2 }}>
-          Record Inserted successfully into Confluence Portal
-        </Typography>
-        <Typography sx={{ mt: 2 }}>
-          ARB review invitation sent successfully
-        </Typography>
+        onClose={(event, reason) => {
+          if (reason !== "backdropClick") {
+            setOpenPopup(false);
+          }
+        }}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}>
+        <Fade in={openPopup}>
+          <Box sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 500,
+            bgcolor: 'background.paper',
+            borderRadius: '8px',
+            boxShadow: 24,
+            p: 4,
+            textAlign: 'center',
+          }}>
+            <Typography variant="h6">Session Ended</Typography>
+            <Typography sx={{ mt: 2 }}>File uploaded successfully as an attachment to Confluence!
+            </Typography>
+            <Typography sx={{ mt: 2 }}>
+              Record Inserted successfully into Confluence Portal
+            </Typography>
+            <Typography sx={{ mt: 2 }}>
+              ARB review invitation sent successfully
+            </Typography>
 
-        {/* Close button */}
-        <Button onClick={() => setOpenPopup(false)}>Close</Button>
-
-      </Box>
-    </Fade>
-</Modal>
+            <Button onClick={() => setOpenPopup(false)}>Close</Button>
+            <Button
+              onClick={handleNewChat}
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2 }}
+            >
+              New Chat
+            </Button>
+          </Box>
+        </Fade>
+      </Modal>
 
     </Box>
   );
