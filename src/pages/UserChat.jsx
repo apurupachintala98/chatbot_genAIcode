@@ -645,37 +645,46 @@ function UserChat(props) {
         </Grid>
       </Box>
       <Modal open={openPopup}
-        onClose={() => setOpenPopup(false)}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}>
-        <Fade in={openPopup}>
-          <Box sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 500,
-            bgcolor: 'background.paper',
-            borderRadius: '8px',
-            boxShadow: 24,
-            p: 4,
-            textAlign: 'center',
-          }}>
-            <Typography variant="h6">Session Ended</Typography>
-            <Typography sx={{ mt: 2 }}>File uploaded successfully as an attachment to Confluence!
-            </Typography>
-            <Typography sx={{ mt: 2 }}>
-              Record Inserted successfully into Confluence Portal
-            </Typography>
-            <Typography sx={{ mt: 2 }}>
-              ARB review invitation sent successfully
-            </Typography>
-          </Box>
-        </Fade>
-      </Modal>
+    onClose={(event, reason) => {
+      if (reason !== "backdropClick") {
+        setOpenPopup(false);
+      }
+    }}
+    closeAfterTransition
+    BackdropComponent={Backdrop}
+    BackdropProps={{
+      timeout: 500,
+    }}>
+    <Fade in={openPopup}>
+      <Box sx={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 500,
+        bgcolor: 'background.paper',
+        borderRadius: '8px',
+        boxShadow: 24,
+        p: 4,
+        textAlign: 'center',
+      }}>
+        <Typography variant="h6">Session Ended</Typography>
+        <Typography sx={{ mt: 2 }}>File uploaded successfully as an attachment to Confluence!
+        </Typography>
+        <Typography sx={{ mt: 2 }}>
+          Record Inserted successfully into Confluence Portal
+        </Typography>
+        <Typography sx={{ mt: 2 }}>
+          ARB review invitation sent successfully
+        </Typography>
+
+        {/* Close button */}
+        <Button onClick={() => setOpenPopup(false)}>Close</Button>
+
+      </Box>
+    </Fade>
+</Modal>
+
     </Box>
   );
 }
