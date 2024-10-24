@@ -496,6 +496,7 @@ function UserChat(props) {
     setSelectedCategory(null);
     setShowInitialView(true);
     setRequestId(uuidv4());
+    setOpenPopup(false);
   };
   
 
