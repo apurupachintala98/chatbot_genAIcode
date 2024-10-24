@@ -10,7 +10,7 @@ import parseMessageContent from '../components/parseMessageContent';
 import ARBCategories from '../components/ARBCategories';
 import FileUploader from '../components/FileUploader';
 import ChatMessage from '../components/ChatMessage';
-import { Box, Grid, TextField, Button, IconButton, Typography, InputAdornment, Toolbar, useTheme, useMediaQuery } from '@mui/material';
+import { Modal, Backdrop, Fade, Box, Grid, TextField, Button, IconButton, Typography, InputAdornment, Toolbar, useTheme, useMediaQuery } from '@mui/material';
 
 function UserChat(props) {
   const theme = useTheme();
@@ -43,6 +43,7 @@ function UserChat(props) {
   const [serverError, setServerError] = useState(null);
   const layoutWidth = isSmallScreen ? '100%' : isMediumScreen ? '80%' : '70%';
   const [resId, setResId] = useState(null);
+  const [openPopup, setOpenPopup] = useState(false);
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
     "I want to schedule an ARB meeting",
@@ -68,8 +69,8 @@ function UserChat(props) {
   // Handle clicking on a suggested prompt
   const handlePromptClick = async (prompt) => {
     const newMessage = {
-        role: 'user',
-        content: prompt,
+      role: 'user',
+      content: prompt,
     };
 
     const newChatLog = [...chatLog, newMessage]; // Add new user message to chat log
@@ -82,79 +83,79 @@ function UserChat(props) {
     setServerError(null);
 
     try {
-        // Send the new message to the API
-        const response = await fetch(
-            `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
-            {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newChatLog) // Send the updated chat log
-            }
-        );
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+      // Send the new message to the API
+      const response = await fetch(
+        `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newChatLog) // Send the updated chat log
         }
-        const data = await response.json();
-        const newResId = data.fdbk_id; // Assuming fdbk_id is part of the response
-        setResId(newResId);
-        // Handle route_cd change
-        if (data.route_cd && data.route_cd !== routeCd) {
-            const previousRouteCd = routeCd; // Store the previous routeCd
-            setRouteCd(data.route_cd); // Update the route_cd
-            setRouteCdUpdated(true);
-            // Prepare the silent message "Hey"
-            const silentMessage = {
-                role: 'user',
-                content: 'Hey',
-            };
-            // Send the "Hey" message to the API but don't display it in the chatLog
-            const silentResponse = await fetch(
-                `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify([...newChatLog, silentMessage]) // Include the new chat log and the silent message
-                }
-            );
-            if (!silentResponse.ok) {
-                throw new Error('Network response was not ok while sending silent message');
-            }
-            const silentData = await silentResponse.json();
-            const newResId = silentData.fdbk_id; // Assuming fdbk_id is part of the response
-            setResId(newResId);
-            // Only store the final assistant's response from the silent call
-            const finalBotMessage = {
-                role: 'assistant',
-                content: silentData.modelreply,
-            };
-            // Update chat log without the silent message
-            setChatLog(prevChatLog => [...prevChatLog, finalBotMessage]); // Only add the final response to the chat log
-        } else {
-            // Add the assistant's response to the chat log
-            const botMessage = {
-                role: 'assistant',
-                content: data.modelreply, // Assuming modelreply contains the bot's response
-            };
-            setChatLog(prevChatLog => [...prevChatLog, botMessage]); // Update chat log with bot's response
-        }
-    } catch (err) {
-        // Create an error message object
-        const errorMessage = {
-            role: 'assistant',
-            content: 'Unable to fetch data from the server ...', // Error message
+      );
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      const newResId = data.fdbk_id; // Assuming fdbk_id is part of the response
+      setResId(newResId);
+      // Handle route_cd change
+      if (data.route_cd && data.route_cd !== routeCd) {
+        const previousRouteCd = routeCd; // Store the previous routeCd
+        setRouteCd(data.route_cd); // Update the route_cd
+        setRouteCdUpdated(true);
+        // Prepare the silent message "Hey"
+        const silentMessage = {
+          role: 'user',
+          content: 'Hey',
         };
-        // Update the chat log with the error message
-        setChatLog(prevChatLog => [...prevChatLog, errorMessage]); // Add error message to chat log
-        console.error(err);
+        // Send the "Hey" message to the API but don't display it in the chatLog
+        const silentResponse = await fetch(
+          `http://10.126.192.122:8000/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify([...newChatLog, silentMessage]) // Include the new chat log and the silent message
+          }
+        );
+        if (!silentResponse.ok) {
+          throw new Error('Network response was not ok while sending silent message');
+        }
+        const silentData = await silentResponse.json();
+        const newResId = silentData.fdbk_id; // Assuming fdbk_id is part of the response
+        setResId(newResId);
+        // Only store the final assistant's response from the silent call
+        const finalBotMessage = {
+          role: 'assistant',
+          content: silentData.modelreply,
+        };
+        // Update chat log without the silent message
+        setChatLog(prevChatLog => [...prevChatLog, finalBotMessage]); // Only add the final response to the chat log
+      } else {
+        // Add the assistant's response to the chat log
+        const botMessage = {
+          role: 'assistant',
+          content: data.modelreply, // Assuming modelreply contains the bot's response
+        };
+        setChatLog(prevChatLog => [...prevChatLog, botMessage]); // Update chat log with bot's response
+      }
+    } catch (err) {
+      // Create an error message object
+      const errorMessage = {
+        role: 'assistant',
+        content: 'Unable to fetch data from the server ...', // Error message
+      };
+      // Update the chat log with the error message
+      setChatLog(prevChatLog => [...prevChatLog, errorMessage]); // Add error message to chat log
+      console.error(err);
     } finally {
-        setIsLoading(false);
-        setResponseReceived(true); // Set loading state to false
+      setIsLoading(false);
+      setResponseReceived(true); // Set loading state to false
     }
-};
+  };
 
   // Handle clicking on a category icon and updating routeCd
   const handleCategoryClick = async (categoryRouteCd) => {
@@ -201,10 +202,10 @@ function UserChat(props) {
       const errorMessage = {
         role: 'assistant',
         content: 'Unable to fetch data from the server ...', // Error message
-    };
-    // Update the chat log with the error message
-    setChatLog(prevChatLog => [...prevChatLog, errorMessage]); // Add error message to chat log
-    console.error(err);
+      };
+      // Update the chat log with the error message
+      setChatLog(prevChatLog => [...prevChatLog, errorMessage]); // Add error message to chat log
+      console.error(err);
       console.error(err);
     } finally {
       // setIsLoading(false); // Set loading state to false after the API call
@@ -224,9 +225,9 @@ function UserChat(props) {
     formData.append('app_cd', appCd);
     formData.append('request_id', requestId);
     formData.append('route_cd', routeCd);
+
     // Convert the string to a pure JSON object
     const pureJsonResultModelResponse = JSON.parse(apiResponse.app_info.json_result_model_response);
-    console.log(pureJsonResultModelResponse);
     formData.append('app_info', JSON.stringify({
       json_result_model_response: pureJsonResultModelResponse,
       final_response_flag: "True"
@@ -239,10 +240,21 @@ function UserChat(props) {
         method: 'POST',
         body: formData, // FormData object
       });
+
       if (response.ok) {
-        setUploadStatus('File uploaded successfully as an attachment to Confluence!');
-        setSuccessMessage('Record Inserted successfully into Confluence Portal'); // Set success message
-        setSuccessMessage('ARB review invitation sent successfully'); // Set success message
+        const responseData = await response.json(); // Parse the response as JSON
+
+        // Check if the response indicates the session has ended
+
+
+        //setUploadStatus('File uploaded successfully as an attachment to Confluence!');
+        // setSuccessMessage('Record Inserted successfully into Confluence Portal'); // Set success message
+        // setSuccessMessage('ARB review invitation sent successfully'); // Set success message 
+        if (responseData) { // Assuming the response has a property called 'sessionEnded'
+          setOpenPopup(true);
+          setIsLoading(false);
+          setResponseReceived(false); // Alert the user
+        }
       } else {
         setUploadStatus('File upload failed.');
       }
@@ -309,14 +321,28 @@ function UserChat(props) {
       }
 
       setApiResponse(data);
-      const modelReply = data.modelreply; // Store model reply
+      const modelReply = data.modelreply;
+      const botMessage = {
+        role: 'assistant',
+        content: data.modelreply, // Assuming modelreply contains the bot's response
+      };
+      setResponseReceived(false);
+      setIsLoading(false);
+
+
+
+
+      setChatLog(prevChatLog => [...prevChatLog, botMessage]);// Store model reply
 
       if (modelReply.includes(' "Architecture Deck": "Yes"')) {
-        setFileUploadCondition(true); // Show file upload option if user replies with "yes"
+        setFileUploadCondition(true);        // Show file upload option if user replies with "yes"
+        setResponseReceived(false);
       }
 
       // Check if the model reply indicates "No"
       if (modelReply.includes(' "Architecture Deck": "No"')) {
+
+
         const dummyFile = createDummyFile(); // Create the dummy file
 
         // Prepare FormData with the dummy file
@@ -333,15 +359,46 @@ function UserChat(props) {
 
         formData.append('file', dummyFile); // Add the dummy file
 
-        // Upload the dummy file
-        const fileUploadResponse = await fetch(
-          `http://10.126.192.122:8000/upload_file/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
-          {
-            method: 'POST',
-            body: formData,
+        try {
+          // Upload the dummy file
+          const fileUploadResponse = await fetch(
+            `http://10.126.192.122:8000/upload_file/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
+            {
+              method: 'POST',
+              body: formData,
+            }
+          );
+
+          // Check if the response is OK (status in the range 200-299)
+          if (!fileUploadResponse.ok) {
+            // Handle error response
+            const errorText = await fileUploadResponse.text();
+            throw new Error(`File upload failed: ${fileUploadResponse.status} ${errorText}`);
           }
-        );
+
+          // Parse the response data
+          const responseData = await fileUploadResponse.json();
+
+          if (responseData) { // Assuming the response has a property called 'sessionEnded'
+            setOpenPopup(true);
+            setIsLoading(false);
+            setResponseReceived(false); // Alert the user
+          }
+
+          // Handle the response as needed
+          console.log('File uploaded successfully:', responseData);
+
+          // Optionally, you can return or process responseData further
+          return responseData;
+
+        } catch (error) {
+          // Handle any errors that occurred during the fetch
+          console.error('Error during file upload:', error);
+          // You might want to rethrow the error or handle it accordingly
+          throw error;
+        }
       }
+
 
       // After handling the file upload, reset the file input and clear upload status
       if (fileInputRef.current) {
@@ -406,14 +463,14 @@ function UserChat(props) {
       const errorMessage = {
         role: 'assistant',
         content: 'Unable to fetch data from the server  ...', // Error message
-    };
-    // Update the chat log with the error message
-    setChatLog(prevChatLog => [...prevChatLog, errorMessage]); // Add error message to chat log
-    console.error(err);
+      };
+      // Update the chat log with the error message
+      setChatLog(prevChatLog => [...prevChatLog, errorMessage]); // Add error message to chat log
+      console.error(err);
       console.error(err);
     } finally {
       setIsLoading(false);
-      setResponseReceived(true)// Set loading state to false
+      setResponseReceived(true);// Set loading state to false
       // setHidePrompts(false);
     }
   }
@@ -537,8 +594,8 @@ function UserChat(props) {
           position: 'relative',
         }}
       >
-        <Grid container spacing={isSmallScreen || isMediumScreen ? 4 : 2} 
-        sx={{ width: '100%', maxWidth: '100%', position: 'fixed', bottom: '50px', left: '67%', transform: 'translateX(-50%)', width: '70%', marginLeft: '8px', flexDirection: 'column' }}>
+        <Grid container spacing={isSmallScreen || isMediumScreen ? 4 : 2}
+          sx={{ width: '100%', maxWidth: '100%', position: 'fixed', bottom: '50px', left: '67%', transform: 'translateX(-50%)', width: '70%', marginLeft: '8px', flexDirection: 'column' }}>
           {/* Suggested Prompts */}
           {showInitialView && (
             <Grid item xs={12} sm={6}>
@@ -568,8 +625,8 @@ function UserChat(props) {
 
           {/* Input Field */}
           <Grid item xs={12} sm={6} sx={{
-        marginBottom: isSmallScreen || isMediumScreen ? '16px' : '8px',
-      }}>
+            marginBottom: isSmallScreen || isMediumScreen ? '16px' : '8px',
+          }}>
             <form onSubmit={handleSubmit} style={{ width: '100%', backgroundColor: '#fff', boxShadow: '0px -2px 5px rgba(0, 0, 0, 0.1)' }}>
               <TextField
                 fullWidth
@@ -606,6 +663,38 @@ function UserChat(props) {
           </Grid>
         </Grid>
       </Box>
+      <Modal open={openPopup}
+        onClose={() => setOpenPopup(false)}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}>
+        <Fade in={openPopup}>
+          <Box sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 500,
+            bgcolor: 'background.paper',
+            borderRadius: '8px',
+            boxShadow: 24,
+            p: 4,
+            textAlign: 'center',
+          }}>
+            <Typography variant="h6">Session Ended</Typography>
+            <Typography sx={{ mt: 2 }}>File uploaded successfully as an attachment to Confluence!
+            </Typography>
+            <Typography sx={{ mt: 2 }}>
+              Record Inserted successfully into Confluence Portal
+            </Typography>
+            <Typography sx={{ mt: 2 }}>
+              ARB review invitation sent successfully
+            </Typography>
+          </Box>
+        </Fade>
+      </Modal>
     </Box>
   );
 }
