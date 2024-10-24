@@ -9,6 +9,7 @@ import parseMessageContent from '../components/parseMessageContent';
 import ARBCategories from '../components/ARBCategories';
 import FileUploader from '../components/FileUploader';
 import ChatMessage from '../components/ChatMessage';
+import { v4 as uuidv4 } from 'uuid';
 import { Modal, Backdrop, Fade, Box, Grid, TextField, Button, IconButton, Typography, InputAdornment, Toolbar, useTheme, useMediaQuery } from '@mui/material';
 
 function UserChat(props) {
@@ -689,8 +690,6 @@ function UserChat(props) {
             <Typography sx={{ mt: 2 }}>
               ARB review invitation sent successfully
             </Typography>
-
-            <Button onClick={() => setOpenPopup(false)}>Close</Button>
             <Button
               onClick={handleNewChat}
               variant="contained"

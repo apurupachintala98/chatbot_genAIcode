@@ -14,7 +14,7 @@ import {
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import DescriptionIcon from '@mui/icons-material/Description';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import elevance from "../assets/images/logo.png"; 
+import elevance from "../assets/images/logo.png";
 import UserChat from './UserChat';
 import { v4 as uuidv4 } from 'uuid';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -23,7 +23,7 @@ const drawerWidth = 180;
 
 const Dashboard = () => {
   const isMobile = useMediaQuery("(max-width:950px)");
-  
+
   const [chatLog, setChatLog] = useState([]);
   const [responseReceived, setResponseReceived] = useState(false);
   const [error, setError] = useState('');
@@ -42,7 +42,7 @@ const Dashboard = () => {
 
   const [open, setOpen] = useState(false);
   const [copySuccess, setCopySuccess] = useState('');
-  
+
   const jsonData = JSON.stringify({
     "SVRO_APPROVED_YN": " ",
     "SVRO_PROGRAM_NO": " ",
@@ -83,7 +83,7 @@ const Dashboard = () => {
     setCategoryLoading(false);
     setSelectedCategory(null);
     setShowInitialView(true);
-    setRequestId(uuidv4()); 
+    setRequestId(uuidv4());
   };
 
   const theme = createTheme({
