@@ -483,21 +483,21 @@ function UserChat(props) {
   };
 
   const handleNewChat = () => {
-    setChatLog([]); // Clear chat log
-    setResponseReceived(false); // Reset response received
-    setError(''); // Clear any errors
+    setChatLog([]);
+    setResponseReceived(false);
+    setError('');
     setRouteCdUpdated(false);
-    setUploadStatus(''); // Reset upload status
+    setUploadStatus(false);
     setRouteCd('None');
     setIsLoading(false);
     setSuccessMessage('');
     setFileUploadCondition(false);
     setCategoryLoading(false);
     setSelectedCategory(null);
-    setShowInitialView(true); // Show initial view with categories
-    setRequestId(uuidv4()); // Reset the request ID for the new session
-    setOpenPopup(false); // Close the popup after starting a new chat
+    setShowInitialView(true);
+    setRequestId(uuidv4());
   };
+  
 
   return (
     <Box
