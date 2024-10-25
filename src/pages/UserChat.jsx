@@ -44,6 +44,7 @@ function UserChat(props) {
   const layoutWidth = isSmallScreen ? '100%' : isMediumScreen ? '80%' : '70%';
   const [resId, setResId] = useState(null);
   const [openPopup, setOpenPopup] = useState(false);
+  const [archdeck,setArchdeck] = useState(false)
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
     "I want to schedule an ARB meeting",
@@ -252,7 +253,8 @@ function UserChat(props) {
         if (responseData) { // Assuming the response has a property called 'sessionEnded'
           setOpenPopup(true);
           setIsLoading(false);
-          setResponseReceived(false); // Alert the user
+          setResponseReceived(false);
+          setArchdeck(true); 
         }
       } else {
         setUploadStatus('File upload failed.');
@@ -683,8 +685,8 @@ function UserChat(props) {
             textAlign: 'center',
           }}>
             <Typography variant="h6">Session Ended</Typography>
-            <Typography sx={{ mt: 2 }}>File uploaded successfully as an attachment to Confluence!
-            </Typography>
+            {archdeck && (<Typography sx={{ mt: 2 }}>File uploaded successfully as an attachment to Confluence!
+            </Typography>)}
             <Typography sx={{ mt: 2 }}>
               Record Inserted successfully into Confluence Portal
             </Typography>
