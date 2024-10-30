@@ -290,6 +290,7 @@ const Dashboard = () => {
               setShowInitialView={setShowInitialView}
               requestId={requestId}
               setRequestId={setRequestId}
+              handleNewChat={handleNewChat}
             />
           </Box>
         </Box>

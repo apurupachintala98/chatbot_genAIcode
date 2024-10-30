@@ -31,7 +31,7 @@ function UserChat(props) {
     setCategoryLoading, categoryLoading,
     selectedCategory, setSelectedCategory,
     showInitialView, setShowInitialView,
-    requestId, setRequestId,
+    requestId, setRequestId,handleNewChat,
   } = props;
 
   const endOfMessagesRef = useRef(null);
@@ -45,6 +45,11 @@ function UserChat(props) {
   const [resId, setResId] = useState(null);
   const [openPopup, setOpenPopup] = useState(false);
   const [archdeck,setArchdeck] = useState(false)
+  const INACTIVITY_TIME = 30 * 60 * 1000;
+  const inactivityTimeoutRef = useRef(null); // Ref for the inactivity timeout
+  const [sessionActive, setSessionActive] = useState(true); // State to track session activity
+  const [timeoutPopup, setTimeoutPopup] = useState(false);
+
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
     "I want to schedule an ARB meeting",
@@ -271,6 +276,32 @@ function UserChat(props) {
     }
   };
 
+  const handleSessionEnd = () => {
+    setSessionActive(false);
+    //setChatLog([...chatLog, { role: 'assistant', content: 'Session has ended due to inactivity.' }]);
+    setTimeoutPopup(true); // Show the popup
+  };
+
+
+  const resetInactivityTimeout = () => {
+    if (inactivityTimeoutRef.current) {
+      clearTimeout(inactivityTimeoutRef.current);
+    }
+
+    inactivityTimeoutRef.current = setTimeout(() => {
+      handleSessionEnd(); // End session after 30 minutes of inactivity
+    }, INACTIVITY_TIME);
+  };
+
+  useEffect(() => {
+    resetInactivityTimeout();
+    return () => {
+      if (inactivityTimeoutRef.current) clearTimeout(inactivityTimeoutRef.current);
+    };
+  }, []);
+
+
+
   // Update handleSubmit
   async function handleSubmit(e) {
     e.preventDefault();
@@ -482,24 +513,10 @@ function UserChat(props) {
   // Handle focus or input changes
   const handleInputFocusOrChange = () => {
     setShowInitialView(false);// Hide avatar, categories, and prompts when the input field is clicked or typed
+    resetInactivityTimeout();
   };
 
-  const handleNewChat = () => {
-    setChatLog([]);
-    setResponseReceived(false);
-    setError('');
-    setRouteCdUpdated(false);
-    setUploadStatus(false);
-    setRouteCd('None');
-    setIsLoading(false);
-    setSuccessMessage('');
-    setFileUploadCondition(false);
-    setCategoryLoading(false);
-    setSelectedCategory(null);
-    setShowInitialView(true);
-    setRequestId(uuidv4());
-    setOpenPopup(false);
-  };
+  
   
 
   return (
@@ -694,7 +711,49 @@ function UserChat(props) {
               ARB review invitation sent successfully
             </Typography>
             <Button
-              onClick={handleNewChat}
+              onClick={() => {
+                setOpenPopup(false);  // Close modal
+                handleNewChat(); // Start new chat
+              }}
+              variant="contained"
+              color="primary"
+              sx={{ mt: 2 }}
+            >
+              New Chat
+            </Button>
+          </Box>
+        </Fade>
+      </Modal>
+      <Modal open={timeoutPopup}
+        onClose={(event, reason) => {
+          if (reason !== "backdropClick") {
+            setTimeoutPopup(false);
+          }
+        }}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}>
+        <Fade in={timeoutPopup}>
+          <Box sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 360,
+            bgcolor: 'background.paper',
+            borderRadius: '8px',
+            boxShadow: 24,
+            p: 4,
+            textAlign: 'center',
+          }}>
+            <Typography variant="h6">Session Ended Due To Inactivity</Typography>
+            <Button
+              onClick={() => {
+                setTimeoutPopup(false);  // Close modal
+                handleNewChat(); // Start new chat
+              }}
               variant="contained"
               color="primary"
               sx={{ mt: 2 }}
