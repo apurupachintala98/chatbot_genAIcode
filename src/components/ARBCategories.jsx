@@ -8,7 +8,7 @@ const ARBCategories = ({ handleCategoryClick, selectedCategory }) => {
   const categories = [
     { name: 'Scheduler', key: 'arb_scheduler', image: scheduler },
     { name: 'FAQ', key: 'arb_faq', image: faq },
-    { name: 'Query', key: 'arb_query', image: query }
+    { name: 'Project Status', key: 'arb_query', image: query }
   ];
 
   return (

@@ -52,10 +52,10 @@ function UserChat(props) {
 
 
   const [suggestedPrompts, setSuggestedPrompts] = useState([
-    "I want to schedule an ARB meeting",
+    "I want to schedule an ARB meeting.",
     "What is the status of my ARB review?",
     "Guide me on the TGOV process?",
-    "Guide me on Snowflake Onboarding process",
+    "Guide me on Snowflake Onboarding process?",
   ]);
 
   // Scroll to the bottom when a new message is added
@@ -281,7 +281,6 @@ function UserChat(props) {
     //setChatLog([...chatLog, { role: 'assistant', content: 'Session has ended due to inactivity.' }]);
     setTimeoutPopup(true); // Show the popup
   };
-
 
   const resetInactivityTimeout = () => {
     if (inactivityTimeoutRef.current) {
@@ -548,7 +547,7 @@ function UserChat(props) {
               marginRight: 'auto',
             }}
           >
-            Hello there, I am your ARB Scheduler Assistant. How can I help you today?
+            Hello there, I am your ARB Assistant. How can I help you today?
 
             {/* ARB Categories Component */}
             <ARBCategories

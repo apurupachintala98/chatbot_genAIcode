@@ -132,7 +132,7 @@ const Dashboard = () => {
                 marginLeft: '-90px'
               }}
             >
-              EDA ARB Scheduler Assistant
+              EDA ARB Assistant
             </Typography>
           </Toolbar>
         </AppBar>
