@@ -362,18 +362,18 @@ function UserChat(props) {
       setChatLog(prevChatLog => [...prevChatLog, botMessage]);// Store model reply
 
       let modelReplyParsed;
-      try {
-        const jsonMatch = modelReply.match(/\{[\s\S]*\}/); // Matches everything between the first "{" and last "}"
-      
-        if (jsonMatch) {
-          modelReplyParsed = JSON.parse(jsonMatch[0]);
-        } else {
-          throw new Error("No JSON object found in modelReply.");
-        }
-      } catch (parseError) {
-        console.error("Failed to parse modelReply as JSON:", parseError);
-        modelReplyParsed = {}; // Fallback to an empty object
-      }
+try {
+  const jsonMatch = modelReply.match(/\{(?:[^{}]|(\{[^{}]*\}))*\}/); // Matches nested JSON
+
+  if (jsonMatch && jsonMatch[0]) {
+    modelReplyParsed = JSON.parse(jsonMatch[0]);
+  } else {
+    throw new Error("No JSON object found in modelReply.");
+  }
+} catch (parseError) {
+  console.error("Failed to parse modelReply as JSON:", parseError);
+  modelReplyParsed = {}; // Use empty object to prevent further errors
+}
 
       if (modelReplyParsed['Architecture Deck'] === "Yes") {
         setFileUploadCondition(true);
