@@ -371,7 +371,6 @@ try {
     throw new Error("No JSON object found in modelReply.");
   }
 } catch (parseError) {
-  console.error("Failed to parse modelReply as JSON:", parseError);
   modelReplyParsed = {}; // Use empty object to prevent further errors
 }
 
