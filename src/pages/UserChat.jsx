@@ -361,13 +361,13 @@ function UserChat(props) {
       setIsLoading(false);
       setChatLog(prevChatLog => [...prevChatLog, botMessage]);// Store model reply
 
-      if (modelReply.includes(' "Architecture Deck": "Yes"')) {
+      if (modelReply.includes('"Architecture Deck": "Yes"')) {
         setFileUploadCondition(true);        // Show file upload option if user replies with "yes"
         setResponseReceived(false);
       }
 
       // Check if the model reply indicates "No"
-      if (modelReply.includes(' "Architecture Deck": "No"')) {
+      if (modelReply.includes('"Architecture Deck": "No"')) {
         const dummyFile = createDummyFile(); // Create the dummy file
         // Prepare FormData with the dummy file
         const formData = new FormData();
