@@ -363,15 +363,15 @@ function UserChat(props) {
 
       let modelReplyParsed;
       try {
-        const outerData = JSON.parse(modelReply);
-
-        const innerModelReply = outerData.modelreply;
-        const cleanedInnerModelReply = innerModelReply
-          .replace(/\\n/g, '') // Remove newline characters
-          .replace(/\\"/g, '"'); // Replace escaped double-quotes
-
-        modelReplyParsed = JSON.parse(cleanedInnerModelReply);
-
+        // Extract JSON object using a regular expression
+        const jsonMatch = modelReply.match(/\{.*\}/s); // Matches the first JSON object in the string
+      
+        if (jsonMatch) {
+          // Parse the matched JSON string
+          modelReplyParsed = JSON.parse(jsonMatch[0]);
+        } else {
+          throw new Error("No JSON object found in modelReply.");
+        }
       } catch (parseError) {
         console.error("Failed to parse modelReply as JSON:", parseError);
         modelReplyParsed = {}; // Fallback in case parsing still fails
