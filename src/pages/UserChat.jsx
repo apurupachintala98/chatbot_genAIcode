@@ -363,18 +363,16 @@ function UserChat(props) {
 
       let modelReplyParsed;
       try {
-        // Extract JSON object using a regular expression
-        const jsonMatch = modelReply.match(/\{.*\}/s); // Matches the first JSON object in the string
+        const jsonMatch = modelReply.match(/\{[\s\S]*\}/); // Matches everything between the first "{" and last "}"
       
         if (jsonMatch) {
-          // Parse the matched JSON string
           modelReplyParsed = JSON.parse(jsonMatch[0]);
         } else {
           throw new Error("No JSON object found in modelReply.");
         }
       } catch (parseError) {
         console.error("Failed to parse modelReply as JSON:", parseError);
-        modelReplyParsed = {}; // Fallback in case parsing still fails
+        modelReplyParsed = {}; // Fallback to an empty object
       }
 
       if (modelReplyParsed['Architecture Deck'] === "Yes") {
