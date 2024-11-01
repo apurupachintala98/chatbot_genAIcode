@@ -363,10 +363,17 @@ function UserChat(props) {
 
       let modelReplyParsed;
       try {
-        modelReplyParsed = JSON.parse(modelReply); // Parse modelReply if it's JSON
+        // Attempt to clean the modelReply string
+        const cleanedModelReply = modelReply
+          .replace(/\\n/g, '') // Remove newline characters
+          .replace(/\\"/g, '"') // Replace escaped double-quotes
+          .replace(/\\t/g, ''); // Remove tab characters, if any
+      
+        // Parse the cleaned string as JSON
+        modelReplyParsed = JSON.parse(cleanedModelReply);
       } catch (parseError) {
         console.error("Failed to parse modelReply as JSON:", parseError);
-        modelReplyParsed = {}; // Fallback in case modelReply is not JSON
+        modelReplyParsed = {}; // Fallback in case parsing still fails
       }
 
       if (modelReplyParsed['Architecture Deck'] === "Yes") {
