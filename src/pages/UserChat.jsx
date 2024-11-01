@@ -363,14 +363,15 @@ function UserChat(props) {
 
       let modelReplyParsed;
       try {
-        // Attempt to clean the modelReply string
-        const cleanedModelReply = modelReply
+        const outerData = JSON.parse(modelReply);
+
+        const innerModelReply = outerData.modelreply;
+        const cleanedInnerModelReply = innerModelReply
           .replace(/\\n/g, '') // Remove newline characters
-          .replace(/\\"/g, '"') // Replace escaped double-quotes
-          .replace(/\\t/g, ''); // Remove tab characters, if any
-      
-        // Parse the cleaned string as JSON
-        modelReplyParsed = JSON.parse(cleanedModelReply);
+          .replace(/\\"/g, '"'); // Replace escaped double-quotes
+
+        modelReplyParsed = JSON.parse(cleanedInnerModelReply);
+
       } catch (parseError) {
         console.error("Failed to parse modelReply as JSON:", parseError);
         modelReplyParsed = {}; // Fallback in case parsing still fails
