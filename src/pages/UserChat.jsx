@@ -31,7 +31,7 @@ function UserChat(props) {
     setCategoryLoading, categoryLoading,
     selectedCategory, setSelectedCategory,
     showInitialView, setShowInitialView,
-    requestId, setRequestId,handleNewChat,
+    requestId, setRequestId, handleNewChat,
   } = props;
 
   const endOfMessagesRef = useRef(null);
@@ -44,7 +44,7 @@ function UserChat(props) {
   const layoutWidth = isSmallScreen ? '100%' : isMediumScreen ? '80%' : '70%';
   const [resId, setResId] = useState(null);
   const [openPopup, setOpenPopup] = useState(false);
-  const [archdeck,setArchdeck] = useState(false)
+  const [archdeck, setArchdeck] = useState(false)
   const INACTIVITY_TIME = 30 * 60 * 1000;
   const inactivityTimeoutRef = useRef(null); // Ref for the inactivity timeout
   const [sessionActive, setSessionActive] = useState(true); // State to track session activity
@@ -259,7 +259,7 @@ function UserChat(props) {
           setOpenPopup(true);
           setIsLoading(false);
           setResponseReceived(false);
-          setArchdeck(true); 
+          setArchdeck(true);
         }
       } else {
         setUploadStatus('File upload failed.');
@@ -355,19 +355,28 @@ function UserChat(props) {
       const modelReply = data.modelreply;
       const botMessage = {
         role: 'assistant',
-        content: data.modelreply, // Assuming modelreply contains the bot's response
+        content: modelReply, // Assuming modelreply contains the bot's response
       };
       setResponseReceived(false);
       setIsLoading(false);
       setChatLog(prevChatLog => [...prevChatLog, botMessage]);// Store model reply
 
-      if (modelReply.includes('"Architecture Deck": "Yes"')) {
-        setFileUploadCondition(true);        // Show file upload option if user replies with "yes"
+      let modelReplyParsed;
+      try {
+        modelReplyParsed = JSON.parse(modelReply); // Parse modelReply if it's JSON
+      } catch (parseError) {
+        console.error("Failed to parse modelReply as JSON:", parseError);
+        modelReplyParsed = {}; // Fallback in case modelReply is not JSON
+      }
+
+      if (modelReplyParsed['Architecture Deck'] === "Yes") {
+        setFileUploadCondition(true);
         setResponseReceived(false);
       }
 
       // Check if the model reply indicates "No"
-      if (modelReply.includes('"Architecture Deck": "No"')) {
+      if (modelReplyParsed['Architecture Deck'] === "No") {
+        setFileUploadCondition(false);
         const dummyFile = createDummyFile(); // Create the dummy file
         // Prepare FormData with the dummy file
         const formData = new FormData();
@@ -515,8 +524,8 @@ function UserChat(props) {
     resetInactivityTimeout();
   };
 
-  
-  
+
+
 
   return (
     <Box
