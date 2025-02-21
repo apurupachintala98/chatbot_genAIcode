@@ -99,7 +99,7 @@ const Feedback = ({ fdbk_id, routeCd, requestId, appCd }) => {
     };
 
     try {
-      const response = await fetch(`http://10.126.192.122:8000/get_llm_feedback/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`, {
+      const response = await fetch(`http://10.126.192.122:8100/get_llm_feedback/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ const Feedback = ({ fdbk_id, routeCd, requestId, appCd }) => {
     };
 
     try {
-      const response = await fetch(`http://10.126.192.122:8000/get_llm_feedback/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`, {
+      const response = await fetch(`http://10.126.192.122:8100/get_llm_feedback/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
