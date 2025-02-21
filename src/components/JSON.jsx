@@ -24,7 +24,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
         successMessage,
         setSuccessMessage,
         requestId,
-        setRequestId, app_cd
+        setRequestId, app_cd, apiUrl,
     } = props;
 
     const initialFormData = {
@@ -207,11 +207,9 @@ const JsonButton = ({ open, handleClose, ...props }) => {
 
             // Parse the JSON response
             const responseData = await response.json();
-            console.log("API Response:", responseData); // Log the API response
+            // console.log("API Response:", responseData); // Log the API response
             setSuccessMessage("Form submitted successfully"); // Set success message
             setShowSuccessDialog(true);
-            // handleClose(); // Close the modal after submission
-            //setSuccessMessage("Form submitted successfully");
             resetForm();
         } catch (error) {
             console.error("Submission error:", error); // Log the error for debugging
@@ -228,6 +226,11 @@ const JsonButton = ({ open, handleClose, ...props }) => {
         }
         resetForm();
         handleClose();
+    };
+
+    const closeSuccessDialog = () => {
+        setShowSuccessDialog(false);
+        handleClose(); // Now close the form dialog after success dialog is dismissed
     };
 
 
@@ -403,26 +406,30 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     Submit
                 </Button>
             </DialogActions>
-        </Dialog><Dialog open={showSuccessDialog} onClose={() => setShowSuccessDialog(false)}>
-                <DialogTitle>Success</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        {(formData.Architecture_Deck === 'yes') && (<Typography sx={{ mt: 2 }}>File uploaded successfully as an attachment to Confluence!
-                        </Typography>)}
-                        <Typography sx={{ mt: 2 }}>
-                            Record Inserted successfully into Confluence Portal
-                        </Typography>
-                        <Typography sx={{ mt: 2 }}>
-                            ARB review invitation sent successfully
-                        </Typography>
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setShowSuccessDialog(false)} color="primary">
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog></>
+        </Dialog>
+
+        <Dialog open={showSuccessDialog} onClose={closeSuccessDialog}>
+    <DialogTitle>Success</DialogTitle>
+    <DialogContent>
+        <DialogContentText>
+            {(formData.Architecture_Deck === 'yes') && (
+                <Typography sx={{ mt: 2 }}>File uploaded successfully as an attachment to Confluence!</Typography>
+            )}
+            <Typography sx={{ mt: 2 }}>
+                Record Inserted successfully into Confluence Portal
+            </Typography>
+            <Typography sx={{ mt: 2 }}>
+                ARB review invitation sent successfully
+            </Typography>
+        </DialogContentText>
+    </DialogContent>
+    <DialogActions>
+        <Button onClick={closeSuccessDialog} color="primary">Close</Button>
+    </DialogActions>
+</Dialog>
+
+            
+            </>
 
     );
 };
