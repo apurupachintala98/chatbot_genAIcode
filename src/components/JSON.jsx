@@ -228,11 +228,6 @@ const JsonButton = ({ open, handleClose, ...props }) => {
         handleClose();
     };
 
-    const closeSuccessDialog = () => {
-        setShowSuccessDialog(false);
-        handleClose(); // Now close the form dialog after success dialog is dismissed
-    };
-
 
     return (
         <><Dialog open={open} onClose={handleDialogClose} onExited={resetForm}>
@@ -408,26 +403,26 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             </DialogActions>
         </Dialog>
 
-        <Dialog open={showSuccessDialog} onClose={closeSuccessDialog}>
-    <DialogTitle>Success</DialogTitle>
-    <DialogContent>
-        <DialogContentText>
-            {(formData.Architecture_Deck === 'yes') && (
-                <Typography sx={{ mt: 2 }}>File uploaded successfully as an attachment to Confluence!</Typography>
-            )}
-            <Typography sx={{ mt: 2 }}>
-                Record Inserted successfully into Confluence Portal
-            </Typography>
-            <Typography sx={{ mt: 2 }}>
-                ARB review invitation sent successfully
-            </Typography>
-        </DialogContentText>
-    </DialogContent>
-    <DialogActions>
-        <Button onClick={closeSuccessDialog} color="primary">Close</Button>
-    </DialogActions>
-</Dialog>
-
+            <Dialog open={showSuccessDialog} onClose={() => setShowSuccessDialog(false)}>
+                <DialogTitle>Success</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        {(formData.Architecture_Deck === 'yes') && (<Typography sx={{ mt: 2 }}>File uploaded successfully as an attachment to Confluence!
+                        </Typography>)}
+                        <Typography sx={{ mt: 2 }}>
+                            Record Inserted successfully into Confluence Portal
+                        </Typography>
+                        <Typography sx={{ mt: 2 }}>
+                            ARB review invitation sent successfully
+                        </Typography>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setShowSuccessDialog(false)} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
             
             </>
 
