@@ -209,7 +209,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             const responseData = await response.json();
             console.log("API Response:", responseData); // Log the API response
             setSuccessMessage("Form submitted successfully"); // Set success message
-            handleClose(); // Close the modal after submission
+            // handleClose(); // Close the modal after submission
             //setSuccessMessage("Form submitted successfully");
             resetForm();
         } catch (error) {
@@ -217,6 +217,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             setError(error.message || "Failed to submit form"); // Set error message for UI
         } finally {
             setApiLoading(false); // Ensure loading indicator is turned off
+            handleClose();
         }
     };
 
