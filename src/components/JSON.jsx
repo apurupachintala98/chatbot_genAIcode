@@ -217,7 +217,6 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             setError(error.message || "Failed to submit form"); // Set error message for UI
         } finally {
             setApiLoading(false); // Ensure loading indicator is turned off
-            handleClose();
         }
     };
 
