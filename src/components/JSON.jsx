@@ -11,6 +11,8 @@ import {
     Select,
     TextField,
     FormHelperText,
+    DialogContentText,
+    Typography,
 } from '@mui/material';
 
 const JsonButton = ({ open, handleClose, ...props }) => {
@@ -45,6 +47,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
     const [formData, setFormData] = useState(initialFormData);
     const [apiLoading, setApiLoading] = useState(false);
     const [errors, setErrors] = useState({});
+    const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
     const resetForm = () => {
         setFormData(initialFormData);
@@ -132,9 +135,6 @@ const JsonButton = ({ open, handleClose, ...props }) => {
         return file;
     };
 
-    // const handleSubmit = async (event) => {
-    //   event.preventDefault(); // Prevent the default form submission
-
     const handleSubmit = async (event) => {
         if (event) {
             event.preventDefault();
@@ -209,6 +209,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             const responseData = await response.json();
             console.log("API Response:", responseData); // Log the API response
             setSuccessMessage("Form submitted successfully"); // Set success message
+            setShowSuccessDialog(true);
             // handleClose(); // Close the modal after submission
             //setSuccessMessage("Form submitted successfully");
             resetForm();
@@ -231,7 +232,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
 
 
     return (
-        <Dialog open={open} onClose={handleDialogClose} onExited={resetForm}>
+        <><Dialog open={open} onClose={handleDialogClose} onExited={resetForm}>
             <DialogTitle>Form Submission</DialogTitle>
             <DialogContent>
                 <FormControl fullWidth margin="normal" error={!!errors.SVRO_TO_APPROVED_YN}>
@@ -256,8 +257,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     fullWidth
                     margin="normal"
                     error={!!errors.SVRO_TO_PROGRAM_NO}
-                    helperText={errors.SVRO_TO_PROGRAM_NO}
-                />
+                    helperText={errors.SVRO_TO_PROGRAM_NO} />
 
                 <TextField
                     name="BUSINESS_FUNDED"
@@ -267,8 +267,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     fullWidth
                     margin="normal"
                     error={!!errors.BUSINESS_FUNDED}
-                    helperText={errors.BUSINESS_FUNDED}
-                />
+                    helperText={errors.BUSINESS_FUNDED} />
 
                 <TextField
                     name="FUNDING_COST_CENTER_NO"
@@ -278,8 +277,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     fullWidth
                     margin="normal"
                     error={!!errors.FUNDING_COST_CENTER_NO}
-                    helperText={errors.FUNDING_COST_CENTER_NO}
-                />
+                    helperText={errors.FUNDING_COST_CENTER_NO} />
 
                 <TextField
                     name="TGOV_REQUEST_ID"
@@ -290,8 +288,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     margin="normal"
                     required // This is now mandatory
                     error={!!errors.TGOV_REQUEST_ID}
-                    helperText={errors.TGOV_REQUEST_ID}
-                />
+                    helperText={errors.TGOV_REQUEST_ID} />
 
                 <TextField
                     name="PROJECT_NAME"
@@ -302,8 +299,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     margin="normal"
                     required // This is now mandatory
                     error={!!errors.PROJECT_NAME}
-                    helperText={errors.PROJECT_NAME}
-                />
+                    helperText={errors.PROJECT_NAME} />
 
                 <TextField
                     name="PROJECT_CODE"
@@ -314,8 +310,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     margin="normal"
                     required // This is now mandatory
                     error={!!errors.PROJECT_CODE}
-                    helperText={errors.PROJECT_CODE}
-                />
+                    helperText={errors.PROJECT_CODE} />
 
                 <TextField
                     name="APM_NO"
@@ -326,8 +321,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     margin="normal"
                     required // This is now mandatory
                     error={!!errors.APM_NO}
-                    helperText={errors.APM_NO}
-                />
+                    helperText={errors.APM_NO} />
 
                 <TextField
                     name="IT_OWNER_NAME"
@@ -338,8 +332,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     margin="normal"
                     required // This is now mandatory
                     error={!!errors.IT_OWNER_NAME}
-                    helperText={errors.IT_OWNER_NAME}
-                />
+                    helperText={errors.IT_OWNER_NAME} />
 
                 <TextField
                     name="ARCHITECT_LEAD_NAME"
@@ -350,8 +343,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     margin="normal"
                     required // This is now mandatory
                     error={!!errors.ARCHITECT_LEAD_NAME}
-                    helperText={errors.ARCHITECT_LEAD_NAME}
-                />
+                    helperText={errors.ARCHITECT_LEAD_NAME} />
 
                 <TextField
                     name="BUSINES_OWNER_NAME"
@@ -362,8 +354,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     margin="normal"
                     required // This is now mandatory
                     error={!!errors.BUSINES_OWNER_NAME}
-                    helperText={errors.BUSINES_OWNER_NAME}
-                />
+                    helperText={errors.BUSINES_OWNER_NAME} />
                 <TextField
                     name="Receiver_Email"
                     label="Receiver Email"
@@ -374,8 +365,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     required // This is now mandatory
                     type="email"
                     error={!!errors.Receiver_Email}
-                    helperText={errors.Receiver_Email}
-                />
+                    helperText={errors.Receiver_Email} />
 
                 <FormControl fullWidth margin="normal" error={!!errors.Architecture_Deck}>
                     <InputLabel>Architecture Deck</InputLabel>
@@ -397,8 +387,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                         type="file"
                         onChange={handleFileChange}
                         fullWidth
-                        margin="normal"
-                    />
+                        margin="normal" />
                 )}
             </DialogContent>
             <DialogActions>
@@ -414,7 +403,27 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     Submit
                 </Button>
             </DialogActions>
-        </Dialog>
+        </Dialog><Dialog open={showSuccessDialog} onClose={() => setShowSuccessDialog(false)}>
+                <DialogTitle>Success</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        {(formData.Architecture_Deck === 'yes') && (<Typography sx={{ mt: 2 }}>File uploaded successfully as an attachment to Confluence!
+                        </Typography>)}
+                        <Typography sx={{ mt: 2 }}>
+                            Record Inserted successfully into Confluence Portal
+                        </Typography>
+                        <Typography sx={{ mt: 2 }}>
+                            ARB review invitation sent successfully
+                        </Typography>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setShowSuccessDialog(false)} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog></>
+
     );
 };
 
