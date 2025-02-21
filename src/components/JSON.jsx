@@ -208,8 +208,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             // Parse the JSON response
             const responseData = await response.json();
             // console.log("API Response:", responseData); // Log the API response
-            setSuccessMessage("Form submitted successfully"); // Set success message
-            setShowSuccessDialog(true);
+            // setSuccessMessage("Form submitted successfully"); // Set success message
             resetForm();
         } catch (error) {
             console.error("Submission error:", error); // Log the error for debugging
@@ -217,6 +216,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
         } finally {
             setApiLoading(false); // Ensure loading indicator is turned off
             handleClose();
+            setShowSuccessDialog(true);
         }
     };
 
