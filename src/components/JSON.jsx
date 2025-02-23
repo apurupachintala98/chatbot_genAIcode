@@ -189,7 +189,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             }
 
             // API endpoint using destructured variables
-            const apiUrl = `http://10.126.192.122:8100/get_full_payload/?app_cd=${app_cd}&request_id=${requestId}&route_cd=${routeCd}`;
+            const apiUrl = `https://arbassist.edagenaidev.awsdns.internal.das/backend/get_full_payload/?app_cd=${app_cd}&request_id=${requestId}&route_cd=${routeCd}`;
 
             // Make the API request
             const response = await fetch(apiUrl, {
