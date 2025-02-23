@@ -126,6 +126,12 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             newErrors.Receiver_Email = 'Invalid email format';
             isError = true;
         }
+
+        if (formData.Architecture_Deck === 'yes' && !formData.file) {
+            newErrors.Architecture_Deck = 'File must be uploaded when Architecture Deck is set to Yes';
+            isError = true;
+        }
+
         setErrors(newErrors);
         return isError;
     };
@@ -140,14 +146,13 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             event.preventDefault();
         }
 
-        const isError = validate(); // Validate the form data
+        const isError = validate(); 
         if (isError) {
             return; // If there's an error, stop the submission
         }
 
         try {
-            setApiLoading(true); // Start loading indicator before the fetch
-
+            setApiLoading(true); 
             const formDataToSend = new FormData();
             formDataToSend.append('app_cd', app_cd);
             formDataToSend.append('request_id', requestId);
@@ -167,10 +172,10 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     IT_OWNER_NAME: formData.IT_OWNER_NAME,
                     ARCHITECT_LEAD_NAME: formData.ARCHITECT_LEAD_NAME,
                     BUSINES_OWNER_NAME: formData.BUSINES_OWNER_NAME,
-                    'Architecture Deck': formData.Architecture_Deck, // Corrected Key
+                    'Architecture Deck': formData.Architecture_Deck, 
                     Receiver_Email: formData.Receiver_Email,
                 },
-                final_response_flag: "True", // Assuming this is always true for this submission
+                final_response_flag: "True",
             };
 
             // Append the app_info as a JSON string
@@ -199,24 +204,25 @@ const JsonButton = ({ open, handleClose, ...props }) => {
 
             // Check if the response is ok
             if (!response.ok) {
-                const errorText = await response.text(); // Get error text from the response
+                const errorText = await response.text(); 
                 throw new Error(
                     `HTTP error! status: ${response.status}, message: ${errorText}`
-                ); // Throw an error with the status and message
+                ); 
             }
 
             // Parse the JSON response
             const responseData = await response.json();
-            // console.log("API Response:", responseData); // Log the API response
-            // setSuccessMessage("Form submitted successfully"); // Set success message
+            if (responseData.backend_msg && responseData.backend_msg.flag === "True") {
+                setShowSuccessDialog(true);
+            } else {
+                throw new Error(responseData.backend_msg.msg || "Backend did not confirm process completion.");
+            }
             resetForm();
         } catch (error) {
-            console.error("Submission error:", error); // Log the error for debugging
-            setError(error.message || "Failed to submit form"); // Set error message for UI
+            setError(error.message || "Failed to submit form"); 
         } finally {
-            setApiLoading(false); // Ensure loading indicator is turned off
+            setApiLoading(false); 
             handleClose();
-            setShowSuccessDialog(true);
         }
     };
 
