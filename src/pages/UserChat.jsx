@@ -90,7 +90,7 @@ function UserChat(props) {
     try {
       // Send the new message to the API
       const response = await fetch(
-        `https://arbassist.edagenaidev.awsdns.internal.das/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
+        `https://arbassist.edagenaidev.awsdns.internal.das//get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
         {
           method: 'PUT',
           headers: {
@@ -117,7 +117,7 @@ function UserChat(props) {
         };
         // Send the "Hey" message to the API but don't display it in the chatLog
         const silentResponse = await fetch(
-          `https://arbassist.edagenaidev.awsdns.internal.das/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
+          `https://arbassist.edagenaidev.awsdns.internal.das//get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
           {
             method: 'PUT',
             headers: {
@@ -178,7 +178,7 @@ function UserChat(props) {
 
       // Send the "Hey" message to the API but don't display it in the chatLog
       const response = await fetch(
-        `https://arbassist.edagenaidev.awsdns.internal.das/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${categoryRouteCd}`,
+        `https://arbassist.edagenaidev.awsdns.internal.das//get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${categoryRouteCd}`,
         {
           method: 'PUT',
           headers: {
@@ -325,7 +325,7 @@ function UserChat(props) {
     try {
       // Dynamic API URL based on user inputs
       const response = await fetch(
-        `https://arbassist.edagenaidev.awsdns.internal.das/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
+        `https://arbassist.edagenaidev.awsdns.internal.das//get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
         {
           method: 'PUT',
           headers: {
@@ -454,7 +454,7 @@ try {
         };
 
         const silentResponse = await fetch(
-          `https://arbassist.edagenaidev.awsdns.internal.das/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
+          `https://arbassist.edagenaidev.awsdns.internal.das//get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
           {
             method: 'PUT',
             headers: {
