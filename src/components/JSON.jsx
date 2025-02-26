@@ -429,6 +429,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                         color="primary"
                         onClick={() => {
                             setShowSuccessDialog(false); // This will close the dialog
+                            window.location.reload(); // This will refresh the page
                         }}
                     >
                         New Chat
