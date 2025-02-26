@@ -146,13 +146,13 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             event.preventDefault();
         }
 
-        const isError = validate(); 
+        const isError = validate();
         if (isError) {
             return; // If there's an error, stop the submission
         }
 
         try {
-            setApiLoading(true); 
+            setApiLoading(true);
             const formDataToSend = new FormData();
             formDataToSend.append('app_cd', app_cd);
             formDataToSend.append('request_id', requestId);
@@ -172,7 +172,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     IT_OWNER_NAME: formData.IT_OWNER_NAME,
                     ARCHITECT_LEAD_NAME: formData.ARCHITECT_LEAD_NAME,
                     BUSINES_OWNER_NAME: formData.BUSINES_OWNER_NAME,
-                    'Architecture Deck': formData.Architecture_Deck, 
+                    'Architecture Deck': formData.Architecture_Deck,
                     Receiver_Email: formData.Receiver_Email,
                 },
                 final_response_flag: "True",
@@ -204,10 +204,10 @@ const JsonButton = ({ open, handleClose, ...props }) => {
 
             // Check if the response is ok
             if (!response.ok) {
-                const errorText = await response.text(); 
+                const errorText = await response.text();
                 throw new Error(
                     `HTTP error! status: ${response.status}, message: ${errorText}`
-                ); 
+                );
             }
 
             // Parse the JSON response
@@ -219,9 +219,9 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             }
             resetForm();
         } catch (error) {
-            setError(error.message || "Failed to submit form"); 
+            setError(error.message || "Failed to submit form");
         } finally {
-            setApiLoading(false); 
+            setApiLoading(false);
             handleClose();
         }
     };
@@ -237,7 +237,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
 
     return (
         <><Dialog open={open} onClose={handleDialogClose} onExited={resetForm}>
-            <DialogTitle>Form Submission</DialogTitle>
+            <DialogTitle sx={{ fontWeight: "bold" }}>Scheduler Form Submission</DialogTitle>
             <DialogContent>
                 <FormControl fullWidth margin="normal" error={!!errors.SVRO_TO_APPROVED_YN}>
                     <InputLabel>SVRO or TO Approved</InputLabel>
@@ -424,13 +424,22 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setShowSuccessDialog(false)} color="primary">
-                        Close
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            setShowSuccessDialog(false);
+                        }}
+                    >
+                        New Chat
                     </Button>
+                    {/* <Button onClick={() => setShowSuccessDialog(false)} color="primary">
+                        Close
+                    </Button> */}
                 </DialogActions>
             </Dialog>
-            
-            </>
+
+        </>
 
     );
 };
