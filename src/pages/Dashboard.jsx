@@ -476,7 +476,7 @@ const Dashboard = () => {
                   startIcon={<DescriptionIcon />}
                   onClick={handleOpen}
                 >
-                  Json
+                  Scheduler Form
                 </MuiButton>
               {/* <Modal open={open} onClose={handleClose} aria-labelledby="json-modal-title">
                 <Box
