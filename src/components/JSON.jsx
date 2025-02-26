@@ -423,20 +423,19 @@ const JsonButton = ({ open, handleClose, ...props }) => {
                         </Typography>
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions>
+                <DialogActions style={{ justifyContent: 'center' }}> {/* Applying flexbox centering */}
                     <Button
                         variant="contained"
                         color="primary"
                         onClick={() => {
-                            setShowSuccessDialog(false);
+                            setShowSuccessDialog(false); // This will close the dialog
+                            window.location.reload(); // This will refresh the page
                         }}
                     >
                         New Chat
                     </Button>
-                    {/* <Button onClick={() => setShowSuccessDialog(false)} color="primary">
-                        Close
-                    </Button> */}
                 </DialogActions>
+
             </Dialog>
 
         </>
