@@ -22,7 +22,11 @@ import JsonButton from "../components/JSON";
 
 const drawerWidth = 180;
 
-const Dashboard = () => {
+const Dashboard = (props) => {
+  const apiUrl = props.apiUrl;
+  const uploadApiUrl = props.uploadApiUrl;
+  const feedbackUrl = props.feedbackUrl;
+  const fullPayloadUrl = props.fullPayloadUrl;
   const isMobile = useMediaQuery("(max-width:950px)");
 
   const [chatLog, setChatLog] = useState([]);
@@ -213,6 +217,7 @@ const Dashboard = () => {
              setRouteCd={setRouteCd}
              requestId={requestId}
              setRequestId={setRequestId}
+             fullPayloadUrl={fullPayloadUrl}
              app_cd="ARB_Bot"
            />
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: '100%' }}>
@@ -245,6 +250,9 @@ const Dashboard = () => {
               requestId={requestId}
               setRequestId={setRequestId}
               handleNewChat={handleNewChat}
+              apiUrl={apiUrl}
+              uploadApiUrl={uploadApiUrl}
+              feedbackUrl={feedbackUrl}
             />
           </Box>
         </Box>

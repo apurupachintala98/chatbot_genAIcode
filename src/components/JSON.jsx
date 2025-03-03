@@ -24,7 +24,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
         successMessage,
         setSuccessMessage,
         requestId,
-        setRequestId, app_cd, apiUrl,
+        setRequestId, app_cd, fullPayloadUrl,
     } = props;
 
     const initialFormData = {
@@ -194,10 +194,10 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             }
 
             // API endpoint using destructured variables
-            const apiUrl = `https://arbassist.edagenaidev.awsdns.internal.das/backend/get_full_payload/?app_cd=${app_cd}&request_id=${requestId}&route_cd=${routeCd}`;
+            const apiData = `${fullPayloadUrl}?app_cd=${app_cd}&request_id=${requestId}&route_cd=${routeCd}`;
 
             // Make the API request
-            const response = await fetch(apiUrl, {
+            const response = await fetch(apiData, {
                 method: "POST", // Use POST method for data submission
                 body: formDataToSend,  // Send the combined data as FormData
             });
@@ -233,7 +233,6 @@ const JsonButton = ({ open, handleClose, ...props }) => {
         resetForm();
         handleClose();
     };
-
 
     return (
         <><Dialog open={open} onClose={handleDialogClose} onExited={resetForm}>

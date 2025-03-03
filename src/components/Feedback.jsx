@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 const ThumbsUpIcon = ({ isSelected }) => (
   <svg
-  className={`w-[16px] h-[16px] ${isSelected ? 'text-blue-600' : 'text-gray-800 dark:text-white'}`}
-      aria-hidden="true"
+    className={`w-[16px] h-[16px] ${isSelected ? 'text-blue-600' : 'text-gray-800 dark:text-white'}`}
+    aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     width="16"
     height="16"
@@ -26,9 +26,9 @@ const ThumbsUpIcon = ({ isSelected }) => (
 );
 
 const ThumbsDownIcon = ({ isSelected }) => (
-    <svg
+  <svg
     className={`w-[16px] h-[16px] ${isSelected ? 'text-red-600' : 'text-gray-800 dark:text-white'}`}
-        aria-hidden="true"
+    aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     width="16"
     height="16"
@@ -72,7 +72,7 @@ const CommentIcon = () => (
   </svg>
 );
 
-const Feedback = ({ fdbk_id, routeCd, requestId, appCd }) => {
+const Feedback = ({ fdbk_id, routeCd, requestId, appCd, feedbackUrl }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
   const [isCommentBoxVisible, setIsCommentBoxVisible] = useState(false);
@@ -91,7 +91,7 @@ const Feedback = ({ fdbk_id, routeCd, requestId, appCd }) => {
         setIsLiked(false);
       }
     }
-    
+
     // Prepare payload based on feedback type
     const payload = {
       fdbk_id,
@@ -99,7 +99,7 @@ const Feedback = ({ fdbk_id, routeCd, requestId, appCd }) => {
     };
 
     try {
-      const response = await fetch(`http://10.126.192.122:8100/get_llm_feedback/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`, {
+      const response = await fetch(`${feedbackUrl}?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -133,7 +133,7 @@ const Feedback = ({ fdbk_id, routeCd, requestId, appCd }) => {
     };
 
     try {
-      const response = await fetch(`http://10.126.192.122:8100/get_llm_feedback/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`, {
+      const response = await fetch(`${feedbackUrl}?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -162,7 +162,7 @@ const Feedback = ({ fdbk_id, routeCd, requestId, appCd }) => {
       <div className="flex items-center space-x-4">
         <p className="feedback-text font-bold m-0">Was this response helpful?</p>
         <div className="flex items-center space-x-2">
-           <button
+          <button
             onClick={() => handleFeedback('like')}
             className="text-gray-500 hover:text-gray-800"
           >

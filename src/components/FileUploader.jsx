@@ -6,8 +6,7 @@ function FileUploader({ uploadStatus, setUploadStatus, handleFileUpload, setSele
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && (file.type === 'application/pdf' || file.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
-      setSelectedFile(file); 
-      // setUploadStatus('Uploading...');
+      setSelectedFile(file);
     } else {
       setUploadStatus('Please select a valid PDF or PPTX file.');
     }
@@ -15,8 +14,6 @@ function FileUploader({ uploadStatus, setUploadStatus, handleFileUpload, setSele
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      {/* File Upload Section */}
-      {/* <form onSubmit={handleFileUpload} style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}> */}
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
         <input
           type="file"
@@ -36,13 +33,10 @@ function FileUploader({ uploadStatus, setUploadStatus, handleFileUpload, setSele
             fontSize: '11px',
           }}
           onClick={handleFileUpload}
-          // onMouseOver={(e) => (e.target.style.backgroundColor = '#135bb5')}
-          // onMouseOut={(e) => (e.target.style.backgroundColor = '#18181a')}
         >
           Upload
         </Button>
-      {/* </form> */}
-</div>
+      </div>
       {uploadStatus && (
         <Typography
           variant="body2"

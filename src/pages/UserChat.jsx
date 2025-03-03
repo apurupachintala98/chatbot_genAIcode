@@ -31,7 +31,7 @@ function UserChat(props) {
     setCategoryLoading, categoryLoading,
     selectedCategory, setSelectedCategory,
     showInitialView, setShowInitialView,
-    requestId, setRequestId, handleNewChat,
+    requestId, setRequestId, handleNewChat, apiUrl, uploadApiUrl, feedbackUrl,
   } = props;
 
   const endOfMessagesRef = useRef(null);
@@ -90,7 +90,7 @@ function UserChat(props) {
     try {
       // Send the new message to the API
       const response = await fetch(
-        `https://arbassist.edagenaidev.awsdns.internal.das/backend/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
+        `${apiUrl}?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
         {
           method: 'PUT',
           headers: {
@@ -117,7 +117,7 @@ function UserChat(props) {
         };
         // Send the "Hey" message to the API but don't display it in the chatLog
         const silentResponse = await fetch(
-          `https://arbassist.edagenaidev.awsdns.internal.das/backend/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
+          `${apiUrl}?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
           {
             method: 'PUT',
             headers: {
@@ -178,7 +178,7 @@ function UserChat(props) {
 
       // Send the "Hey" message to the API but don't display it in the chatLog
       const response = await fetch(
-        `https://arbassist.edagenaidev.awsdns.internal.das/backend/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${categoryRouteCd}`,
+        `${apiUrl}?app_cd=${appCd}&request_id=${requestId}&route_cd=${categoryRouteCd}`,
         {
           method: 'PUT',
           headers: {
@@ -241,7 +241,7 @@ function UserChat(props) {
 
     try {
       const response = await fetch(
-        `https://arbassist.edagenaidev.awsdns.internal.das/upload_file/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`, {
+        `${uploadApiUrl}?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`, {
         method: 'POST',
         body: formData, // FormData object
       });
@@ -250,11 +250,6 @@ function UserChat(props) {
         const responseData = await response.json(); // Parse the response as JSON
 
         // Check if the response indicates the session has ended
-
-
-        //setUploadStatus('File uploaded successfully as an attachment to Confluence!');
-        // setSuccessMessage('Record Inserted successfully into Confluence Portal'); // Set success message
-        // setSuccessMessage('ARB review invitation sent successfully'); // Set success message 
         if (responseData) { // Assuming the response has a property called 'sessionEnded'
           setOpenPopup(true);
           setIsLoading(false);
@@ -325,7 +320,7 @@ function UserChat(props) {
     try {
       // Dynamic API URL based on user inputs
       const response = await fetch(
-        `https://arbassist.edagenaidev.awsdns.internal.das/backend/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
+        `${apiUrl}?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
         {
           method: 'PUT',
           headers: {
@@ -362,17 +357,17 @@ function UserChat(props) {
       setChatLog(prevChatLog => [...prevChatLog, botMessage]);// Store model reply
 
       let modelReplyParsed;
-try {
-  const jsonMatch = modelReply.match(/\{(?:[^{}]|(\{[^{}]*\}))*\}/); // Matches nested JSON
+      try {
+        const jsonMatch = modelReply.match(/\{(?:[^{}]|(\{[^{}]*\}))*\}/); // Matches nested JSON
 
-  if (jsonMatch && jsonMatch[0]) {
-    modelReplyParsed = JSON.parse(jsonMatch[0]);
-  } else {
-    throw new Error("No JSON object found in modelReply.");
-  }
-} catch (parseError) {
-  modelReplyParsed = {}; // Use empty object to prevent further errors
-}
+        if (jsonMatch && jsonMatch[0]) {
+          modelReplyParsed = JSON.parse(jsonMatch[0]);
+        } else {
+          throw new Error("No JSON object found in modelReply.");
+        }
+      } catch (parseError) {
+        modelReplyParsed = {}; // Use empty object to prevent further errors
+      }
 
       if (modelReplyParsed['Architecture Deck'] === "Yes") {
         setFileUploadCondition(true);
@@ -400,7 +395,7 @@ try {
         try {
           // Upload the dummy file
           const fileUploadResponse = await fetch(
-            `https://arbassist.edagenaidev.awsdns.internal.das/upload_file/?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
+            `${uploadApiUrl}?app_cd=${appCd}&request_id=${requestId}&route_cd=${routeCd}`,
             {
               method: 'POST',
               body: formData,
@@ -454,7 +449,7 @@ try {
         };
 
         const silentResponse = await fetch(
-          `https://arbassist.edagenaidev.awsdns.internal.das/backend/get_llm_response/?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
+          `${apiUrl}?app_cd=${appCd}&request_id=${requestId}&route_cd=${data.route_cd}`,
           {
             method: 'PUT',
             headers: {
@@ -516,21 +511,16 @@ try {
 
   // Simulate receiving a response from the chatbot
   const simulateChatbotResponse = () => {
-    // Simulate a delay for receiving response
     setTimeout(() => {
-      setResponseReceived(true); // Set the state to indicate response received
-    }, 1000); // Simulated delay (1 second)
+      setResponseReceived(true);
+    }, 1000);
   };
-
 
   // Handle focus or input changes
   const handleInputFocusOrChange = () => {
-    setShowInitialView(false);// Hide avatar, categories, and prompts when the input field is clicked or typed
+    setShowInitialView(false);
     resetInactivityTimeout();
   };
-
-
-
 
   return (
     <Box
@@ -562,14 +552,11 @@ try {
             }}
           >
             Hello there, I am your ARB Assistant. How can I help you today?
-
-            {/* ARB Categories Component */}
             <ARBCategories
               handleCategoryClick={handleCategoryClick}
               selectedCategory={selectedCategory}
             />
           </Box>
-
         </>
       )}
       {categoryLoading && (
@@ -609,6 +596,7 @@ try {
             routeCd={routeCd}
             requestId={requestId}
             appCd={appCd}
+            feedbackUrl={feedbackUrl}
           />)}
       </Box>
 
@@ -630,15 +618,6 @@ try {
               <SuggestedPrompts
                 prompts={suggestedPrompts}
                 onPromptClick={handlePromptClick}
-                // sx={{
-                //   mb: 2,
-                //   textAlign: 'center',
-                //   width: '100%',
-                //   maxWidth: '600px', // Ensure a consistent width
-                //   marginLeft: 'auto', // Center it
-                //   marginRight: 'auto', // Center it
-                //   marginBottom: '16px',
-                // }}
                 sx={{
                   mb: isSmallScreen || isMediumScreen ? '32px' : '24px', // Add extra margin for smaller or zoomed screens
                   textAlign: 'center',
@@ -725,8 +704,8 @@ try {
             </Typography>
             <Button
               onClick={() => {
-                setOpenPopup(false);  // Close modal
-                handleNewChat(); // Start new chat
+                setOpenPopup(false);
+                handleNewChat();
               }}
               variant="contained"
               color="primary"
@@ -764,8 +743,8 @@ try {
             <Typography variant="h6">Session Ended Due To Inactivity</Typography>
             <Button
               onClick={() => {
-                setTimeoutPopup(false);  // Close modal
-                handleNewChat(); // Start new chat
+                setTimeoutPopup(false);
+                handleNewChat();
               }}
               variant="contained"
               color="primary"
