@@ -136,7 +136,12 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             }
         }
 
-        if (formData.Architecture_Deck === 'yes' && !formData.file) {
+        if (formData.Architecture_Deck === 'yes' && formData.file) {
+            if (!isValidFileType(formData.file)) {
+                newErrors.Architecture_Deck = 'File must be a PDF or PPT';
+                isError = true;
+            }
+        } else if (formData.Architecture_Deck === 'yes' && !formData.file) {
             newErrors.Architecture_Deck = 'File must be uploaded when Architecture Deck is set to Yes';
             isError = true;
         }
@@ -144,6 +149,12 @@ const JsonButton = ({ open, handleClose, ...props }) => {
         setErrors(newErrors);
         return isError;
     };
+
+    const isValidFileType = (file) => {
+        const validTypes = ['application/pdf', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
+        return validTypes.includes(file.type);
+    };
+
     const createDummyFile = () => {
         const blob = new Blob(["This is a dummy file for Architecture Deck"], { type: 'application/pdf' });
         const file = new File([blob], "dummy.pdf", { type: 'application/pdf' });
