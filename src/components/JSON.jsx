@@ -48,6 +48,7 @@ const JsonButton = ({ open, handleClose, ...props }) => {
     const [apiLoading, setApiLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+    const [showFailureDialog, setShowFailureDialog] = useState(false);
 
     const resetForm = () => {
         setFormData(initialFormData);
@@ -74,6 +75,12 @@ const JsonButton = ({ open, handleClose, ...props }) => {
     const isValidEmail = (email) => {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(email);
+    };
+
+    const validateMultipleEmails = (emailString) => {
+        const emails = emailString.split(/[,;]/).map(email => email.trim());
+        const invalidEmails = emails.filter(email => email && !isValidEmail(email));
+        return invalidEmails.length > 0 ? `Invalid email format for: ${invalidEmails.join(', ')}` : "";
     };
 
     const validate = () => {
@@ -121,10 +128,12 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             isError = true;
         }
 
-        // Additional email validation
-        if (formData.Receiver_Email && !isValidEmail(formData.Receiver_Email)) {
-            newErrors.Receiver_Email = 'Invalid email format';
-            isError = true;
+        if (formData.Receiver_Email) {
+            const emailError = validateMultipleEmails(formData.Receiver_Email);
+            if (emailError) {
+                newErrors.Receiver_Email = emailError;
+                isError = true;
+            }
         }
 
         if (formData.Architecture_Deck === 'yes' && !formData.file) {
@@ -214,6 +223,8 @@ const JsonButton = ({ open, handleClose, ...props }) => {
             const responseData = await response.json();
             if (responseData.backend_msg && responseData.backend_msg.flag === "True") {
                 setShowSuccessDialog(true);
+            } else if (responseData.backend_msg && responseData.backend_msg.flag === "False") {
+                setShowFailureDialog(true);
             } else {
                 throw new Error(responseData.backend_msg.msg || "Backend did not confirm process completion.");
             }
@@ -437,6 +448,29 @@ const JsonButton = ({ open, handleClose, ...props }) => {
 
             </Dialog>
 
+            <Dialog open={showFailureDialog} onClose={() => setShowFailureDialog(false)}>
+                <DialogTitle>Failed</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        <Typography sx={{ mt: 2 }}>
+                            Unable to submit the Scheduler form, Please do check with EDA ARB Team - dl-EDA-ARB@carelon.com
+                        </Typography>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions style={{ justifyContent: 'center' }}> {/* Applying flexbox centering */}
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                            setShowFailureDialog(false); // This will close the dialog
+                            window.location.reload(); // This will refresh the page
+                        }}
+                    >
+                        New Chat
+                    </Button>
+                </DialogActions>
+
+            </Dialog>
         </>
 
     );
